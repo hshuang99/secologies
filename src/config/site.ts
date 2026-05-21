@@ -22,7 +22,8 @@ const googleAdsenseClientId = normalizeGoogleAdsenseClientId(
 )
 const x402PayTo = normalizePublicString(import.meta.env.PUBLIC_X402_PAY_TO)
 const x402Network = normalizePublicString(
-  import.meta.env.PUBLIC_X402_NETWORK ?? "eip155:8453"
+  import.meta.env.PUBLIC_X402_NETWORK ??
+    "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp"
 )
 const x402Price = normalizePublicString(
   import.meta.env.PUBLIC_X402_PRICE ?? "$0.01"
@@ -32,7 +33,7 @@ const x402Description = normalizePublicString(
     "Voluntary x402 payment support for Polyglow content."
 )
 const x402FacilitatorUrl = normalizePublicString(
-  import.meta.env.PUBLIC_X402_FACILITATOR_URL ?? "https://x402.org/facilitator"
+  import.meta.env.PUBLIC_X402_FACILITATOR_URL
 )
 
 export const SITE_CONFIG = {

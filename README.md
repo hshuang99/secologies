@@ -164,12 +164,16 @@ Configure it with public environment variables:
 
 ```bash
 PUBLIC_X402_ENABLED=true
-PUBLIC_X402_PAY_TO=0xYourWalletAddress
-PUBLIC_X402_NETWORK=eip155:8453
+PUBLIC_X402_PAY_TO=YourSolanaWalletAddress
+PUBLIC_X402_NETWORK=solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp
 PUBLIC_X402_PRICE=$0.01
 PUBLIC_X402_DESCRIPTION=Voluntary x402 payment support for Polyglow content.
-PUBLIC_X402_FACILITATOR_URL=https://x402.org/facilitator
+PUBLIC_X402_FACILITATOR_URL=https://your-solana-mainnet-facilitator.example
 ```
+
+Solana addresses use base58 format. The public x402.org facilitator is intended
+for testnet development; production Solana payments require a facilitator that
+supports Solana mainnet, or a self-hosted facilitator.
 
 Use `src/components/widgets/X402.astro` only on pages or layouts where x402
 metadata should be published.

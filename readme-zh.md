@@ -158,12 +158,15 @@ middleware。
 
 ```bash
 PUBLIC_X402_ENABLED=true
-PUBLIC_X402_PAY_TO=0xYourWalletAddress
-PUBLIC_X402_NETWORK=eip155:8453
+PUBLIC_X402_PAY_TO=YourSolanaWalletAddress
+PUBLIC_X402_NETWORK=solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp
 PUBLIC_X402_PRICE=$0.01
 PUBLIC_X402_DESCRIPTION=Voluntary x402 payment support for Polyglow content.
-PUBLIC_X402_FACILITATOR_URL=https://x402.org/facilitator
+PUBLIC_X402_FACILITATOR_URL=https://your-solana-mainnet-facilitator.example
 ```
+
+Solana 接收地址使用 base58 格式。公开的 x402.org facilitator 面向测试网开发；生产环境的 Solana 收款需要使用支持
+Solana mainnet 的 facilitator，或自建 facilitator。
 
 只在需要发布 x402 元数据的页面或布局中使用 `src/components/widgets/X402.astro`。
 

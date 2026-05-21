@@ -1,16 +1,13 @@
 ---
-name: "فريق تحرير Polyglow"
-bio: "ملاحظات مركزة حول الحياة والاستثمار وبناء المنتجات، مكتوبة بصوت تحريري هادئ."
-locale: ar
 slug: "default"
-avatar: "/open-graph.webp"
-avatarWidth: 1200
-avatarHeight: 630
-githubUsername: "realriplab"
+name: "فريق تحرير Polyglow"
+bio: "ملاحظات حول بناء المنتجات، والتفكير الاستثماري، والأنظمة التقنية، وأنظمة المحتوى المستدامة."
 socials:
-  - label: "GitHub"
-    url: "https://github.com/realriplab"
+  - { label: "GitHub", url: "https://github.com/realriplab/Polyglow" }
+  - { label: "Website", url: "/ar/" }
+  - { label: "RSS", url: "/ar/rss.xml" }
+locale: ar
 draft: false
 ---
 
-فريق تحرير Polyglow يركز على كتابة قابلة للقراءة والعودة إليها لاحقا، مع اهتمام واضح بالبنية والتصنيف وسهولة النشر.
+ينشر فريق تحرير Polyglow ملاحظات حول بناء المنتجات، والتفكير الاستثماري، والأنظمة التقنية، وممارسة صيانة موقع محتوى ثابت متعدد اللغات على المدى الطويل.
