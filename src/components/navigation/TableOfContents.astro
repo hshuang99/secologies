@@ -1,0 +1,54 @@
+---
+import type { Locale } from "@/config/locales"
+import type { TocHeading } from "@/utils/headings"
+
+interface Props {
+  lang: Locale
+  headings: TocHeading[]
+}
+
+const { lang, headings } = Astro.props
+
+const titleByLocale: Record<Locale, string> = {
+  zh: "目录",
+  en: "Contents",
+  fr: "Sommaire",
+  es: "Índice",
+  ru: "Содержание",
+  ja: "目次",
+  ko: "목차",
+  pt: "Sumário",
+  de: "Inhalt",
+  id: "Daftar Isi",
+  ar: "المحتويات",
+}
+
+const title = titleByLocale[lang]
+---
+
+<nav
+  class="flex flex-col gap-3 rounded-2xl border border-border/80 bg-muted/15 p-4 backdrop-blur"
+  aria-label={title}
+>
+  <p class="text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">
+    {title}
+  </p>
+  <ul class="space-y-1 text-sm text-muted-foreground">
+    {
+      headings.map((heading) => (
+        <li>
+          <a
+            class:list={[
+              "block rounded-md px-2 py-1 transition hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
+              heading.depth === 3 ? "ml-3 border-l border-border/60 pl-3" : "",
+            ]}
+            href={`#${heading.slug}`}
+          >
+            {heading.text}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+

@@ -21,6 +21,7 @@ interface Props {
   description?: string
   image?: string
   ogType?: "website" | "article"
+  alternates?: Record<string, string>
   noindex?: boolean
   jsonLd?: unknown
   dynamicGlass?: boolean
@@ -33,12 +34,13 @@ const {
   description,
   image = SITE_CONFIG.defaultOgImage,
   ogType = "website",
+  alternates: explicitAlternates,
   noindex = false,
   jsonLd,
   dynamicGlass = false,
 } = Astro.props
+const alternates = explicitAlternates ?? buildAlternates(path)
 const localeMeta = getLocaleMeta(lang)
-const alternates = buildAlternates(path)
 const pageDescription = description ?? t(lang, "site.description")
 const pageTitle =
   title === SITE_CONFIG.name || title.includes(SITE_CONFIG.name)
