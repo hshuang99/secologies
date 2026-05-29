@@ -1,4 +1,4 @@
-import { DEFAULT_LOCALE, LOCALES } from "@/config/locales"
+import { DEFAULT_LOCALE, LOCALE_META, LOCALES } from "@/config/locales"
 import { SITE_CONFIG } from "@/config/site"
 import { getCategory, getTag } from "@/config/taxonomy"
 import {
@@ -12,30 +12,42 @@ function canonicalPostUrl(post: PostEntry): string {
   return `${SITE_CONFIG.url}${postUrl(post)}`
 }
 
+function localeLabel(locale: keyof typeof LOCALE_META): string {
+  const localeMeta = LOCALE_META[locale]
+  return `${localeMeta.nativeName} (${locale})`
+}
+
 export function renderLlmsTxt(posts: readonly PostEntry[]): string {
   const latestPosts = posts.slice(0, 12)
 
   return [
     `# ${SITE_CONFIG.name}`,
     "",
-    `> ${SITE_CONFIG.description}`,
+    `> ${SITE_CONFIG.description}。适合为 LLM 提供站点结构、最近内容和官方入口索引。`,
     "",
-    `Site: ${SITE_CONFIG.url}`,
-    `Default locale: ${DEFAULT_LOCALE}`,
-    `Locales: ${LOCALES.join(", ")}`,
+    `- Repository: ${SITE_CONFIG.repository}`,
+    `- Supported locales: ${LOCALES.map((locale) => localeLabel(locale)).join(", ")}`,
+    `- Default locale: ${localeLabel(DEFAULT_LOCALE)}`,
     "",
-    "## Entry points",
+    "## Core",
     "",
     `- [Home](${SITE_CONFIG.url}/${DEFAULT_LOCALE}/)`,
     `- [Search](${SITE_CONFIG.url}/${DEFAULT_LOCALE}/search/)`,
     `- [All posts](${SITE_CONFIG.url}/${DEFAULT_LOCALE}/posts/)`,
-    `- [Full content index](${SITE_CONFIG.url}/llms-full.txt)`,
+    `- [llms-full.txt](${SITE_CONFIG.url}/llms-full.txt): 全量文章目录（带分类/标签/发布日期）`,
+    "",
+    "## Content endpoints",
+    "",
+    `- [中文 RSS](${SITE_CONFIG.url}/zh/rss.xml)`,
+    `- [英文 RSS](${SITE_CONFIG.url}/en/rss.xml)`,
+    `- [Sitemap](${SITE_CONFIG.url}/sitemap.xml)`,
+    `- [Robots](${SITE_CONFIG.url}/robots.txt)`,
     "",
     "## Recent posts",
     "",
     ...latestPosts.map(
       (post) =>
-        `- [${post.data.title}](${canonicalPostUrl(post)}) - ${post.data.description}`
+        `- [${post.data.title}](${canonicalPostUrl(post)}): ${post.data.description}`
     ),
     "",
   ].join("\n")
@@ -43,16 +55,25 @@ export function renderLlmsTxt(posts: readonly PostEntry[]): string {
 
 export function renderLlmsFullTxt(posts: readonly PostEntry[]): string {
   const lines = [
-    "# Polyglow full content index",
+    "# Polyglow llms-full.txt",
     "",
     `Site: ${SITE_CONFIG.url}`,
     `Generated from ${posts.length} published posts.`,
+    `Repository: ${SITE_CONFIG.repository}`,
+    "",
+    "## Core references",
+    `- [Home](${SITE_CONFIG.url}/${DEFAULT_LOCALE}/)`,
+    `- [llms.txt](${SITE_CONFIG.url}/llms.txt): 简化索引说明`,
+    "",
+    "## All posts",
     "",
   ]
 
   for (const locale of LOCALES) {
     const localePosts = posts.filter((post) => post.data.locale === locale)
-    lines.push(`## ${locale}`, "")
+    if (localePosts.length === 0) continue
+
+    lines.push(`### ${localeLabel(locale)}`, "")
 
     for (const post of localePosts) {
       const categorySlug = postCategorySlug(post)
@@ -71,6 +92,9 @@ export function renderLlmsFullTxt(posts: readonly PostEntry[]): string {
 
     lines.push("")
   }
+
+  lines.push("## Optional")
+  lines.push("- [Sitemap](/sitemap.xml)")
 
   return lines.join("\n")
 }
