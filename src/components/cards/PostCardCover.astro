@@ -71,7 +71,7 @@ const TitleTag = headingLevel === 3 ? "h3" : "h2"
     height={post.data.heroImageHeight}
     widths={imageWidths}
     sizes={imageSizes}
-    loading={priority ? "eager" : "lazy"}
+    priority={priority}
     class="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700 ease-out"
   />
   <div

@@ -106,6 +106,7 @@ interface Props {
   variant?: ImageVariant
   width?: number
   height?: number
+  sizes?: string
   layout?: ImageLayout
   fit?: ImageFit
   position?: string
@@ -129,6 +130,7 @@ const {
   variant = "content",
   width,
   height,
+  sizes,
   layout,
   fit,
   position,
@@ -164,9 +166,9 @@ const imageQuality = quality ?? preset.quality
 const shouldRenderPicture = asPicture ?? preset.asPicture
 const loadingAttrs = {
   priority: priority ? true : undefined,
-  loading: loading ?? "lazy",
+  loading: loading ?? (priority ? "eager" : "lazy"),
   decoding: decoding ?? "async",
-  fetchpriority,
+  fetchpriority: fetchpriority ?? (priority ? "high" : undefined),
 }
 const crossOrigin = isRemoteImage ? "anonymous" : undefined
 const imageFormats = formats ?? ["avif", "webp"]
@@ -201,6 +203,7 @@ const svgSrc = isStringSource ? (src as string) : (src as ImageMetadata).src
       class={className}
       formats={imageFormats}
       fallbackFormat={imageFallbackFormat}
+      sizes={sizes}
       layout={imageLayout}
       fit={imageFit}
       position={imagePosition}
@@ -220,6 +223,7 @@ const svgSrc = isStringSource ? (src as string) : (src as ImageMetadata).src
       class={className}
       formats={imageFormats}
       fallbackFormat={imageFallbackFormat}
+      sizes={sizes}
       layout={imageLayout}
       fit={imageFit}
       position={imagePosition}
@@ -236,6 +240,7 @@ const svgSrc = isStringSource ? (src as string) : (src as ImageMetadata).src
       fetchpriority={loadingAttrs.fetchpriority}
       crossorigin={crossOrigin}
       class={className}
+      sizes={sizes}
       layout={imageLayout}
       fit={imageFit}
       position={imagePosition}
@@ -254,6 +259,7 @@ const svgSrc = isStringSource ? (src as string) : (src as ImageMetadata).src
       fetchpriority={loadingAttrs.fetchpriority}
       crossorigin={crossOrigin}
       class={className}
+      sizes={sizes}
       layout={imageLayout}
       fit={imageFit}
       position={imagePosition}
@@ -274,6 +280,7 @@ const svgSrc = isStringSource ? (src as string) : (src as ImageMetadata).src
       class={className}
       formats={imageFormats}
       fallbackFormat={imageFallbackFormat}
+      sizes={sizes}
       layout={imageLayout}
       fit={imageFit}
       position={imagePosition}
@@ -291,6 +298,7 @@ const svgSrc = isStringSource ? (src as string) : (src as ImageMetadata).src
       fetchpriority={loadingAttrs.fetchpriority}
       crossorigin={crossOrigin}
       class={className}
+      sizes={sizes}
       layout={imageLayout}
       fit={imageFit}
       position={imagePosition}
