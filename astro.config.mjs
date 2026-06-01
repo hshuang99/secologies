@@ -29,13 +29,6 @@ export default defineConfig({
   output: "static",
   site: SITE_CONFIG.url,
   trailingSlash: "always",
-  prefetch: {
-    prefetchAll: true,
-    defaultStrategy: "hover",
-  },
-  build: {
-    concurrency: 6,
-  },
   vite: {
     plugins: [tailwindcss()],
   },
