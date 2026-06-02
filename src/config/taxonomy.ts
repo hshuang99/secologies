@@ -431,54 +431,7 @@ const normalizeKey = (value: string): string =>
   value.trim().toLowerCase().replace(/[\s_]+/g, "-")
 
 const categoryAliases: Record<string, string> = {
-  build: "startup",
-  "建设": "startup",
-  building: "startup",
-  bauen: "startup",
-  "construire": "startup",
-  "construir": "startup",
-  "строить": "startup",
-  "構築": "startup",
-  "구축": "startup",
-  "membangun": "startup",
-  "البناء": "startup",
-  startup: "startup",
-  startups: "startup",
-  "start-up": "startup",
-  entrepreneurship: "startup",
-  entrepreneuriat: "startup",
-  emprendimiento: "startup",
-  empreendedorismo: "startup",
-  "предпринимательство": "startup",
-  unternehmertum: "startup",
-  kewirausahaan: "startup",
-  "起業家精神": "startup",
-  "기업가 정신": "startup",
-  "ريادة الأعمال": "startup",
-  "スタートアップ": "startup",
-  "스타트업": "startup",
-  "стартап": "startup",
-  "стартапы": "startup",
-  "démarrage": "startup",
-  "puesta-en-marcha": "startup",
-  memulai: "startup",
-  comece: "startup",
-  inicio: "startup",
-  "gründung": "startup",
-  "بدء-التشغيل": "startup",
-  "شركة-ناشئة": "startup",
-  "شركات-ناشئة": "startup",
   investment: "invest",
-  investissement: "invest",
-  "inversión": "invest",
-  investimento: "invest",
-  investition: "invest",
-  "инвестиции": "invest",
-  "استثمار": "invest",
-  "人生": "life",
-  "인생": "life",
-  hidup: "life",
-  "حياة": "life",
 }
 
 const tagAliases: Record<string, string> = {}
@@ -491,9 +444,7 @@ function buildTaxonomyLookup(
 
   for (const item of items) {
     lookup.set(normalizeKey(item.slug), item.slug)
-    for (const label of Object.values(item.labelByLocale)) {
-      lookup.set(normalizeKey(label), item.slug)
-    }
+    lookup.set(normalizeKey(item.labelByLocale.en), item.slug)
   }
 
   for (const [alias, slug] of Object.entries(aliases)) {
