@@ -29,9 +29,9 @@ const dateLabel = new Intl.DateTimeFormat(post.data.locale, {
   year: "numeric",
 }).format(post.data.pubDate)
 const portraitCardShape =
-  "aspect-[3/4] rounded-none sm:min-h-[24rem]"
+  "aspect-[3/4] rounded-lg sm:min-h-[24rem]"
 const cardShape = {
-  lead: "aspect-[3/4] rounded-none sm:aspect-[16/9] sm:min-h-[27rem]",
+  lead: "aspect-[3/4] rounded-lg sm:aspect-[16/9] sm:min-h-[27rem]",
   wide: `${portraitCardShape} xl:aspect-[16/10] xl:min-h-[20rem]`,
   portrait: portraitCardShape,
 }[variant]

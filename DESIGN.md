@@ -83,12 +83,12 @@ typography:
     lineHeight: "1.5"
     letterSpacing: "0px"
 rounded:
-  sm: "6px"
-  md: "8px"
-  lg: "10px"
-  xl: "14px"
-  card: "14px"
-  hero: "16px"
+  sm: "12px"
+  md: "12px"
+  lg: "12px"
+  xl: "12px"
+  card: "12px"
+  hero: "12px"
   pill: "999px"
 spacing:
   xs: "4px"
@@ -112,12 +112,12 @@ components:
   post-card:
     backgroundColor: "transparent"
     textColor: "{colors.primaryForeground}"
-    rounded: "0"
+    rounded: "{rounded.card}"
     padding: "0"
   article-hero:
     backgroundColor: "transparent"
     textColor: "{colors.primaryForeground}"
-    rounded: "0"
+    rounded: "{rounded.hero}"
     padding: "0"
   text-card:
     backgroundColor: "transparent"
@@ -257,11 +257,11 @@ Do not use decorative gradients for atmosphere.
 
 ## Shapes
 
-The base runtime radius is 10px. Small controls use 6px, standard buttons and
-dropdown items use 8px, regular repeated surfaces use 10px to 14px, and
-metadata labels avoid visible pill backgrounds. Full-bleed image cards and
-article hero images stay square-edged unless a specific template needs a
-contained thumbnail.
+The base runtime radius is 12px. Rectangular controls, dropdowns, text cards,
+taxonomy links, code blocks, post image cards, article hero images, and article
+media use the same radius token for a consistent system feel. Semantic circles
+and pills, including avatars, icon-only circular controls, and search inputs,
+keep `999px` or `rounded-full`.
 
 ## Component Guidance
 
