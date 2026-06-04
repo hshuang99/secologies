@@ -9,7 +9,6 @@ import { t } from "@/utils/translations"
 import { webPageJsonLd, webSiteJsonLd } from "@/utils/structured-data"
 import Header from "@/components/ui/Header.astro"
 import Footer from "@/components/ui/Footer.astro"
-import DynamicGlass from "@/components/features/DynamicGlass.astro"
 import GTMHead from "@/components/widgets/GTMHead.astro"
 import GTMBody from "@/components/widgets/GTMBody.astro"
 import Adsense from "@/components/widgets/Adsense.astro"
@@ -24,7 +23,6 @@ interface Props {
   alternates?: Record<string, string>
   noindex?: boolean
   jsonLd?: unknown
-  dynamicGlass?: boolean
 }
 
 const {
@@ -37,7 +35,6 @@ const {
   alternates: explicitAlternates,
   noindex = false,
   jsonLd,
-  dynamicGlass = false,
 } = Astro.props
 const alternates = explicitAlternates ?? buildAlternates(path)
 const localeMeta = getLocaleMeta(lang)
@@ -186,6 +183,5 @@ const alternateOgLocales = LOCALES.filter((locale) => locale !== lang).map(
       <slot />
     </main>
     <Footer lang={lang} />
-    {dynamicGlass && <DynamicGlass />}
   </body>
 </html>

@@ -102,16 +102,14 @@ const jsonLd = articleJsonLd({
   ogType="article"
   jsonLd={jsonLd}
   alternates={alternates}
-  dynamicGlass
 >
   <article aria-labelledby="article-title">
     <div
       class="relative mx-auto mt-10 w-[calc(100%-2rem)] max-w-3xl sm:w-[calc(100%-2.5rem)] md:w-[calc(100%-3rem)]"
     >
       <div
-        class="post-card relative flex aspect-[3/4] flex-col overflow-hidden rounded-2xl md:aspect-[16/9] md:rounded-3xl"
+        class="post-card relative flex aspect-[3/4] flex-col overflow-hidden rounded-xl md:aspect-[16/9] md:rounded-2xl"
         data-article-hero
-        data-glass-card
       >
         <OptimizedPicture
           src={post.data.heroImage}
@@ -128,8 +126,7 @@ const jsonLd = articleJsonLd({
         >
         </div>
         <div
-          class="post-card__content absolute z-10 right-1.5 bottom-1.5 left-1.5 flex flex-col justify-end rounded-2xl p-4 text-white sm:p-5"
-          data-glass-target
+          class="post-card__content absolute inset-x-0 bottom-0 z-10 flex flex-col justify-end p-5 text-white sm:p-6"
         >
           <div class="flex w-full flex-col gap-4 text-center">
             <h1

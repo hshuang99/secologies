@@ -166,7 +166,7 @@ const activityDataJson = JSON.stringify(activityByYear).replace(/</g, "\\u003c")
   <PageSection class="py-8" pagefindIgnore={false}>
     <PageHeader title={title} subtitle={author?.data.bio} />
     <article
-      class="author-card mx-auto mt-16 grid max-w-5xl gap-8 rounded-[2rem] bg-transparent p-8 sm:p-12 md:grid-cols-[11rem_minmax(0,1fr)] md:items-center lg:p-16"
+      class="author-card mx-auto mt-16 grid max-w-5xl gap-8 bg-transparent px-2 py-8 sm:px-4 sm:py-12 md:grid-cols-[11rem_minmax(0,1fr)] md:items-center lg:py-16"
       data-author-card
     >
       <OptimizedPicture
@@ -217,7 +217,7 @@ const activityDataJson = JSON.stringify(activityByYear).replace(/</g, "\\u003c")
       </div>
     </article>
     <section
-      class="mx-auto mt-24 max-w-5xl rounded-[2rem] bg-transparent p-6 sm:p-10"
+      class="mx-auto mt-24 max-w-5xl bg-transparent px-2 py-6 sm:px-4 sm:py-10"
       data-writing-activity
       data-activity-locale={lang}
       data-activity-published-text={publishedText}

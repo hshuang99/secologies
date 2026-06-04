@@ -45,9 +45,8 @@
   --tracking-tightest: -0.035em;
   --tracking-widest-caps: 0.12em;
   --ease-apple-spring: cubic-bezier(0.25, 1, 0.5, 1);
-  --glass-blur: 16px;
-  --glass-blur-sm: 8px;
-  --glass-blur-lg: 24px;
+  --surface-blur: 16px;
+  --surface-blur-lg: 24px;
 }
 
 :root {
@@ -70,10 +69,7 @@
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
   --radius: 0.625rem;
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --glass-border-light: rgba(255, 255, 255, 0.15);
-  --glass-content-bg: rgba(0, 0, 0, 0.4);
-  --glass-content-bg-hover: rgba(0, 0, 0, 0.5);
+  --panel-bg: rgba(255, 255, 255, 0.86);
 }
 
 .dark {
@@ -95,10 +91,7 @@
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-border-light: rgba(255, 255, 255, 0.12);
-  --glass-content-bg: rgba(0, 0, 0, 0.5);
-  --glass-content-bg-hover: rgba(0, 0, 0, 0.6);
+  --panel-bg: rgba(0, 0, 0, 0.82);
 }
 
 @layer base {
@@ -169,26 +162,15 @@
   }
 }
 
-.glass-card {
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  @apply rounded-lg transition-all duration-300 ease-apple-spring;
-}
-
-.header-glass {
+.header-surface {
   @apply border-b-0 bg-white/70 backdrop-blur-md dark:bg-black/70;
 }
 
 .nav-dropdown,
-.mobile-nav-glass {
-  background: var(--glass-content-bg);
-  backdrop-filter: blur(var(--glass-blur-lg));
-  -webkit-backdrop-filter: blur(var(--glass-blur-lg));
-}
-
-:root:not(.dark) .nav-dropdown,
-:root:not(.dark) .mobile-nav-glass {
-  background: rgba(255, 255, 255, 0.86);
+.mobile-nav-panel {
+  background: var(--panel-bg);
+  backdrop-filter: blur(var(--surface-blur-lg));
+  -webkit-backdrop-filter: blur(var(--surface-blur-lg));
 }
 
 .nav-link {
@@ -389,7 +371,7 @@ html[dir="rtl"] .polyglow-prose :where(p, li) {
 }
 
 .polyglow-prose :where(blockquote) {
-  @apply my-8 rounded-2xl bg-muted/50 px-5 py-3 text-foreground/80;
+  @apply my-8 ps-5 text-lg leading-8 text-foreground/70 italic;
 }
 
 .polyglow-prose :where(hr) {
@@ -397,19 +379,19 @@ html[dir="rtl"] .polyglow-prose :where(p, li) {
 }
 
 .polyglow-prose :where(table) {
-  @apply my-8 text-sm;
+  @apply my-8 w-full border-collapse text-sm;
 }
 
 .polyglow-prose :where(th) {
-  @apply px-3 py-2 text-start font-semibold text-foreground;
+  @apply px-0 py-2 text-start font-semibold text-foreground;
 }
 
 .polyglow-prose :where(td) {
-  @apply px-3 py-2 text-foreground/80;
+  @apply px-0 py-2 text-foreground/80;
 }
 
 .polyglow-prose :where(img) {
-  @apply my-8 rounded-2xl;
+  @apply my-8 rounded-xl;
 }
 
 .archive-list {
@@ -473,9 +455,9 @@ html[dir="rtl"] .polyglow-prose :where(p, li) {
   --pagefind-ui-primary: var(--foreground);
   --pagefind-ui-text: var(--foreground);
   --pagefind-ui-background: var(--background);
-  --pagefind-ui-border: var(--border);
-  --pagefind-ui-tag: var(--muted);
-  --pagefind-ui-border-radius: 0.75rem;
+  --pagefind-ui-border: transparent;
+  --pagefind-ui-tag: transparent;
+  --pagefind-ui-border-radius: 0;
   --pagefind-ui-font: var(--font-sans);
   color: var(--foreground);
 }
@@ -499,14 +481,8 @@ html[dir="rtl"] .polyglow-prose :where(p, li) {
 
 .pagefind-ui__search-input {
   border: 0 !important;
-  background: color-mix(
-    in oklab,
-    var(--background) 92%,
-    transparent
-  ) !important;
+  background: transparent !important;
   box-shadow: none !important;
-  backdrop-filter: blur(var(--glass-blur)) !important;
-  -webkit-backdrop-filter: blur(var(--glass-blur)) !important;
   min-height: 3.125rem !important;
   font-size: 1rem !important;
   font-weight: 600 !important;
@@ -580,5 +556,19 @@ html[dir="rtl"] .polyglow-prose :where(p, li) {
 
   .blur-placeholder {
     @apply transition-opacity duration-50;
+  }
+
+  .post-card,
+  .archive-row,
+  .taxonomy-card,
+  .taxonomy-link,
+  .not-found-link,
+  .not-found-search__button {
+    transition-duration: 1ms !important;
+  }
+
+  .post-card picture img,
+  .post-card > img {
+    transform: none !important;
   }
 }

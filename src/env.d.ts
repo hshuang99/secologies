@@ -17,6 +17,5 @@ interface Window {
     locale: string
   }
   __polyglowPagefindSearchCleanup?: () => void
-  __polyglowDynamicGlassCleanup?: () => void
   __polyglowAuthorActivityCleanup?: () => void
 }
