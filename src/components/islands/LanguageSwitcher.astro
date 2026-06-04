@@ -27,7 +27,7 @@ const flags: Record<Locale, string> = {
 <div class="relative" data-polyglow-menu>
   <button
     type="button"
-    class="inline-flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-transform duration-300 ease-apple-spring active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+    class="inline-flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-transform duration-300 ease-apple-spring active:scale-[0.98]"
     aria-label={t(lang, "language.switch")}
     aria-haspopup="menu"
     aria-expanded="false"
@@ -44,7 +44,7 @@ const flags: Record<Locale, string> = {
     {
       LOCALES.map((locale) => (
         <a
-          class="flex min-h-9 items-center gap-2 rounded-lg px-3 text-sm text-foreground transition-opacity duration-300 hover:opacity-70 focus:outline-none"
+          class="flex min-h-9 items-center gap-2 rounded-lg px-3 text-sm text-foreground transition-opacity duration-300 hover:opacity-70"
           href={localePath(locale, path)}
           role="menuitem"
           aria-current={locale === lang ? "true" : undefined}

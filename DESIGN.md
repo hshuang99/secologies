@@ -201,7 +201,8 @@ text. Use the dark tokens as design references; runtime switching stays in CSS.
 The project prioritizes Inter, SF Pro Text, and PingFang SC, then falls back to
 system sans families with broad multilingual support.
 
-Article prose uses `17px` type with relaxed line height. Chinese, Japanese, and
+Article prose uses fluid `clamp()` sizing around the 16px to 18px range with
+relaxed line height. Chinese, Japanese, and
 Korean prose uses justified text where supported. Arabic pages rely on the
 document `dir="rtl"` value and start-aligned prose. Headings are compact and
 strong. Navigation and metadata stay small, with normal or slight positive
@@ -231,8 +232,10 @@ legibility. Text sits directly on the image layer and relies on weight, scale,
 tracking, and whitespace instead of panels, borders, or shadows.
 
 Article heroes use the same image-first language. Header, dropdown, and mobile
-navigation use translucent theme backgrounds with blur, but they do not use
-decorative borders or shadow.
+navigation use translucent theme backgrounds with 20px-class blur and saturation
+for Apple-style vibrancy, but they do not use decorative borders or shadow.
+When a separator is needed, use a pseudo-element hairline instead of a normal
+border.
 
 Text cards, taxonomy links, and archives stay quiet: transparent backgrounds,
 small radius only where hit targets need it, and physical active states instead
@@ -249,8 +252,9 @@ surfaces use 12px to 16px, and metadata labels avoid visible pill backgrounds.
 
 ## Component Guidance
 
-- **Header and nav:** compact height, theme background, subtle border, grouped
-  category dropdowns, search, language switcher, theme switcher, and mobile nav.
+- **Header and nav:** compact height, theme background, optional hairline
+  separator, grouped category dropdowns, search, language switcher, theme
+  switcher, and mobile nav.
 - **Post cards:** image-first with readable gradient text and real imagery.
 - **Article page:** image hero, compact metadata, centered readable prose,
   typography-first MDX elements, and related posts.
@@ -263,6 +267,8 @@ surfaces use 12px to 16px, and metadata labels avoid visible pill backgrounds.
   configuration.
 - **Icons:** use `src/components/ui/Icon.astro` and the Lucide allowlist in
   `astro.config.mjs`.
+- **Focus states:** mouse focus stays visually quiet; keyboard focus uses a
+  subtle offset zinc ring on the active element.
 
 The prose wrapper class is `polyglow-prose`. Treat it as a stable CSS API
 unless the rename is part of a deliberate cleanup across components, CSS, and

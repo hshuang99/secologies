@@ -252,7 +252,7 @@ const activityDataJson = JSON.stringify(activityByYear).replace(/</g, "\\u003c")
                 displayYears.map((year, index) => (
                   <button
                     type="button"
-                    class={`inline-flex h-10 w-[4.5rem] shrink-0 snap-start cursor-pointer items-center justify-center rounded-full text-sm font-semibold transition-transform duration-300 ease-apple-spring active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring ${
+                    class={`inline-flex h-10 w-[4.5rem] shrink-0 snap-start cursor-pointer items-center justify-center rounded-full text-sm font-semibold transition-transform duration-300 ease-apple-spring active:scale-[0.98] ${
                       index === 0
                         ? "bg-zinc-900 text-zinc-50 dark:bg-zinc-100 dark:text-zinc-900"
                         : "text-muted-foreground"

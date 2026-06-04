@@ -37,9 +37,9 @@ const title = titleByLocale[lang]
     {
       headings.map((heading) => (
         <li>
-          <a
-            class:list={[
-              "block rounded-sm py-1.5 transition-opacity duration-300 hover:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
+            <a
+              class:list={[
+              "block rounded-sm py-1.5 transition-opacity duration-300 hover:opacity-70",
               heading.depth === 3 ? "pl-3 text-xs" : "",
             ]}
             href={`#${heading.slug}`}

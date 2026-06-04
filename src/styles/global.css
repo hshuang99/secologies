@@ -116,6 +116,35 @@
   a[href] {
     cursor: pointer;
   }
+
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  :where(
+      a[href],
+      button,
+      input,
+      textarea,
+      select,
+      summary,
+      [tabindex]:not([tabindex="-1"])
+    ):focus-visible {
+    @apply rounded-sm outline-none ring-2 ring-zinc-900 ring-offset-2 ring-offset-white;
+  }
+
+  .dark
+    :where(
+      a[href],
+      button,
+      input,
+      textarea,
+      select,
+      summary,
+      [tabindex]:not([tabindex="-1"])
+    ):focus-visible {
+    @apply ring-zinc-100 ring-offset-black;
+  }
 }
 
 ::view-transition-old(root),
@@ -162,15 +191,27 @@
   }
 }
 
-.header-surface {
-  @apply border-b-0 bg-white/70 backdrop-blur-md dark:bg-black/70;
+.hairline-b {
+  position: relative;
+}
+
+.hairline-b::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 1px;
+  transform: scaleY(0.5);
+  transform-origin: bottom;
+  @apply bg-zinc-200 dark:bg-zinc-800;
 }
 
 .nav-dropdown,
 .mobile-nav-panel {
   background: var(--panel-bg);
-  backdrop-filter: blur(var(--surface-blur-lg));
-  -webkit-backdrop-filter: blur(var(--surface-blur-lg));
+  backdrop-filter: saturate(150%) blur(var(--surface-blur-lg));
+  -webkit-backdrop-filter: saturate(150%) blur(var(--surface-blur-lg));
 }
 
 .nav-link {
@@ -206,6 +247,7 @@
 
 .polyglow-prose {
   @apply max-w-3xl text-[17px] text-zinc-800 dark:text-zinc-200;
+  font-size: clamp(1rem, 1.2vw, 1.125rem);
 }
 
 .polyglow-prose.article-prose {
@@ -296,11 +338,13 @@ html[dir="rtl"] .polyglow-prose :where(p, li) {
 }
 
 .polyglow-prose :where(h1) {
-  @apply mt-12 mb-6 border-none text-4xl leading-tight font-semibold tracking-tightest text-zinc-900 dark:text-zinc-50;
+  @apply mt-12 mb-6 border-none leading-tight font-semibold tracking-tightest text-zinc-900 dark:text-zinc-50;
+  font-size: clamp(2rem, 5vw, 3rem);
 }
 
 .polyglow-prose :where(h2) {
-  @apply mt-10 mb-4 border-none text-2xl leading-tight font-semibold tracking-tight text-zinc-900 dark:text-zinc-50;
+  @apply mt-10 mb-4 border-none leading-tight font-semibold tracking-tight text-zinc-900 dark:text-zinc-50;
+  font-size: clamp(1.5rem, 3vw, 2rem);
 }
 
 .polyglow-prose :where(h3) {
@@ -482,15 +526,14 @@ html[dir="rtl"] .polyglow-prose :where(p, li) {
 .pagefind-ui__search-input {
   border: 0 !important;
   background: transparent !important;
-  box-shadow: none !important;
+  box-shadow: none;
   min-height: 3.125rem !important;
   font-size: 1rem !important;
   font-weight: 600 !important;
 }
 
 .pagefind-ui__search-input:focus {
-  outline: 2px solid color-mix(in oklab, var(--ring) 70%, transparent) !important;
-  outline-offset: 2px !important;
+  outline: none !important;
 }
 
 .pagefind-ui__result {
@@ -522,7 +565,7 @@ html[dir="rtl"] .polyglow-prose :where(p, li) {
 }
 
 .not-found-search__input {
-  @apply min-h-12 min-w-0 flex-1 rounded-xl bg-zinc-50 px-4 text-base text-foreground transition outline-none focus:outline-2 focus:outline-ring/40 dark:bg-zinc-900/60;
+  @apply min-h-12 min-w-0 flex-1 rounded-xl bg-zinc-50 px-4 text-base text-foreground transition outline-none dark:bg-zinc-900/60;
 }
 
 .not-found-search__button {

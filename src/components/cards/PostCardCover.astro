@@ -41,8 +41,8 @@ const contentShape =
     : "inset-x-0 bottom-0 p-4 sm:p-5"
 const titleClass =
   variant === "lead"
-    ? "line-clamp-2 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl"
-    : "line-clamp-3 text-xl font-semibold leading-tight tracking-tight"
+    ? "line-clamp-2 text-[clamp(2rem,5vw,3rem)] leading-tight font-semibold tracking-tight"
+    : "line-clamp-3 text-[clamp(1.25rem,2.5vw,1.5rem)] leading-tight font-semibold tracking-tight"
 const imageWidths = {
   lead: [640, 768, 960, 1200],
   wide: [420, 640, 720, 960, 1200],
