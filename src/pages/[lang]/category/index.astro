@@ -5,6 +5,7 @@ import PageSection from "@/components/layout/PageSection.astro"
 import TaxonomyLinkGrid from "@/components/navigation/TaxonomyLinkGrid.astro"
 import { LOCALES, type Locale } from "@/config/locales"
 import { TAXONOMY_TERMS_PER_PAGE } from "@/config/pagination"
+import { SITE_CONFIG } from "@/config/site"
 import { TAXONOMY } from "@/config/taxonomy"
 import Pagination from "@/components/navigation/Pagination.astro"
 import {
@@ -53,10 +54,12 @@ const categoryDescriptions = TAXONOMY.categories.map((category) => ({
 }))
 const title = t(lang, "pages.categories.title")
 const seoTitle =
-  lang === "en" ? "Content Categories and Topic Groups | Polyglow" : title
+  lang === "en"
+    ? `Content Categories and Topic Groups | ${SITE_CONFIG.name}`
+    : title
 const seoDescription =
   lang === "en"
-    ? "Browse Polyglow categories for startup, investing, and life articles across essays, notes, and long-term archives."
+    ? `Browse ${SITE_CONFIG.name} categories for startup, investing, and life articles across essays, notes, and long-term archives.`
     : t(lang, "pages.categories.description")
 ---
 

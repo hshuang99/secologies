@@ -8,15 +8,15 @@ interface Window {
     showImages: boolean
     showSubResults: boolean
   }) => { destroy?: () => void }
-  __polyglowMenuCleanup?: () => void
-  __polyglowMobileNavCleanup?: () => void
-  __polyglowThemeSwitcherCleanup?: () => void
-  __polyglowPagefindSearch?: {
+  __dropdownMenuCleanup?: () => void
+  __mobileNavCleanup?: () => void
+  __themeSwitcherCleanup?: () => void
+  __pagefindSearch?: {
     id: string
     instance: { destroy?: () => void }
     locale: string
   }
-  __polyglowPagefindSearchCleanup?: () => void
-  __polyglowDynamicGlassCleanup?: () => void
-  __polyglowAuthorActivityCleanup?: () => void
+  __pagefindSearchCleanup?: () => void
+  __dynamicGlassCleanup?: () => void
+  __authorActivityCleanup?: () => void
 }

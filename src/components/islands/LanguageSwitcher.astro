@@ -24,14 +24,14 @@ const flags: Record<Locale, string> = {
 }
 ---
 
-<div class="relative" data-polyglow-menu>
+<div class="relative" data-dropdown-menu>
   <button
     type="button"
     class="inline-flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
     aria-label={t(lang, "language.switch")}
     aria-haspopup="menu"
     aria-expanded="false"
-    data-polyglow-menu-trigger
+    data-dropdown-menu-trigger
   >
     <span class="text-sm leading-none" aria-hidden="true">{flags[lang]}</span>
   </button>
@@ -39,7 +39,7 @@ const flags: Record<Locale, string> = {
     class="nav-dropdown absolute top-full right-0 z-50 mt-2 grid w-44 gap-1 rounded-xl p-2 shadow-xl"
     role="menu"
     hidden
-    data-polyglow-menu-content
+    data-dropdown-menu-content
   >
     {
       LOCALES.map((locale) => (
@@ -59,11 +59,11 @@ const flags: Record<Locale, string> = {
 
 <script is:inline>
   ;(() => {
-    window.__polyglowMenuCleanup?.()
+    window.__dropdownMenuCleanup?.()
 
     const closeMenu = (menu) => {
-      const trigger = menu.querySelector("[data-polyglow-menu-trigger]")
-      const content = menu.querySelector("[data-polyglow-menu-content]")
+      const trigger = menu.querySelector("[data-dropdown-menu-trigger]")
+      const content = menu.querySelector("[data-dropdown-menu-content]")
       if (
         !(trigger instanceof HTMLElement) ||
         !(content instanceof HTMLElement)
@@ -74,14 +74,14 @@ const flags: Record<Locale, string> = {
     }
 
     const closeAll = (except) => {
-      document.querySelectorAll("[data-polyglow-menu]").forEach((menu) => {
+      document.querySelectorAll("[data-dropdown-menu]").forEach((menu) => {
         if (menu !== except) closeMenu(menu)
       })
     }
 
     const openMenu = (menu) => {
-      const trigger = menu.querySelector("[data-polyglow-menu-trigger]")
-      const content = menu.querySelector("[data-polyglow-menu-content]")
+      const trigger = menu.querySelector("[data-dropdown-menu-trigger]")
+      const content = menu.querySelector("[data-dropdown-menu-content]")
       if (
         !(trigger instanceof HTMLElement) ||
         !(content instanceof HTMLElement)
@@ -96,10 +96,10 @@ const flags: Record<Locale, string> = {
       const target = event.target
       if (!(target instanceof Element)) return
 
-      const trigger = target.closest("[data-polyglow-menu-trigger]")
+      const trigger = target.closest("[data-dropdown-menu-trigger]")
       if (trigger instanceof HTMLElement) {
-        const menu = trigger.closest("[data-polyglow-menu]")
-        const content = menu?.querySelector("[data-polyglow-menu-content]")
+        const menu = trigger.closest("[data-dropdown-menu]")
+        const content = menu?.querySelector("[data-dropdown-menu-content]")
         if (!(menu instanceof HTMLElement) || !(content instanceof HTMLElement))
           return
         if (content.hidden) openMenu(menu)
@@ -107,15 +107,15 @@ const flags: Record<Locale, string> = {
         return
       }
 
-      if (!target.closest("[data-polyglow-menu]")) closeAll()
+      if (!target.closest("[data-dropdown-menu]")) closeAll()
     }
 
     const handleKeydown = (event) => {
       if (event.key !== "Escape") return
       const openMenuContent = document.querySelector(
-        "[data-polyglow-menu-content]:not([hidden])"
+        "[data-dropdown-menu-content]:not([hidden])"
       )
-      const menu = openMenuContent?.closest("[data-polyglow-menu]")
+      const menu = openMenuContent?.closest("[data-dropdown-menu]")
       if (!(menu instanceof HTMLElement)) return
       closeMenu(menu)
       menu.querySelector("button")?.focus()
@@ -125,7 +125,7 @@ const flags: Record<Locale, string> = {
     document.addEventListener("click", handleClick)
     document.addEventListener("keydown", handleKeydown)
     document.addEventListener("astro:before-swap", handleBeforeSwap)
-    window.__polyglowMenuCleanup = () => {
+    window.__dropdownMenuCleanup = () => {
       document.removeEventListener("click", handleClick)
       document.removeEventListener("keydown", handleKeydown)
       document.removeEventListener("astro:before-swap", handleBeforeSwap)

@@ -5,6 +5,7 @@ import OptimizedPicture from "@/components/features/OptimizedPicture.astro"
 import PageHeader from "@/components/layout/PageHeader.astro"
 import PageSection from "@/components/layout/PageSection.astro"
 import { LOCALES, type Locale } from "@/config/locales"
+import { SITE_CONFIG } from "@/config/site"
 import { getAuthor } from "@/utils/content"
 import { getPostsForLocale, postUrl } from "@/utils/posts"
 import { t } from "@/utils/translations"
@@ -17,7 +18,7 @@ export async function getStaticPaths() {
 const { lang } = Astro.props as { lang: Locale }
 const author = await getAuthor(lang)
 const title = t(lang, "pages.author.title")
-const seoTitle = lang === "en" ? "Rip Author Profile | Polyglow" : title
+const seoTitle = lang === "en" ? `Rip Author Profile | ${SITE_CONFIG.name}` : title
 const seoDescription =
   lang === "en"
     ? "Read Rip's author profile, recent publishing activity, social links, and articles on startup, investing, and life."
@@ -369,7 +370,7 @@ const activityDataJson = JSON.stringify(activityByYear).replace(/</g, "\\u003c")
 
 <script is:inline>
   ;(() => {
-    window.__polyglowAuthorActivityCleanup?.()
+    window.__authorActivityCleanup?.()
     const cleanups = []
 
     const setupYearNav = () => {
@@ -626,7 +627,7 @@ const activityDataJson = JSON.stringify(activityByYear).replace(/</g, "\\u003c")
     const handleBeforeSwap = () => cleanup()
     document.addEventListener("astro:page-load", handlePageLoad)
     document.addEventListener("astro:before-swap", handleBeforeSwap)
-    window.__polyglowAuthorActivityCleanup = () => {
+    window.__authorActivityCleanup = () => {
       document.removeEventListener("astro:page-load", handlePageLoad)
       document.removeEventListener("astro:before-swap", handleBeforeSwap)
       cleanup()

@@ -99,7 +99,7 @@ const primaryCategories = getPrimaryCategories()
 
 <script is:inline>
   ;(() => {
-    window.__polyglowMobileNavCleanup?.()
+    window.__mobileNavCleanup?.()
 
     const getParts = (root) => ({
       trigger: root.querySelector("[data-mobile-nav-trigger]"),
@@ -178,7 +178,7 @@ const primaryCategories = getPrimaryCategories()
     document.addEventListener("click", handleClick)
     document.addEventListener("keydown", handleKeydown)
     document.addEventListener("astro:before-swap", handleBeforeSwap)
-    window.__polyglowMobileNavCleanup = () => {
+    window.__mobileNavCleanup = () => {
       document.removeEventListener("click", handleClick)
       document.removeEventListener("keydown", handleKeydown)
       document.removeEventListener("astro:before-swap", handleBeforeSwap)

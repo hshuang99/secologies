@@ -273,7 +273,7 @@ dropdown items use 8px, regular cards use 10px to 14px, image cards use 24px to
 - **Icons:** use `src/components/ui/Icon.astro` and the Lucide allowlist in
   `astro.config.mjs`.
 
-The prose wrapper class is `polyglow-prose`. Treat it as a stable CSS API
+The prose wrapper class is `content-prose`. Treat it as a stable CSS API
 unless the rename is part of a deliberate cleanup across components, CSS, and
 tests.
 

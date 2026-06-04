@@ -1,6 +1,7 @@
+import { SITE_CONFIG } from "@/config/site"
+
 const DEFAULT_MIN_DESCRIPTION_LENGTH = 140
 const DEFAULT_MAX_DESCRIPTION_LENGTH = 160
-const SITE_NAME = "Polyglow"
 
 function cleanDescription(value: string) {
   return value.replace(/\s+/g, " ").trim()
@@ -40,7 +41,7 @@ export function normalizeMetaDescription(
 
 export function taxonomyMetaTitle(label: string, page?: number) {
   const pageLabel = page && page > 1 ? ` Page ${page}` : ""
-  return `${label} Articles and Topic Notes${pageLabel} | ${SITE_NAME}`
+  return `${label} Articles and Topic Notes${pageLabel} | ${SITE_CONFIG.name}`
 }
 
 export function taxonomyMetaDescription(
@@ -51,7 +52,7 @@ export function taxonomyMetaDescription(
   const pageLabel = page && page > 1 ? ` Page ${page} continues the archive.` : ""
 
   return normalizeMetaDescription(description, [
-    `Explore ${SITE_NAME} ${label.toLowerCase()} articles and related research notes.`,
+    `Explore ${SITE_CONFIG.name} ${label.toLowerCase()} articles and related research notes.`,
     `Use this page to review practical context for long-term decisions.${pageLabel}`,
   ])
 }

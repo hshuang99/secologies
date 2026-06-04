@@ -34,20 +34,20 @@ const bundlePath = `/pagefind/${lang}/`
 <link href={`/pagefind/${lang}/pagefind-ui.css`} rel="stylesheet" />
 <script is:inline define:vars={{ id, lang, bundlePath }}>
   ;(() => {
-    window.__polyglowPagefindSearchCleanup?.()
+    window.__pagefindSearchCleanup?.()
 
     const initPagefindSearch = async () => {
       const target = document.querySelector(`#${id}`)
       if (!target) return
       if (target.dataset.pagefindStatus === "loading") return
 
-      const activeSearch = window.__polyglowPagefindSearch
+      const activeSearch = window.__pagefindSearch
       if (
         activeSearch?.instance &&
         (activeSearch.locale !== lang || activeSearch.id !== id)
       ) {
         activeSearch.instance.destroy?.()
-        window.__polyglowPagefindSearch = undefined
+        window.__pagefindSearch = undefined
       }
 
       if (
@@ -73,7 +73,7 @@ const bundlePath = `/pagefind/${lang}/`
           showImages: false,
           showSubResults: true,
         })
-        window.__polyglowPagefindSearch = { id, instance, locale: lang }
+        window.__pagefindSearch = { id, instance, locale: lang }
 
         window.requestAnimationFrame(() => {
           if (target.querySelector(".pagefind-ui__search-input")) {
@@ -82,24 +82,24 @@ const bundlePath = `/pagefind/${lang}/`
           }
           target.innerHTML = fallback
           target.dataset.pagefindStatus = "fallback"
-          window.__polyglowPagefindSearch = undefined
+          window.__pagefindSearch = undefined
         })
       } catch {
         target.innerHTML = fallback
         target.dataset.pagefindStatus = "fallback"
         target.dataset.pagefindLocale = ""
-        window.__polyglowPagefindSearch = undefined
+        window.__pagefindSearch = undefined
       }
     }
 
     const cleanup = () => {
-      window.__polyglowPagefindSearch?.instance?.destroy?.()
-      window.__polyglowPagefindSearch = undefined
+      window.__pagefindSearch?.instance?.destroy?.()
+      window.__pagefindSearch = undefined
     }
     const handleBeforeSwap = () => cleanup()
     document.addEventListener("astro:page-load", initPagefindSearch)
     document.addEventListener("astro:before-swap", handleBeforeSwap)
-    window.__polyglowPagefindSearchCleanup = () => {
+    window.__pagefindSearchCleanup = () => {
       document.removeEventListener("astro:page-load", initPagefindSearch)
       document.removeEventListener("astro:before-swap", handleBeforeSwap)
       cleanup()

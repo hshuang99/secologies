@@ -6,6 +6,7 @@ import Pagination from "@/components/navigation/Pagination.astro"
 import TaxonomyLinkGrid from "@/components/navigation/TaxonomyLinkGrid.astro"
 import { LOCALES, type Locale } from "@/config/locales"
 import { TAXONOMY_TERMS_PER_PAGE } from "@/config/pagination"
+import { SITE_CONFIG } from "@/config/site"
 import { TAXONOMY } from "@/config/taxonomy"
 import {
   getPageSlice,
@@ -48,10 +49,13 @@ const tagDescriptions = TAXONOMY.tags.map((tag) => ({
   description: tag.descriptionByLocale[lang],
 }))
 const title = t(lang, "pages.tags.title")
-const seoTitle = lang === "en" ? "Content Tags and Research Topics | Polyglow" : title
+const seoTitle =
+  lang === "en"
+    ? `Content Tags and Research Topics | ${SITE_CONFIG.name}`
+    : title
 const seoDescription =
   lang === "en"
-    ? "Browse Polyglow tags for strategy, risk, media, innovation, and related themes across essays, notes, and long-term archives."
+    ? `Browse ${SITE_CONFIG.name} tags for strategy, risk, media, innovation, and related themes across essays, notes, and long-term archives.`
     : t(lang, "pages.tags.description")
 ---
 

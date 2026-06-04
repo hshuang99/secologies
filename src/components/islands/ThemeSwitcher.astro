@@ -10,14 +10,14 @@ interface Props {
 const { lang } = Astro.props
 ---
 
-<div class="relative" data-polyglow-menu>
+<div class="relative" data-dropdown-menu>
   <button
     type="button"
     class="inline-flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
     aria-label={t(lang, "theme.toggle")}
     aria-haspopup="menu"
     aria-expanded="false"
-    data-polyglow-menu-trigger
+    data-dropdown-menu-trigger
   >
     <Icon name="sun" class="size-4" dataIcon="inline-start" />
   </button>
@@ -25,7 +25,7 @@ const { lang } = Astro.props
     class="nav-dropdown absolute top-full right-0 z-50 mt-2 grid w-44 gap-1 rounded-xl p-2 shadow-xl"
     role="menu"
     hidden
-    data-polyglow-menu-content
+    data-dropdown-menu-content
   >
     <button
       type="button"
@@ -59,7 +59,7 @@ const { lang } = Astro.props
 
 <script is:inline>
   ;(() => {
-    window.__polyglowThemeSwitcherCleanup?.()
+    window.__themeSwitcherCleanup?.()
 
     const getThemePreference = () => localStorage.getItem("theme") || "system"
     const darkModeQuery = matchMedia("(prefers-color-scheme: dark)")
@@ -100,9 +100,9 @@ const { lang } = Astro.props
       const option = target.closest("[data-theme-value]")
       if (!(option instanceof HTMLElement)) return
       applyTheme(option.dataset.themeValue || "system")
-      const menu = option.closest("[data-polyglow-menu]")
-      const trigger = menu?.querySelector("[data-polyglow-menu-trigger]")
-      const content = menu?.querySelector("[data-polyglow-menu-content]")
+      const menu = option.closest("[data-dropdown-menu]")
+      const trigger = menu?.querySelector("[data-dropdown-menu-trigger]")
+      const content = menu?.querySelector("[data-dropdown-menu-content]")
       if (trigger instanceof HTMLElement) {
         trigger.setAttribute("aria-expanded", "false")
         trigger.focus()
@@ -117,7 +117,7 @@ const { lang } = Astro.props
     document.addEventListener("click", handleClick)
     document.addEventListener("astro:page-load", handlePageLoad)
     darkModeQuery.addEventListener("change", handleSystemThemeChange)
-    window.__polyglowThemeSwitcherCleanup = () => {
+    window.__themeSwitcherCleanup = () => {
       document.removeEventListener("click", handleClick)
       document.removeEventListener("astro:page-load", handlePageLoad)
       darkModeQuery.removeEventListener("change", handleSystemThemeChange)

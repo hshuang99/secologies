@@ -1,12 +1,12 @@
 <script is:inline>
   ;(() => {
-    window.__polyglowDynamicGlassCleanup?.()
+    window.__dynamicGlassCleanup?.()
 
     const CONFIG = {
       sampleSize: 10,
       colorMultiplier: 0.7,
-      baseOpacity: 0.35,
-      blurAmount: "20px",
+      baseOpacity: 0.24,
+      blurAmount: "14px",
     }
     const colorCache = new WeakMap()
 
@@ -102,7 +102,7 @@
     const handleBeforeSwap = () => observer?.disconnect()
     document.addEventListener("astro:page-load", handlePageLoad)
     document.addEventListener("astro:before-swap", handleBeforeSwap)
-    window.__polyglowDynamicGlassCleanup = () => {
+    window.__dynamicGlassCleanup = () => {
       document.removeEventListener("astro:page-load", handlePageLoad)
       document.removeEventListener("astro:before-swap", handleBeforeSwap)
       observer?.disconnect()

@@ -63,6 +63,8 @@ const baseJsonLd = [
 const jsonLdItems = jsonLd
   ? baseJsonLd.concat(Array.isArray(jsonLd) ? jsonLd : [jsonLd])
   : baseJsonLd
+const modelContextSearchDescription = `Search ${SITE_CONFIG.name} public editorial content.`
+const modelContextSearchTitle = `${SITE_CONFIG.name} search`
 const languageAlternates = noindex
   ? undefined
   : Object.entries(alternates).map(([hrefLang, href]) => ({
@@ -131,7 +133,10 @@ const alternateOgLocales = LOCALES.filter((locale) => locale !== lang).map(
       type="application/ld+json"
       set:html={JSON.stringify(jsonLdItems)}
     />
-    <script is:inline>
+    <script
+      is:inline
+      define:vars={{ modelContextSearchDescription, modelContextSearchTitle }}
+    >
       ;(() => {
         const modelContext = navigator.modelContext
         if (!modelContext || typeof modelContext.registerTool !== "function") return
@@ -139,8 +144,8 @@ const alternateOgLocales = LOCALES.filter((locale) => locale !== lang).map(
         const controller = new AbortController()
         modelContext.registerTool(
           {
-            name: "polyglow_search",
-            description: "Search Polyglow public editorial content.",
+            name: "site_search",
+            description: modelContextSearchDescription,
             inputSchema: {
               type: "object",
               properties: {
@@ -162,7 +167,7 @@ const alternateOgLocales = LOCALES.filter((locale) => locale !== lang).map(
               const path = `/${locale}/search/?q=${encodeURIComponent(query)}`
               return {
                 url: new URL(path, location.origin).toString(),
-                title: "Polyglow search",
+                title: modelContextSearchTitle,
               }
             },
           },

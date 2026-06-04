@@ -157,7 +157,7 @@ function paymentRoutes(config: GatewayConfig) {
           network: config.network,
           payTo: config.payTo,
         },
-        description: "Access to Polyglow content",
+        description: "Access to protected content",
         mimeType: "text/html",
       },
     ])

@@ -51,7 +51,7 @@ export default function pagefind({
   let clientDir: string | undefined
 
   return {
-    name: "polyglow-pagefind",
+    name: "pagefind",
     hooks: {
       "astro:config:setup": ({ config, logger }) => {
         if (config.output === "server") {
