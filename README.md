@@ -15,7 +15,7 @@ account, wallet, or Cloudflare credentials.
 
 | Lighthouse | Agent Readiness |
 | --- | --- |
-| [![Polyglow Lighthouse score](public/lighthouse-score---https---polyglow-realrip-com.svg)](https://pagespeed.web.dev/analysis?url=https%3A%2F%2Fpolyglow.zbz.ai%2F) | [![Polyglow Agent Readiness score](public/agent-readiness-https---polyglow-realrip-com.avif)](https://isitagentready.com/polyglow.zbz.ai) |
+| [![Polyglow Lighthouse score](public/lighthouse-score---https---polyglow-zbz-ai.svg)](https://pagespeed.web.dev/analysis?url=https%3A%2F%2Fpolyglow.zbz.ai%2F) | [![Polyglow Agent Readiness score](public/agent-readiness-https---polyglow-zbz-ai.avif)](https://isitagentready.com/polyglow.zbz.ai) |
 
 ## Features
 
