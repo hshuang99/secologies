@@ -53,7 +53,7 @@ Sie können **fett**, *kursiv*, ~~durchgestrichen~~ und `Inline-Code` verwenden.
 > Dies ist ein Zitatbeispiel mit der `>`-Syntax.
 
 ### Links und Bild
-[Projektseite](https://github.com/realriplab/Polyglow)
+[Projektseite](https://github.com/zbzailabs/Polyglow)
 
 ![Beispielbild](https://images.unsplash.com/photo-1498050108023-c5249f4df085)
 

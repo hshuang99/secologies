@@ -53,7 +53,7 @@ locale: zh
 > 这是引用块示例，用于展示 `> ` 语法。
 
 ### 链接与图片
-[项目主页](https://github.com/realriplab/Polyglow)
+[项目主页](https://github.com/zbzailabs/Polyglow)
 
 ![示例图片](https://images.unsplash.com/photo-1498050108023-c5249f4df085)
 

@@ -53,7 +53,7 @@ Você pode usar **negrito**, *itálico*, ~~tachado~~ e `código inline`.
 > Exemplo de citação com sintaxe `>`.
 
 ### Links e imagem
-[Página do projeto](https://github.com/realriplab/Polyglow)
+[Página do projeto](https://github.com/zbzailabs/Polyglow)
 
 ![Imagem de exemplo](https://images.unsplash.com/photo-1498050108023-c5249f4df085)
 

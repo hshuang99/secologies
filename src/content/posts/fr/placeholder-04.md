@@ -53,7 +53,7 @@ Vous pouvez utiliser **gras**, *italique*, ~~barré~~ et `code en ligne`.
 > Ceci est un exemple de citation avec la syntaxe `>`.
 
 ### Liens et image
-[Page du projet](https://github.com/realriplab/Polyglow)
+[Page du projet](https://github.com/zbzailabs/Polyglow)
 
 ![Image exemple](https://images.unsplash.com/photo-1498050108023-c5249f4df085)
 

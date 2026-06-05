@@ -9,12 +9,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/realriplab/Polyglow.git"
+    "url": "git+https://github.com/zbzailabs/Polyglow.git"
   },
   "bugs": {
-    "url": "https://github.com/realriplab/Polyglow/issues"
+    "url": "https://github.com/zbzailabs/Polyglow/issues"
   },
-  "homepage": "https://github.com/realriplab/Polyglow#readme",
+  "homepage": "https://github.com/zbzailabs/Polyglow#readme",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",

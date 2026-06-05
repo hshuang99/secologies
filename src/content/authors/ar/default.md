@@ -3,7 +3,7 @@ slug: "default"
 name: "فريق تحرير Polyglow"
 bio: "ملاحظات حول بناء المنتجات، والتفكير الاستثماري، والأنظمة التقنية، وأنظمة المحتوى المستدامة."
 socials:
-  - { label: "GitHub", url: "https://github.com/realriplab/Polyglow" }
+  - { label: "GitHub", url: "https://github.com/zbzailabs/Polyglow" }
   - { label: "Website", url: "/ar/" }
   - { label: "RSS", url: "/ar/rss.xml" }
 locale: ar

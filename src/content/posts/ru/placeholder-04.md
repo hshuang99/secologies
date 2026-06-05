@@ -53,7 +53,7 @@ locale: ru
 > Это пример цитаты с синтаксисом `>`.
 
 ### Ссылки и изображение
-[Домашняя страница проекта](https://github.com/realriplab/Polyglow)
+[Домашняя страница проекта](https://github.com/zbzailabs/Polyglow)
 
 ![Пример изображения](https://images.unsplash.com/photo-1498050108023-c5249f4df085)
 

@@ -53,7 +53,7 @@ You can use **bold**, *italic*, ~~strikethrough~~, and `inline code`.
 > This is a blockquote used to show quote syntax.
 
 ### Links and image
-[Project homepage](https://github.com/realriplab/Polyglow)
+[Project homepage](https://github.com/zbzailabs/Polyglow)
 
 ![Example image](https://images.unsplash.com/photo-1498050108023-c5249f4df085)
 

@@ -53,7 +53,7 @@ locale: ar
 > هذا مثال اقتباس باستخدام صيغة `>`.
 
 ### الروابط والصورة
-[صفحة المشروع](https://github.com/realriplab/Polyglow)
+[صفحة المشروع](https://github.com/zbzailabs/Polyglow)
 
 ![صورة توضيحية](https://images.unsplash.com/photo-1498050108023-c5249f4df085)
 

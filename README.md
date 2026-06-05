@@ -337,4 +337,4 @@ pnpm deploy
 ## Feedback
 
 Questions, ideas, and bug reports go to
-[GitHub Issues](https://github.com/realriplab/Polyglow/issues).
+[GitHub Issues](https://github.com/zbzailabs/Polyglow/issues).

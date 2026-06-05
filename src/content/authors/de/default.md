@@ -3,7 +3,7 @@ slug: default
 name: "Polyglow Redaktion"
 bio: "Notizen zu Produktaufbau, Investmentdenken, technischen Systemen und langlebigen Content-Systemen."
 socials:
-  - { label: "GitHub", url: "https://github.com/realriplab/Polyglow" }
+  - { label: "GitHub", url: "https://github.com/zbzailabs/Polyglow" }
   - { label: "Website", url: "/de/" }
   - { label: "RSS", url: "/de/rss.xml" }
 locale: de

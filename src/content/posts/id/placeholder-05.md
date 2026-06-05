@@ -53,7 +53,7 @@ Anda dapat menggunakan **bold**, *miring*, ~~coret~~, dan `kode sebaris`.
 > Ini contoh kutipan dengan sintaks `>`.
 
 ### Tautan dan gambar
-[Halaman proyek](https://github.com/realriplab/Polyglow)
+[Halaman proyek](https://github.com/zbzailabs/Polyglow)
 
 ![Gambar contoh](https://images.unsplash.com/photo-1498050108023-c5249f4df085)
 

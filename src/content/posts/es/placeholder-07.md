@@ -53,7 +53,7 @@ Puede usar **negrita**, *cursiva*, ~~tachado~~ y `código en línea`.
 > Esto es una cita con la sintaxis `>`.
 
 ### Enlaces e imagen
-[Página del proyecto](https://github.com/realriplab/Polyglow)
+[Página del proyecto](https://github.com/zbzailabs/Polyglow)
 
 ![Imagen de ejemplo](https://images.unsplash.com/photo-1498050108023-c5249f4df085)
 

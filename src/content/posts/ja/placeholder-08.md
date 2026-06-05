@@ -53,7 +53,7 @@ locale: ja
 > これは `>` 記法の引用ブロック例です。
 
 ### リンクと画像
-[プロジェクトページ](https://github.com/realriplab/Polyglow)
+[プロジェクトページ](https://github.com/zbzailabs/Polyglow)
 
 ![サンプル画像](https://images.unsplash.com/photo-1498050108023-c5249f4df085)
 

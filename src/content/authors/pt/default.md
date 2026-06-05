@@ -3,7 +3,7 @@ slug: default
 name: "Equipe editorial Polyglow"
 bio: "Notas sobre construção de produtos, investimento, sistemas técnicos e sistemas de conteúdo duráveis."
 socials:
-  - { label: "GitHub", url: "https://github.com/realriplab/Polyglow" }
+  - { label: "GitHub", url: "https://github.com/zbzailabs/Polyglow" }
   - { label: "Website", url: "/pt/" }
   - { label: "RSS", url: "/pt/rss.xml" }
 locale: pt

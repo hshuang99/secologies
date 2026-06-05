@@ -84,7 +84,7 @@ const x402ChargeMode = normalizeX402ChargeMode(
 const x402BotScoreThreshold = normalizeBotScoreThreshold(
   readPublicEnv("PUBLIC_X402_BOT_SCORE_THRESHOLD")
 )
-const socialXUrl = "https://x.com/realriplabs"
+const socialXUrl = "https://x.com/zbzailabs"
 const socialXHandle = `@${
   new URL(socialXUrl).pathname.split("/").filter(Boolean)[0] ?? "polyglow"
 }`
@@ -96,7 +96,7 @@ export const SITE_CONFIG = {
   ).replace(/\/$/, ""),
   description:
     "Pressing forward through the waves of startup, the fog of investing, and the ocean of life.",
-  repository: "https://github.com/realriplab/Polyglow",
+  repository: "https://github.com/zbzailabs/Polyglow",
   social: {
     x: socialXUrl,
     xHandle: socialXHandle,

@@ -53,7 +53,7 @@ locale: ko
 > `>` 문법으로 쓰는 인용문 예시입니다.
 
 ### 링크와 이미지
-[프로젝트 홈](https://github.com/realriplab/Polyglow)
+[프로젝트 홈](https://github.com/zbzailabs/Polyglow)
 
 ![예시 이미지](https://images.unsplash.com/photo-1498050108023-c5249f4df085)
 
