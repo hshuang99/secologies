@@ -150,7 +150,6 @@ const {
 const preset = IMAGE_PRESETS[variant]
 const isStringSource = typeof src === "string"
 const stringSrc = isStringSource ? (src as string) : undefined
-const isRemoteImage = isStringSource ? /^https?:\/\//.test(stringSrc as string) : false
 const assetFormat = isStringSource ? undefined : (src as ImageMetadata).format
 const isSvgImage = isStringSource
   ? stringSrc?.toLowerCase().split("?")[0]?.endsWith(".svg")
@@ -170,7 +169,7 @@ const loadingAttrs = {
   decoding: decoding ?? "async",
   fetchpriority: fetchpriority ?? (priority ? "high" : undefined),
 }
-const crossOrigin = isRemoteImage ? "anonymous" : undefined
+const crossOrigin = undefined
 const imageFormats = formats ?? ["avif", "webp"]
 const imageFallbackFormat = fallbackFormat ?? "webp"
 const imageFormat = format ?? "avif"
