@@ -9,7 +9,7 @@ import Icon from "@/components/ui/Icon.astro"
 import MobileNav from "@/components/islands/MobileNav.astro"
 import LanguageSwitcher from "@/components/islands/LanguageSwitcher.astro"
 import ThemeSwitcher from "@/components/islands/ThemeSwitcher.astro"
-import logo from "@/assets/logo.svg"
+import logo from "@/assets/logo.png"
 
 interface Props {
   lang: Locale
@@ -39,6 +39,7 @@ const primaryCategories = getPrimaryCategories()
         height={24}
         widths={[24, 48]}
         sizes="24px"
+	format="png"
         class="site-logo size-6"
         loading="eager"
       />
@@ -78,6 +79,19 @@ const primaryCategories = getPrimaryCategories()
       }
       <a class="nav-link font-medium" href={localePath(lang, "/posts/")}>
         {t(lang, "pages.posts.title")}
+      </a>
+      <a
+	class="nav-link font-medium"
+	href={localePath(lang, "/resources/")}
+      >
+	{t(lang, "footer.resources")}
+      </a>
+      <a
+	class="nav-link font-medium"
+	href={localePath(lang, "/newsletter/")}
+	data-astro-reload
+      >
+	{t(lang, "pages.newsletter.title")}
       </a>
     </nav>
     <div

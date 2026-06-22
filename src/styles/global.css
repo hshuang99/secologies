@@ -188,9 +188,11 @@
   transition: filter 150ms ease;
 }
 
+/*
 .dark .site-logo {
   filter: invert(1) brightness(1.08);
 }
+*/
 
 .nav-dropdown,
 .mobile-nav-glass {
@@ -615,4 +617,80 @@ html:lang(ar) .article-prose :where(p, li) {
   .blur-placeholder {
     @apply transition-opacity duration-50;
   }
+}
+
+.math-inline-wrapper mjx-container {
+  display: inline !important;
+}
+
+.math-inline-wrapper mjx-container svg {
+  display: inline !important;
+  vertical-align: -0.2em;
+}
+
+mjx-container[display="true"] {
+  display: block !important;
+  text-align: center !important;
+  margin: 1.5rem 0 !important;
+}
+
+.math-display-block {
+  text-align: center !important;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+
+.math-display-block mjx-container {
+  display: inline-block !important;
+}
+
+/* Footnote superscript in text */
+.article-prose a[href*="fn"] {
+  color: var(--foreground) !important;
+  text-decoration: none !important;
+  font-weight: 600;
+  transition: opacity 150ms ease;
+  cursor: help;
+  position: relative;
+}
+
+.article-prose a[href*="fn"]:hover {
+  text-decoration: underline !important;
+}
+
+/* Footnote tooltip box */
+.fn-tooltip {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 320px;
+  background-color: var(--foreground);
+  color: var(--background);
+  font-size: 0.78rem;
+  font-weight: 400;
+  line-height: 1.6;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.4rem;
+  pointer-events: none;
+  z-index: 50;
+  white-space: normal;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+
+.fn-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--foreground);
+}
+
+.article-prose a[href*="fn"]:hover .fn-tooltip,
+.article-prose a[href*="fn"]:focus .fn-tooltip {
+  display: block;
 }

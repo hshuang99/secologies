@@ -1,0 +1,148 @@
+---
+title: "認識網路釣魚之惡意 Payload、誤導以及障礙"
+description: "當我們針對目標的前置研究全部都完成之後，我們就可以專注在要構成何種 Payload 來進行攻擊了，惡意組織跟攻擊者會使用不同的方法來傳送釣魚 payloads"
+pubDate: 2026-03-24
+category: "cybersecurity"
+tags: ["penetration-test"]
+authors:
+  - "hong-sheng-huang"
+heroImage: "https://media.secologies.com/Phishing-Payloads-Misdirection-and-Speedbumps.webp"
+heroImageAlt: "Phishing-Payloads-Misdirection-and-Speedbumps-Cover"
+heroImageWidth: 1920
+heroImageHeight: 1080
+locale: zh
+draft: false
+featured: false
+---
+import OptimizedPicture from "@/components/features/OptimizedPicture.astro"
+
+## 前言
+
+當我們針對目標的前置研究全部都完成之後，我們就可以專注在要構成何種 Payload 來進行攻擊了，惡意組織跟攻擊者會使用不同的方法來傳送釣魚 payloads，誠如我們在[基礎網路釣魚](https://secologies.com/zh/phishing-basics/)一文中提到，攻擊者會根據想要達成的目標來決定使用哪種方法，所以用來攻擊的 payload 也需要搭配網路釣魚活動來設計
+
+## 電子信箱內建的角色
+
+在了解惡意 payloads 是如何製作之前，我們先可能會被什麼給阻擋？最直觀就會想到電子郵件信箱裡內建的過濾器了對吧，常見的商用電子信箱都會設計一些機制檢查寄件者是不是有惡意的模樣，如果符合的話就直接阻擋丟到垃圾分類裡
+
+大部分的過濾器會先看信件網域是不是有名的，不同家的廠商有各自的做法，但最常見的應該就屬網域黑名單了，但還會搭配其他種判斷標準，例如寄件者註冊網域幾年了
+
+而我們可以想像，大部分的電子信箱都會仔細檢查信件裡的副檔，所以我們勢必需要一些繞道技巧來傳輸惡意 payloads，特別是 .exe、.scr (此為 Windows 螢幕保護程式)等格式的檔案要特別檢查，因為這類的檔案通常最容易執行的
+
+取決於不同家的產品，其他種可以執行的檔案(或裡面被嵌入可執行單位的)也可能視作惡意檔案，像是微軟 Office 文件檔案、PDF檔、壓縮檔(ZIP等格式)，或者腳本檔案裡包含連向外部連結的網域等確實都有辦法置入原本未預期的內容
+
+話又說回來，許多組織內部都會針對沒見過的網域信件進行標記，像是微軟的 Outlook 接收到非組織內的信件時會標記成\[外部\]，為的就是讓收件者可以快速分辨出信件來自組織外，甚至是同部門的同事用不同的信箱寄過來時，所以我們在進行電子郵件網路釣魚時通常會遇到幾道關卡，一一排除後才有可能成功
+
+## Office 惡意巨集的威脅
+
+惡意組織或滲透測試人員很早年就發現微軟 Office 的可利用功能非常適合嵌入惡意內容，尤其在疫情期間，隨著越來越多成功案例，Office 套件就成了網路釣魚攻擊中很重要的目標
+
+數個微軟 Office 家族的應用程式都支援 Visual Basic for Application (VBA)，這是一套內建在 Office 裡可執行特定巨集的物件導向程式語言(不知道現在資訊科技課還會不會教 VB，回想我們高中時期就是從這個開始寫的)，原本開發人員應該是預期使用者利用巨集 (macros) 讓內容更動態，像是大企業在報告自家產品時可以呈現更豐富的資訊
+
+然而，他們沒想到的是，攻擊者也注意到這項功能了，利用 Office 巨集來執行惡意內容，至少從 1999 年就有 US-CERT 就公布了 Melissa 巨集病毒威脅情資，該巨集專門針對微軟的 Word 文件進行攻擊，從那之後，許多攻擊者也借鑑 Office 巨集來進行網路釣魚活動
+
+微軟當然也有嘗試要抵抗被嵌入惡意巨集，將其預設是不開放不執行的，只有使用者特別需要打開後才能使用，同時微軟還新增一個叫做 Mark of the Web (MotW) 的檔案屬性，這個屬性會顯示檔案是不是從外部來源下載的，在 Windows 裡 NTFS 檔案系統預設就會啟動，該屬性大概長得像下面這張圖
+
+![MotW](https://media.secologies.com/Mark-of-the-Web-shown-in-the-file-properties-1024x941.webp)
+*MotW 的檔案屬性[^1]*
+
+> 而想要繞過 MotW 這個屬性的標記可以利用 CVE-2022-41091[^2]，雖然目前許多伺服器架設時都會設定該屬性，但如果運氣不錯就可能會遇到沒有修補的老舊機器
+
+Windows 會根據檔案是否有 MotW 來決定要不要相信，而有一些應用程式則從不相信外部下載進來的檔案，像是微軟的保護視角功能在 Windows 打開 Office 檔案時會跳出 MotW 的屬性警告，如果使用者確定檔案沒問題就得自行點擊繞過、編輯文件以及使用巨集功能
+
+不過到了近期，微軟決定預設找 MotW 屬性來阻擋巨集直接執行，這多多少少有些幫助 Office 被網路釣魚利用，畢竟任何從電子信箱傳送的檔案都被設定上 MotW 屬性集了
+
+系統管理員當然也可以從 Active Directory 群組的政策方面下手，讓同一網域層的機器都不能被關閉保護視角功能，甚至設定機器不可執行巨集，而管理員層級設定的政策自然就無法被單獨的使用者覆寫
+
+是說現在 Windows 使用者的安全意識也越來越高了，所以利用 Office 巨集的網路釣魚活動應該也會越來越少見，近未來應該就很少看到相關的新聞，不過我們還是不可小覷巨集作為其中一個攻擊手段
+
+尤其許多公司還是可能執行著舊版的 Office 軟體(畢竟不是每個老闆都願意一直買新版本的授權)，所以還是有可能遇到有企業只採用基本的群組政策來管理舊版 Office 文件，而攻擊者就可以從這些角度切入關閉組織機器裡的安全功能
+
+## 惡意檔案威脅評估
+
+其實我們不只有巨集可以用來在目標的機器上執行，Windows 上的 .exe 可執行檔案也是在新聞中很出現，但從統計上來看這種檔名太可疑了，所以釣魚信件寄送的 .exe 檔也幾乎不會到目標機器裡，就算真的被使用者下載下來好了，大部分的使用者也會對這種檔案充滿疑慮並且被 Defender 擋下來，那不如多關注 .scr、.hta 以及 JScript 這些檔案成功機率說不定還比較高
+
+同理，在企業界很受歡迎的 Office 檔案文件，許多攻擊者開發出輔助的 Office 套件來繞過 Word, PowerPoint 跟 Excel 主流的防護方法，像是 CVE-2017-11882[^3] 就是一個在行列式編輯器上可以導致記憶體毀損的漏洞，微軟到 2018 年才修好，更不用說時至今日，有些公司為了省錢都沒有購買新的授權，導致一些終端防護廠商寫報告時還看得到該漏洞
+
+另外，CVE-2023-21716[^4] 則針對 Word 裡 RTF 檔案分析器進行攻擊，最嚴重可以造成遠端任意程式執行，一些執行驗證都可以在網路上找到
+
+儘管許多攻擊者開發出的漏洞可以不靠巨集就拿到遠端任意惡意程式執行的權限，但一般有注重這塊的企業應該都會有資安廠商幫忙維護相關的修補
+
+除了微軟 Office 家族之外 PDF 檢視工具也是攻擊者青睞檔案分析漏洞的視角之一，Adobe Acrobat 閱讀器作為最通用的軟體，時常是被用來開發漏洞的目標，像 CVE-2023-21608 該漏洞在許多 PoC[^5] 中都使用 use-after-free 的特性，最終可以在目標機器上執行任意惡意程式
+
+上述都是針對特定檔案進行漏洞利用，並且都是先設想目標環境有使用哪些版本的軟體，但如果想讓網路釣魚成功機率提升，如果可以知道目標正在用哪些軟體，這更容易讓攻擊者利用漏洞精準打擊
+
+所以接著我們想探討一下受害者可能常用的軟體以及可以嘗試的漏洞，不同的產業在公司裡使用的軟體都不盡相同，有些主管偏好 Office 套件以及 Adobe 的 PDF 檢視工具，而電子郵件除了 icloud、Outlook 以及 Gmail 都端看個人習慣，還有些人使用 Google Chrome 瀏覽文件，抑或是 Firefox 跟 Safari
+
+甚至使用 Glassdoor、Linkedin、數字求職網站、公司網站、相關職涯論壇、部落格或其他資安事件中是利用哪個軟體的，來分析某個職務人員通常會需要使用哪種工具，嘗試找出 Zero-Day 漏洞來進行利用，這在魚叉式網路攻擊上是常見的流程
+
+但我們也應該清楚，這種方法的有效期限很短，通常只要 Zero-Day 被資安廠商公佈出來這些公司就會更新軟體。找 0-Day 漏洞卻得花上許多時間與精力，一旦廠商公布修補策略就失效，不過綜觀微軟公布 Office 巨集或 Windows 系統功能相關的威脅時，找漏洞似乎是值得的🥴，畢竟一挖就一堆
+
+花點時間熟悉逆向工程吧，漏洞被他們自家工程師發現之前我們就可以先行一步找到新的漏洞，這對於後續的攻擊會有極佳的幫助
+
+## 辨識惡意連結
+
+在我們遇過的許多攻擊中，攻擊者應該都想盡辦法說服目標點擊惡意連結，畢竟這是繞過檔案保護機制最有效的方法，像是偽造受害者平時常用的服務：
+
+- Google 信箱
+- Zoom/Google Meet
+- 微軟登入頁面
+
+拿這些服務相關的內容來寫釣魚信件的可信程度絕對大幅提升，如果是上班累得跟狗一樣的爆肝攻城獅就有可能沒注意到連結內容按下去，而攻擊者就可以取得使用者身份驗證資訊並且重複利用
+
+倒是要注意密碼管理器，因為這類工具只有進到正確的網域時才會允許輸入儲存的密碼，所以習慣用管理器自動填補帳號密碼資訊的人是不會在 m1cros0ft.com 裡輸入 microsoft.com 相關資料的💀
+
+但也不是那麼無敵啦，像是 2016 年 LastPass 就有爆出瀏覽器插件可以透過特定的 URI 讓密碼洩漏的漏洞[^6]，2017 年 Google Project Zero 團隊更是利用這瀏覽器插件達成隨意讀取密碼，甚至執行任意程式的功能[^7]
+
+2021 年 Safari 的 1Password 也是因為瀏覽器套件而被發現可以從使用者儲存的空間讀出信用卡資訊，2023 年 AutoSpill 攻擊針對 Android 的 WebViews 套件進行漏洞利用，可以讓有引用該版本套件的主要軟體竊取使用者資訊[^8]
+
+儘管這些密碼管理工具或基礎建設剛開始出來時都有漏洞被利用，然而這些公司還是會持續改進，所以攻擊者也無法一直利用這些工具進行網路驗證身份釣魚，也正因為如此，這些工具對於攻擊依舊是個阻礙
+
+那怎麼辦？其實連結型的釣魚手法還有更進階的，攻擊者不會一次就想把使用者所有資訊騙出來，而是想辦法引導目標到有風險的網路頁面中，利用瀏覽器的漏洞執行任意程式。這說來很複雜對吧，並且非常要求瀏覽器要有 Zero-Day 或 N-Day(攻擊者非常信任的可利用漏洞，基於底層架構已經定版很難調整或修復的漏洞)，並且有辦法讓目標一直使用該版本的瀏覽器
+
+其他特例則是將惡意頁面搭配跨網站請求偽造 Cross-Site Request Forgery (CSRF) 漏洞攻擊，這需要目標已經在特定網頁服務上儲存自己的資訊後，攻擊者才有辦法強迫受害者做出一些行為，像是要求已經登入的使用者必須創建一個新的帳號才能使用新功能，更極端一點的則是在服務上執行任意惡意程式，CVE-2024-1879 就是在 AutoGPT 裡利用 CSRF 漏洞在有問題的系統裡執行任意程式[^9]
+
+不管怎麼說，在進行網路釣魚時連結絕對要看起來可信且值得目標注意，利用社交工程收集目標資訊來讓這一切看起來無害，同時打開連結時，應該要確保網址不會太可疑，如果網址跳轉了好幾次或者包含一堆奇怪的隨機字串內容，目標也很容易就發覺不對勁
+
+要隱藏這類型的破綻，我們可以考慮 URL 縮網址服務像是 TinyURL 或 Bitly 把一些資訊模糊起來，不過要注意有些第三方服務會檢查縮減的目標網址，如果指向惡意軟體的話通常他們會 ban 掉
+
+不知道讀者有沒有看過同形異義詞的網址，通常會把網址裡一般的英文字母替換成 ASCII 字元，這些字元的組成可能是西里爾字母、希臘字母或拉丁字母，舉例來說 apple.com 跟 аррӏе.com 看起來超級相似的對吧？你們可以自己複製這兩個網址丟進瀏覽器試試看
+
+其中我將 "l" 替換成西里爾字母的 "ӏ" 了，基本上現今主流的瀏覽器應該都在網址列裡渲染成幾乎一模一樣，但只要你們連線網址後其實指到不同的網站上
+
+另外一個細節就是 HTTPS 的設定，由於現在的網站沒有 TLS 是很罕見的行為，這有可能讓使用者要登入資訊時起疑心，為了說服受害者我們申請一張合規的憑證設定 HTTPS 可以避免瀏覽器指出仿造的頁面連線不安全，使得目標有所疑慮
+
+而 CSRF 會強迫目標要驗證一些資源，或者無意間洩漏了一些資訊讓未授權的攻擊者可以執行一些本來不能做的事情，好處多多，舉例來說，儘管 Windows 把 NTLM 移除了，我們還是有辦法透過舊系統來利用驗證洩漏，先寄送一份惡意的連結強迫受害者要進行驗證，當目標點下連結後系統就會進到 NTLM 協定，攻擊者可以攔截 NetNTLMv2 的 hash 值，或者利用 SMB Server 寄送內含圖片的連結，只要受害者點開了包含那張圖片的訊息，一樣可以觸發協定取得 hash 值，儘管這方法有些過時，但我們相信在一些企業裡還是有非常老舊的 Windows 系統會被這種漏洞攻擊到[^10]
+
+上述我們討論這麼多關於讓使用者點擊惡意連結來繞過檔案防護機制，但最終目標都差不多，就是想竊取使用者的身份驗證資訊或利用 CSRF 漏洞、瀏覽器漏洞或 NTLM 協定來執行攻擊，不管最終的目標為何，善用模糊、有說服力的藉口以及細心的調查都有辦法讓這惡意連結變得更加可口
+
+## 區分身份驗證資訊及多因子驗證
+
+一旦我們取得了身份驗證資訊，還有另一道障礙存在，也是近年很流行的多因子驗證 (Multi-Factor Authentication, MFA)，另一項安全機制來減緩攻擊的速度，甚至可以降低其他資訊被竊取時受到的傷害
+
+站在攻擊方的角度有幾個方法可以應對，其中一個常見的叫做即時引爆 (prompt bombing)，當目標的 MFA 是推播式的應用服務，他們在登入時會在該應用服務跳出一個登入的提醒，確認是否要進行登入，而我們則利用 MFA 疲勞 (MFA fatigue) 技巧不斷地轟炸受害者，一直瘋狂登入，直到這個目標點一次接受請求只為了停止警告
+
+你們會認為誰會上這種當啊？痾。。。Lapsus$ 惡意組織就成功過[^11]
+
+另一種擊敗 MFA 的方法就是在我們偽造的登入頁面中加上 MFA 認證要求，這不只讓我們可以取得受害者的帳號密碼，甚至連 MFA token 都一併吃下來，但說實話，如果是 OTP 或者其他驗證登入的 session cookie 我們都必須盡快拿來使用，畢竟這一類的資訊生命週期都超短的，不過依目前許多系統的設計，取得 token 的好處還是值得攻擊者花時間設計的
+
+或者我們用 Browser-in-the-Middle 攻擊代理一組真正的驗證資訊，目標可能會跟合法的網站進行互動，但中間輸入登入資訊做身份驗證卻是在攻擊者設計的，像是 CuddlePhish[^12] 就可以自動化完成這個攻擊，但需要準備好一組公共 IP 以及在自己的環境中架設會挺複雜的，如果是設計假設入侵類型的滲透測試會出現有些限制
+
+再來比較直觀的方法就是暴力破解了吧，通常一些 MFA token 組成是六個數字，在有效期限內理論上有辦法找到一組可用的，但缺點也很明顯，耗時、耗頻寬，還得假設 MFA 伺服器每一次產生的 token 時間超級長才有辦法讓攻擊者嘗試
+
+還是說我們也可以試試社交工程來直接跟目標取得 MFA token？假冒成一些跟目標有關聯的公司協助部門、公司內部的網管來要求需要 MFA token 才能進一步協助，但整個故事得寫得很逼真才行
+
+還有最後一種在台灣可以遇到的，就是透過簡訊通知 token 的形式，在一些研究中已經探討過可以用 SIM 交換攻擊手法[^13]取得目標手機門號，看是要假冒身份去換門號，抑或是透過自架基地台訊號攔截簡訊內容，從而得到驗證碼的方法都有人做過，不過，這並非合法的滲透測試服務內容項目，但這是面對 SMS 基底的 MFA 驗證系統時可以考略的策略之一，所以知道一下不為過
+
+[^1]: OffSec, “Phishing Basics: Payloads, Misdirection, and Speedbumps,” The Penetration Testing with Kali Linux (PEN-200).
+[^2]: Microsoft Corporation, “CVE-2022-41091 Detail,” National Vulnerability Database, 11/09/2022, https://nvd.nist.gov/vuln/detail/cve-2022-41091.
+[^3]: Microsoft Corporation, “CVE-2017-11882 Detail,” National Vulnerability Database, 11/14/2017, https://nvd.nist.gov/vuln/detail/cve-2017-11882.
+[^4]: Microsoft Security Response Center, “Microsoft Word Remote Code Execution Vulnerability: CVE-2023-21716,” Microsoft, Feb 14, 2023, https://msrc.microsoft.com/update-guide/vulnerability/CVE-2023-21716.
+[^5]: hacksysteam, “CVE-2023-21608,” Github, 2023, https://github.com/hacksysteam/CVE-2023-21608.
+[^6]: Swati Khandelwal, “LastPass Bug Lets Hackers Steal All Your Passwords,” The Hacker News, Jul 27, 2016, https://thehackernews.com/2016/07/lastpass-password-manager.html.
+[^7]: Eduard Kovacs, “Google Researcher Finds New Flaw in LastPass,” SECURITYWEEK, March 28, 2017, https://www.securityweek.com/google-researcher-finds-new-flaw-lastpass/.
+[^8]: Bill Toulas, “AutoSpill attack steals credentials from Android password managers,” BleepingComputer, December 9, 2023, https://www.bleepingcomputer.com/news/security/autospill-attack-steals-credentials-from-android-password-managers/.
+[^9]: Elias Hohl, “CSRF to RCE in significant-gravitas/autogpt,” huntr, Feb 13th 2024, https://huntr.com/bounties/125c2d0c-0481-4e5c-ae90-fec263acdf32.
+[^10]: VIPRE Labs, “TA577 Tactics: NTLM Hash Theft Through SMB Thread Hijacking,” Vipre, May 14, 2024, https://vipre.com/blog/ta577-ntlm-hash-theft-smb-thread-hijacking/.
+[^11]: Julian Agudelo, “How LAPSUS$ Bypassed MFA and How to Prevent Similar Identity Attacks,” Memcyco Blog, March 4, 2026, https://www.memcyco.com/lapsus-mfa-bypass-prevention/.
+[^12]: fkasler, “CuddlePhish,” Github, 2023, https://github.com/fkasler/cuddlephish
+[^13]: Emma Stevens, “Hijacked by a Text: Understanding and Preventing SIM Swapping Attacks,” BitSight, July 02, 2025, https://www.bitsight.com/blog/what-is-sim-swapping

@@ -40,7 +40,11 @@
     "astro-icon": "^1.1.5",
     "astro-seo": "^1.1.0",
     "hono": "^4.12.23",
+    "katex": "^0.17.0",
     "pagefind": "^1.5.2",
+    "rehype-katex": "^7.0.1",
+    "rehype-mathjax": "^7.1.0",
+    "remark-math": "^6.0.0",
     "sirv": "^3.0.2",
     "tailwindcss": "^4.2.1"
   },

@@ -1,0 +1,61 @@
+---
+title: "對稱式密碼系統介紹"
+description: "那我為什麼還想談對稱式密碼系統呢？因為這些加解密演算法在硬體上或軟體上執行速度都是最快的，更何況進入 PQC 時代後，雖說量子電腦有辦法降低安全性，但是國外一些團隊認為設計更大的 key size 來防禦就行，所以有些研究員還是持續研究對稱式加密機制，因此這類系統很適合加密大量資料"
+category: "cryptology"
+tags: []
+pubDate: 2026-05-23
+authors:
+  - "hong-sheng-huang"
+heroImage: "https://media.secologies.com/Symmetric-Key-Encryption.webp"
+heroImageAlt: "Symmetric-Key-Encryption-Cover"
+heroImageWidth: 1920
+heroImageHeight: 1080
+locale: zh
+draft: false
+featured: false
+---
+import OptimizedPicture from "@/components/features/OptimizedPicture.astro"
+
+在最傳統的加密機制上，對稱式密碼系統可以保護兩方之間的隱私性，我們假設 Alice 跟 Bob 在進行溝通時，其他攔截到資訊的敵人沒辦法從中發現任何有用的資訊
+
+而要讓這個通道保持安全的話，Alice 跟 Bob 要先互相協議一把 key $k$，而且後續這把 key 只有他們兩個人知道而已，所以 Alice 可以接著用這把 $k$ 透過加密演算法 $E$ 將訊息 $m$ 混淆
+
+Alice 整個動作取得了密文 $c = E(k, m)$，之後將這個 $c$ 寄給 Bob，Bob 再用解密演算法 $D$ 搭配雙方都同意的同一把 key $k$ 還原出原本的資訊，這樣的動作可以表示成 $m = D(k, c)$
+
+這也正是為何該方法稱作對稱式密碼系統，因為雙方在加解密演算法中都使用同一把 key $k$，同時這個加解密演算法 $E$ 跟 $D$ 內容都是公開的，只要任何人持有正確對應的 $k$，就可以做加解密的動作，這也是為什麼 $k$ 一定要保持隱密不洩露
+
+到這裡讀者應該會有一個非常大的疑問，那麼我們該如何確保雙方能夠安全又有效的協議出一把金鑰呢？
+
+很遺憾，對稱式密碼系統沒辦法提供任何幫助，我們得等到 1976 年 Whitfield Diffie 跟 Martin Hellman 提出最重要的非對稱式密碼系統核心概念[^1]才有解決方法，就是經常被稱作 Diffie-Hellman Key Exchange 的做法，之後的文章我們再詳細談
+
+回到對稱式密碼系統上，要確保 $k$ 是對的，我們得確保解密演算法可以把密文 $c$ 推倒回正確對應的明文 $m$，則代表這個 $k$ 是滿足對射特性(bijective)，數學上我們可以考慮加密機制如下：
+
+## Definition
+
+一個對稱金鑰加密系統滿足下列映射(map)  
+$$
+E: K \times M \rightarrow C,
+$$  
+滿足 $k \in K$，則映射可以改寫成  
+$$
+E_{k}: M \rightarrow C, m \mapsto E(k, m)
+$$
+並且是可逆的
+
+接著我們介紹一下上述的元素，$m \in M$ 被稱作明文，有時候稱作訊息，$C$ 則是密文或加密文本，而最重要的 $k \in K$ 則是整個金鑰空間
+
+$E_{k}$ 是我們的加密函式，針對不同的 $k$ 對應到不同的結果，反向的操作就是解密函式 $D_{k} := E_{k}^{-1}$，在這裡我們都是探討可以在多項式時間內執行完有效率的演算法
+
+這麼看來，這把金鑰 $k$ 是在通訊中最重要的，並且也是唯一要保持隱密的，基本條件就是如果沒有持有正確的 key $k$，就無法成功解密回明文資訊，幾個重要的代表讀者應該也耳熟能詳，例如 Vernam's One-Time Pad (OTP)、DES 以及 AES
+
+那我為什麼還想談對稱式密碼系統呢？因為這些加解密演算法在硬體上或軟體上執行速度都是最快的，更何況進入 PQC 時代後，雖說 Grover's Algorithm 可以把 security-bit 數量折半，但是國外一些團隊認為設計更大的 key size 來防禦就行，所以有些研究員還是持續研究對稱式加密機制，因此這類系統很適合加密大量資料[^2]
+
+回到前面的故事，Alice 要跟 Bob 用對稱式密碼系統加密，他們需要先共同持有一把 key，而雙方的協議想要利用一個安全的通道就必須透過公開金鑰加密機制來創建，但這種公開金鑰的方法實作效率不高，沒辦法處理太大量的資料，所以目前現實世界一些實際的例子是混合使用對稱式與非對稱式來完成更複雜的密碼系統
+
+在對稱式底下又有分成區塊式密文 (Block Cipher) 跟流密文 (Stream Cipher)，Block Cipher 顧名思義就是處理固定長度區塊的資料，Stream Cipher 則可以處理資料流的型態，資料流可以是一個字元一個字元進行，但也代表能夠輸入任意的長度
+
+另外，在 Block Cipher 裡如果資料每次都可以集合成特定的長度，則可以用一些模式來進行操作，有時候在 Stream Cipher 上也可以應用，因此，某些特殊情況下，Block Cipher 可以被用來做成 Stream Cipher 的資料輸入
+
+[^1]: W. Diffie and M. Hellman, “New directions in cryptography,” in IEEE Transactions on Information Theory, vol. 22, no. 6, pp. 644-654, November 1976, doi: 10.1109/TIT.1976.1055638.
+
+[^2]: R. V. Chethana, J. Vrindavanam, S. Roy and P. C. Deshmukh, “A Review of Block Ciphers and Its Post-Quantum Considerations,” in IEEE Access, vol. 13, pp. 57834-57846, 2025, doi: 10.1109/ACCESS.2025.3554602.

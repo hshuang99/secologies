@@ -93,6 +93,19 @@ const primaryCategories = getPrimaryCategories()
       >
         {t(lang, "search.title")}
       </a>
+      <a
+        class="rounded-lg px-3 py-2 text-sm font-medium hover:bg-muted"
+        href={localePath(lang, "/resources/")}
+      >
+        {t(lang, "footer.resources")}
+      </a>
+      <a
+        class="rounded-lg px-3 py-2 text-sm font-medium hover:bg-muted"
+        href={localePath(lang, "/newsletter/")}
+        data-astro-reload
+      >
+        {t(lang, "pages.newsletter.title")}
+      </a>
     </nav>
   </aside>
 </div>

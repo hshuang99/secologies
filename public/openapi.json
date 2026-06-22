@@ -1,13 +1,13 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Polyglow x402 API",
+    "title": "Secologies x402 API",
     "version": "1.0.0",
-    "description": "Static discovery description for Polyglow x402 protected API probes."
+    "description": "Static discovery description for Secologies x402 protected API probes."
   },
   "servers": [
     {
-      "url": "https://polyglow.zbz.ai"
+      "url": "https://secologies.com"
     }
   ],
   "paths": {

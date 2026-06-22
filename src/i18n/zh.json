@@ -1,35 +1,35 @@
 {
   "site": {
-    "name": "Polyglow",
-    "titleTemplate": "%s · Polyglow",
-    "description": "在创业的波涛，投资的迷雾和生活的海洋中奋力前行",
+    "name": "Secologies",
+    "titleTemplate": "%s · Secologies",
+    "description": "探索資安的科學與實務",
     "twitter": {
-      "site": "@polyglow",
-      "creator": "@polyglow"
+      "site": "",
+      "creator": ""
     }
   },
   "language": {
-    "name": "中文",
-    "switch": "切换语言",
-    "current": "当前语言"
+    "name": "繁體中文",
+    "switch": "切換語言",
+    "current": "當前語言"
   },
   "theme": {
-    "toggle": "切换主题",
+    "toggle": "切換主题",
     "light": "浅色",
     "dark": "深色",
-    "system": "自动"
+    "system": "自動"
   },
   "dateFormat": "YYYY年M月D日",
   "post": {
-    "publishedAt": "发布于",
-    "modifiedAt": "修改于",
-    "relatedPosts": "相关文章"
+    "publishedAt": "發布於",
+    "modifiedAt": "修改於",
+    "relatedPosts": "相關文章"
   },
   "categories": {
-    "life": "生活",
-    "invest": "投资",
-    "build": "创业",
-    "startup": "创业"
+    "cryptology": "密碼理論",
+    "applied-cryptography": "應用密碼學",
+    "cybersecurity": "網路安全",
+    "event": "活動"
   },
   "tags": {
     "reflect": "沉思",
@@ -45,9 +45,9 @@
   },
   "headings": {
     "home": {
-      "title": "首页",
-      "h1": "Polyglow",
-      "h2": "在创业的波涛，投资的迷雾和生活的海洋中奋力前行"
+      "title": "首頁",
+      "h1": "Secologies",
+      "h2": "探索資安的科學與實務"
     },
     "build": {
       "h1": "创业",
@@ -99,91 +99,96 @@
     }
   },
   "navigation": {
-    "build": "创业",
-    "invest": "投资",
-    "life": "生活"
+    "cryptology": "密碼理論",
+    "applied-cryptography": "應用密碼學",
+    "cybersecurity": "網路安全",
+    "event": "活動"
   },
   "pages": {
     "about": {
-      "title": "关于"
+      "title": "關於本站"
     },
     "author": {
-      "title": "作者",
-      "writingActivity": "写作活跃度",
-      "less": "较少",
-      "more": "较多",
-      "contributionsInYear": "{year} 年发布 {count} 篇文章",
-      "links": "作者链接"
+      "title": "關於作者",
+      "writingActivity": "最近的文章",
+      "less": "較少",
+      "more": "較多",
+      "contributionsInYear": "{year} 年發布 {count} 篇文章",
+      "links": "作者連結"
     },
     "posts": {
       "title": "所有文章",
-      "archiveEyebrow": "归档",
-      "archiveTitle": "文章归档",
-      "archiveSubtitle": "按发布时间倒序排列的全部文章。",
+      "archiveEyebrow": "歸檔",
+      "archiveTitle": "文章歸檔",
+      "archiveSubtitle": "按發布時間倒序排列的全部文章",
       "totalPosts": "共 {count} 篇文章",
-      "pageTitle": "所有文章第 {page} 页",
-      "pageDescription": "文章列表第 {page} 页"
+      "pageTitle": "所有文章第 {page} 頁",
+      "pageDescription": "文章列表第 {page} 頁"
     },
     "categories": {
-      "title": "分类",
-      "h2": "浏览分类",
-      "description": "按主题浏览，基于分类发现更多文章。",
-      "eyebrow": "分类",
-      "relatedTags": "相关标签",
-      "noPosts": "该分类下暂时没有文章。"
+      "title": "分類",
+      "h2": "瀏覽分類",
+      "description": "按主题瀏覽，基於分類發現更多文章",
+      "eyebrow": "分類",
+      "relatedTags": "相關標籤",
+      "noPosts": "該分類下暫時没有文章。"
     },
     "tags": {
-      "title": "标签",
-      "h2": "浏览标签",
-      "description": "按主题浏览，基于标签发现更多文章。",
-      "eyebrow": "标签",
-      "browseCategories": "浏览分类",
-      "noPosts": "该标签下暂时没有文章。"
+      "title": "標籤",
+      "h2": "瀏覽標籤",
+      "description": "按主题瀏覽，基於標籤發現更多文章",
+      "eyebrow": "標籤",
+      "browseCategories": "瀏覽分類",
+      "noPosts": "該標籤下暫時没有文章。"
+    },
+    "newsletter": {
+      "title": "電子報"
     }
   },
   "common": {
-    "loading": "加载中...",
-    "error": "出错了",
+    "loading": "讀取中...",
+    "error": "出錯了",
     "notFound": "未找到",
     "back": "返回",
-    "next": "下一页",
-    "previous": "上一页",
-    "readMore": "阅读更多",
+    "next": "下一頁",
+    "previous": "上一頁",
+    "readMore": "閱讀更多",
     "pagination": {
       "totalPosts": "共 {count} 篇文章",
       "totalPostsWithLang": "{lang}共 {count} 篇文章",
-      "pageInfo": "第 {current} 页，共 {total} 页",
-      "noPosts": "暂无文章",
-      "noPostsInCategory": "该分类下暂时没有文章，请稍后再来查看。",
-      "pageTitle": "第 {page} 页",
-      "pageLabel": "第 {page} 页",
+      "pageInfo": "第 {current} 頁，共 {total} 頁",
+      "noPosts": "暫無文章",
+      "noPostsInCategory": "該分類下暫時没有文章，請稍後再来查看",
+      "pageTitle": "第 {page} 頁",
+      "pageLabel": "第 {page} 頁",
       "postsCount": "{count} 篇文章"
     }
   },
   "footer": {
-    "copyright": "版权所有",
-    "allRightsReserved": "保留所有权利",
+    "copyright": "版權所有",
+    "allRightsReserved": "保留所有版權",
     "more": "更多",
     "author": "作者",
-    "categories": "分类",
-    "tags": "标签",
-    "privacyPolicy": "隐私政策",
-    "termsOfService": "服务条款",
-    "contactUs": "联系我们"
+    "categories": "分類",
+    "tags": "標籤",
+    "privacyPolicy": "隱私權政策",
+    "resources": "資源推薦",
+    "termsOfService": "服務條款",
+    "contactUs": "聯絡我們"
   },
   "homepage": {
-    "featuredPosts": "精选文章",
-    "topArticles": "热门文章",
+    "featuredPosts": "精選文章",
+    "topArticles": "熱門文章",
     "latestArticles": "最新文章"
   },
   "notFound": {
-    "title": "页面未找到",
-    "message": "抱歉，您访问的页面不存在或已被移除。",
-    "backToHome": "返回首页",
-    "browsePosts": "浏览文章"
+    "title": "頁面未找到",
+    "message": "抱歉，你查詢的頁面不存在或已被移除",
+    "backToHome": "返回首頁",
+    "browsePosts": "瀏覽文章"
   },
   "search": {
-    "title": "搜索",
-    "subtitle": "搜索你感兴趣的内容"
+    "title": "搜尋",
+    "subtitle": "搜尋你感興趣的内容"
   }
 }

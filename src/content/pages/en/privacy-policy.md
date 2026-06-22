@@ -1,44 +1,61 @@
 ---
 title: "Privacy Policy"
-description: "How Polyglow handles data for blog reading, advertising, and analytics."
+description: "How Secologies handles data for blog reading, advertising, and analytics."
 locale: en
 draft: false
 ---
+Welcome to '[Secologies](https://secologies.com/en)'( hereinafter referred to as 'this website'). In order to provide you with a secure experience while using the various services and information on this website, we hereby explain the privacy protection policy of this website to safeguard your rights and interests. Please read the following content carefully:
 
-**Effective date: 2026-05-25**
+## Scope of Privacy Protection Policy
 
-Polyglow is a public blog website. It provides article reading, on-site search, RSS feeds, and basic page browsing only. It does not provide accounts, memberships, online transactions, or user content hosting.
+The content of the privacy protection policy includes how this website handles personal identification information collected when you use the website's services. The privacy protection policy does not apply to related websites outside of this website, nor does it apply to personnel not commissioned or involved in the management of this website.
 
-## Information We Process
+## Collection, Processing, and Utilization of Personal Data
 
-When you visit the site, servers and browsers may generate technical information such as IP address, browser type, device information, access time, referrer, pages visited, and basic error logs. This information is used to operate the site, investigate security issues, and measure traffic.
+When you visit this website or use the functional services provided by this website, we will collect the necessary personal data based on the nature of the service. We will process and utilize your personal data within the scope of that specific purpose. Without your written consent, this website will not use personal data for other purposes.
 
-If you contact us by email, your email address, message, and related communication records are used to respond to your request.
+When you use interactive features such as the service mailbox and surveys on this website, we may retain the information you provide, including your name, email address, contact information, and usage time.
 
-## Cookies, Ads, and Analytics
+During general browsing, the server automatically records relevant paths, including your device's IP address, usage time, the browser you used, and browsing and click data records. This information is for internal use only and will not be disclosed to external parties.
 
-Polyglow uses Google AdSense to display ads. Google and its advertising partners may use cookies, device identifiers, or similar technologies to serve ads, limit ad frequency, measure performance, and process data under their own policies.
+To provide accurate services, we will analyze and statistically process the content of surveys collected. The statistical data or explanatory text resulting from the analysis may be published as needed, but it will not involve specific personal information.
 
-Polyglow uses Google Tag Manager to load Google Analytics and Microsoft Clarity. Google Analytics measures page views, traffic sources, devices, and browsing behavior. Microsoft Clarity helps understand page interactions such as clicks, scrolling, and site usage. We use this data to improve the reading experience and do not use it to identify specific individuals.
+You can request at any time to correct or delete any incorrect or incomplete personal data collected by this website. Please see the contact information at the bottom for details.
 
-You can manage or block cookies in your browser settings. The articles remain readable if cookies are blocked, but ads and analytics may be affected.
+## Data Protection
 
-## Data Sharing
+The host of this website is equipped with various information security devices and necessary security protection measures such as firewalls and antivirus systems to protect the website and your personal data. Only authorized personnel can access your personal data, and these relevant personnel have signed confidentiality agreements. Violations of confidentiality obligations will result in legal consequences.
 
-We do not sell personal information. Data may be processed by Google AdSense, Google Analytics, Google Tag Manager, Microsoft Clarity, hosting providers, and necessary security or operations providers.
+If it is necessary to entrust other units to provide services due to business needs, this website will also strictly require them to comply with confidentiality obligations and conduct necessary inspection procedures to ensure their compliance.
 
-## Retention and Security
+## Related External Links
 
-We retain data only for as long as needed for the purposes above and use reasonable safeguards. No internet transmission or storage method is completely risk-free.
+The web pages of this website provide links to other websites. You can also enter other websites through the links provided by this website. However, the privacy protection policy of this website does not apply to these linked websites. You must refer to the privacy protection policy of the linked websites.
 
-## Your Choices
+## Policy on Sharing Personal Data with Third Parties
 
-You can stop using the site, clear browser cookies, use browser privacy controls, or contact us to request access, correction, or deletion of contact records related to you.
+This website will never provide, exchange, rent, or sell any of your personal data to other individuals, groups, private enterprises, or public agencies, except where there are legal grounds or contractual obligations.
 
-## Updates
+The preceding paragraph does not include your written consent.
 
-This policy may be updated when the site, advertising tools, analytics tools, or legal requirements change. The latest version is published on this page.
+It is necessary to provide it to prevent danger to your life, body, freedom, or property.
 
-## Contact
+Cooperating with public authorities or academic research institutions for statistical or academic research based on public interest, and the data is processed or collected by the provider in a way that cannot identify specific individuals.
 
-Privacy questions can be sent to hi@mail.polyglow.com.
+When your behavior on the website violates the terms of service or may harm or obstruct the rights of this website or other users or cause harm to anyone.
+
+To benefit your rights.
+
+When this website entrusts others to assist in collecting, processing, or using your personal data, it will have strict supervision and management responsibilities for the outsourced vendors or individuals.
+
+## Use of Cookies
+
+To provide you with the best service, this website will place and access our cookies on your computer. If you do not wish to accept the writing of cookies, you can set the privacy level to high in your browser's function options to reject the writing of cookies. However, this may result in certain functions of the website not working properly.
+
+## Amendment to the Privacy Protection Policy
+
+The privacy protection policy of this website may be amended at any time in response to needs, and the amended terms will be posted on the website.
+
+## Contact Information
+
+If you have any questions about the privacy policy of this website or wish to request changes or removal of personal data, please email to: [hshuang@secologies.com](mailto:hshuang@secologies.com)

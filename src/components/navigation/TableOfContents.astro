@@ -10,17 +10,8 @@ interface Props {
 const { lang, headings } = Astro.props
 
 const titleByLocale: Record<Locale, string> = {
-  zh: "目录",
+  zh: "目錄",
   en: "Contents",
-  fr: "Sommaire",
-  es: "Índice",
-  ru: "Содержание",
-  ja: "目次",
-  ko: "목차",
-  pt: "Sumário",
-  de: "Inhalt",
-  id: "Daftar Isi",
-  ar: "المحتويات",
 }
 
 const title = titleByLocale[lang]
@@ -39,11 +30,12 @@ const title = titleByLocale[lang]
         <li>
           <a
             class:list={[
-              "block rounded-sm py-1.5 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
+              "toc-link block rounded-sm py-1.5 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
               heading.depth === 3 ? "pl-3 text-xs" : "",
             ]}
             href={`#${heading.slug}`}
             title={heading.text}
+            data-heading-id={heading.slug}
           >
             <span class="toc-link-label">{heading.text}</span>
           </a>
@@ -72,4 +64,93 @@ const title = titleByLocale[lang]
     overflow: hidden;
     overflow-wrap: anywhere;
   }
+
+  .toc-link {
+    position: relative;
+  }
+
+  .toc-link.active {
+    color: hsl(var(--foreground));
+    font-weight: 600;
+  }
+
+  .toc-link.active .toc-link-label {
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 3px;
+  }
+
+  .toc-link.active::before {
+    content: "";
+    position: absolute;
+    left: -1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2px;
+    height: 70%;
+    background-color: hsl(var(--foreground));
+    border-radius: 1px;
+  }
 </style>
+
+<script>
+  function initTOC() {
+    const nav = document.querySelector(".toc-nav")
+    if (!nav) return
+
+    const links = nav.querySelectorAll<HTMLAnchorElement>(".toc-link[data-heading-id]")
+    if (!links.length) return
+
+    const headingIds = Array.from(links).map((l) => l.dataset.headingId!)
+    const headingEls = headingIds
+      .map((id) => document.getElementById(id))
+      .filter(Boolean) as HTMLElement[]
+
+    if (!headingEls.length) return
+
+    let activeId = ""
+
+    function setActive(id: string) {
+      if (id === activeId) return
+      activeId = id
+      links.forEach((link) => {
+        const isActive = link.dataset.headingId === id
+        link.classList.toggle("active", isActive)
+        // scroll the active link into view within the TOC sidebar
+        if (isActive) {
+          link.scrollIntoView({ block: "nearest", behavior: "smooth" })
+        }
+      })
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Find the topmost visible heading
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
+
+        if (visible.length > 0) {
+          setActive(visible[0].target.id)
+        }
+      },
+      {
+        rootMargin: "-80px 0px -60% 0px",
+        threshold: 0,
+      }
+    )
+
+    headingEls.forEach((el) => observer.observe(el))
+
+    // Set initial active based on scroll position
+    const firstVisible = headingEls.find(
+      (el) => el.getBoundingClientRect().top > 0
+    )
+    setActive(firstVisible?.id ?? headingEls[0].id)
+
+    // Cleanup on View Transitions navigation
+    document.addEventListener("astro:before-swap", () => observer.disconnect(), { once: true })
+  }
+
+  document.addEventListener("astro:page-load", initTOC)
+</script>

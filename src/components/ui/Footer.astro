@@ -6,7 +6,7 @@ import { SITE_CONFIG } from "@/config/site"
 import { getPrimaryCategories, getTagsForCategory } from "@/config/taxonomy"
 import { localePath } from "@/utils/routes"
 import { t } from "@/utils/translations"
-import logo from "@/assets/logo.svg"
+import logo from "@/assets/logo.png"
 
 interface Props {
   lang: Locale
@@ -43,12 +43,15 @@ const legalLinks = [
           variant="logo"
           width={28}
           height={28}
+	  format="png"
           class="site-logo size-7"
           loading="lazy"
         />
         <span aria-hidden="true">{SITE_CONFIG.name}</span>
       </a>
       <div class="flex items-center justify-start gap-3">
+
+	{/*
         <a
           class="inline-flex size-9 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
           href={SITE_CONFIG.repository}
@@ -58,6 +61,9 @@ const legalLinks = [
         >
           <Icon name="github" class="size-4" dataIcon="inline-start" />
         </a>
+	*/}
+
+	{/*	
         <a
           class="inline-flex size-9 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
           href={SITE_CONFIG.social.x}
@@ -67,6 +73,8 @@ const legalLinks = [
         >
           <Icon name="x" class="size-4" dataIcon="inline-start" />
         </a>
+	*/}
+
         <a
           class="inline-flex size-9 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
           href={`/${lang}/rss.xml`}
@@ -121,7 +129,7 @@ const legalLinks = [
         </a>
         <a
           class="text-[0.9375rem] leading-6 transition-colors hover:text-foreground"
-          href={localePath(lang, "/author/")}
+	  href={localePath(lang, "/hong-sheng-huang/")}
         >
           {t(lang, "footer.author")}
         </a>

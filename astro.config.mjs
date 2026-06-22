@@ -123,7 +123,7 @@ export default defineConfig({
         )
       },
       i18n: {
-        defaultLocale: "en",
+        defaultLocale: "zh",
         locales: sitemapLocaleMap,
       },
       serialize: (item) => {

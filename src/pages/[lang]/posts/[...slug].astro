@@ -21,7 +21,7 @@ import { t } from "@/utils/translations"
 import { normalizeMetaDescription } from "@/utils/seo"
 import { postLocaleAlternates } from "@/utils/alternates"
 import type { TocHeading } from "@/utils/headings"
-import authorImage from "@/assets/author.avif"
+import authorImage from "@/assets/author.jpg"
 
 export async function getStaticPaths() {
   const posts = await getCollection("post", (entry) => !entry.data.draft)
@@ -69,7 +69,7 @@ const publishedLabel = dateFormatter.format(post.data.pubDate)
 const modifiedLabel = dateFormatter.format(
   post.data.updatedDate ?? post.data.pubDate
 )
-const authorUrl = `${SITE_CONFIG.url}/${post.data.locale}/author/`
+const authorUrl = `${SITE_CONFIG.url}/${post.data.locale}/hong-sheng-huang/`
 const keywords = [...new Set([categoryLabel, ...tagLabels])]
 const sourceBody = (post as typeof post & { body?: string }).body ?? ""
 const wordCount = (sourceBody ?? "")
@@ -210,7 +210,7 @@ const jsonLd = articleJsonLd({
               data-article-attribution
             >
               <a
-                href={`/${post.data.locale}/author/`}
+		href={`/${post.data.locale}/hong-sheng-huang/`}
                 class="flex min-w-0 items-center gap-3 text-sm font-medium text-muted-foreground transition-opacity hover:opacity-75"
               >
                 <OptimizedPicture

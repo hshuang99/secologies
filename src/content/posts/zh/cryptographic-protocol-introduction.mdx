@@ -1,0 +1,45 @@
+---
+title: "密碼學協定簡介"
+description: "隨著現代資訊系統跟資料型態越來越複雜，單一的密碼元件已經無法解決某些問題，所以我們會嘗試將不同的元件做組合，用一系列的操作來完成整個任務，這類定義好的步驟就被稱作密碼學協定(Cryptographic Protocol)"
+pubDate: 2026-03-27
+category: "cryptology"
+tags: []
+authors:
+  - "hong-sheng-huang"
+heroImage: "https://media.secologies.com/Cryptographic-Protocols.webp"
+heroImageAlt: "Cryptographic-Protocols-Cover"
+heroImageWidth: 1920
+heroImageHeight: 1080
+locale: zh
+draft: false
+featured: false
+---
+import OptimizedPicture from "@/components/features/OptimizedPicture.astro"
+
+在密碼理論中我們會提到許多不同的加解密演算法、密碼學雜湊函式或 pseudorandom 產生器，這些工具可以用來解決隱私性、驗證性以及資料完整性各種需求，但每一個項目都只能完成一個任務，這些最基本的單位我們常常稱為密碼學的基本元件(Cryptographic Primitives)
+
+事實上，我們現代的資訊系統跟資料型態越來越複雜，這表示單一的元件已經無法解決某些問題，所以我們會嘗試將不同的元件做組合，用一系列的操作來完成整個任務
+
+這類定義好的步驟就被稱作密碼學協定(Cryptographic Protocol)，更準確的說，組合至少兩個或以上的元件才稱得上協定，通常會用到協定也代表該任務最少有兩個人要互相完成一項任務
+
+舉個例子說明會比較清楚，如果我們看所有數位簽章系統的話，一般的做法是先把訊息 $m$ 放入雜湊函數 $h()$ 算出一個 $h(m)$ 的雜湊值，第二步用公開金鑰密碼系統針對 $h(m)$ 製作簽章 $s$ ，這就是常見的 hash-then-sign，但我們可以注意整個流程只需要一個人就能完成了吧，所以我們通常不會把簽章叫做協定
+
+協定最常用來做使用者身份驗證，現在的系統常常需要針對一端的使用者進行驗證，我們假設這一端叫做 Alice，Alice 想要遠端登入一台電腦，或者登入某個網路銀行帳號，通常就需要輸入密碼或者取得 PIN 碼，雖說這個方法稱不上很安全，像是假設 Alice 的密碼或 PIN 碼在傳輸過程中通通全程被監聽，若被還原回去的話就有辦法偽照身份
+
+所以我們可以試想一個簡單的協定叫做 challenge-and-response，這是用來避免這類偽照身份的方法(雖說這還不是很完美的做法)
+
+這個協定是基於公開金鑰簽章系統所組成，我們假設 Alice 擁有一組 key $k = (pk, sk)$，那麼她就有方法可以跟 Bob 證明自己：
+
+1. Bob 隨機選擇了一組"挑戰" $c$ 給 Alice
+
+3. Alice 用她自己的私鑰簽署這份 $c$ 成簽章 $s := Sign(sk, c)$，並且將 $s$ "回應"給 Bob
+
+5. Bob 收到這個簽章後用公開的驗證演算法 $Verify(pk, s, c) = ok$ 來驗證 Alice 的身份
+
+如果按照公開金鑰密碼系統的架構，只有 Alice 可以簽署有效的簽章給 $c$，畢竟只有她有私鑰，這正是不洩漏任何關於私鑰的資訊也能驗證自己身份最簡單的方法，甚至沒有人可以觀察到 Alice 的私鑰，就連驗證的 Bob 都不行
+
+假設這中間有一個竊聽者 Eve 在偷聽這段驗證流程，她想要假冒 Alice 的身份跟 Bob 聯繫，但由於 Bob 隨機選擇挑戰 $c$ 是從非常大的集合裡取出來，並且 uniformly 的拿出來，所以再次使用一樣的 $c$ 機率微乎其微，這代表 Eve 沒辦法透過竊聽取得任何優勢
+
+但通常協定裡任何一方我們都可以假設對方是友善的或是惡意的，意思是我們在設計協定時通常要設想一定會被攻擊，可能是針對密碼元件演算法的攻擊，也可能是針對演算法與協定的組合實作進行攻擊，甚至針對協定本身進行攻擊
+
+有可能利用竊聽這類靜態攻擊觀察傳輸資訊，或是直接控制協定的某一個流程或參數這類[主動式攻擊](https://secologies.com/zh/cryptanalysis-attakcs/)，甚至假扮成某一方進行合作，只為了替換掉某個舊的資訊改成自己想要的資訊

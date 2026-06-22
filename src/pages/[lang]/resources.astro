@@ -15,7 +15,7 @@ export async function getStaticPaths() {
 }
 
 const { lang } = Astro.props as { lang: Locale }
-const page = await getPage(lang, "terms-of-service")
+const page = await getPage(lang, "resources")
 const rendered = page ? await render(page) : undefined
 const Content = page ? (await render(page)).Content : undefined
 const headings = (rendered?.headings ?? [])
@@ -24,11 +24,11 @@ const headings = (rendered?.headings ?? [])
     ...h,
     depth: h.depth as 2 | 3,
   }));
-const title = page?.data.title ?? t(lang, "footer.termsOfService")
+const title = page?.data.title ?? t(lang, "footer.resources")
 const description = page?.data.description ?? `${title} · ${SITE_CONFIG.name}`
 ---
 
-<Layout lang={lang} path="/terms-of-service/" title={title} description={description}>
+<Layout lang={lang} path="/resources/" title={title} description={description}>
   <PageSection class="py-8">
     <PageHeader title={title} subtitle={description} class="search-header" />
     <div class="mx-auto grid max-w-5xl gap-8 lg:grid-cols-[minmax(0,1fr)_14rem]">

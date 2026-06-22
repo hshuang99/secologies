@@ -66,7 +66,7 @@ const publicAssetHost = hostnameFromUrl(publicAssetBaseUrl)
 const x402PayTo = normalizePublicString(readPublicEnv("PUBLIC_X402_PAY_TO"))
 const x402Network = normalizePublicString(
   readPublicEnv("PUBLIC_X402_NETWORK") ??
-    "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1"
+    "solana:GmmLvA4qvktKCa8SjUmckY6ZPCmgZMvz9hmcb8GUoFLF"
 )
 const x402Price = normalizePublicString(
   readPublicEnv("PUBLIC_X402_PRICE") ?? "$0.01"
@@ -84,23 +84,15 @@ const x402ChargeMode = normalizeX402ChargeMode(
 const x402BotScoreThreshold = normalizeBotScoreThreshold(
   readPublicEnv("PUBLIC_X402_BOT_SCORE_THRESHOLD")
 )
-const socialXUrl = "https://x.com/zbzailabs"
-const socialXHandle = `@${
-  new URL(socialXUrl).pathname.split("/").filter(Boolean)[0] ?? "polyglow"
-}`
 
 export const SITE_CONFIG = {
-  name: "Polyglow",
+  name: "Secologies",
   url: (
-    readPublicEnv("PUBLIC_SITE_URL") ?? "https://polyglow.zbz.ai"
+    readPublicEnv("PUBLIC_SITE_URL") ?? "https://secologies.pages.dev"
   ).replace(/\/$/, ""),
   description:
-    "Pressing forward through the waves of startup, the fog of investing, and the ocean of life.",
-  repository: "https://github.com/zbzailabs/Polyglow",
-  social: {
-    x: socialXUrl,
-    xHandle: socialXHandle,
-  },
+    "探索資安的科學與實務",
+  repository: "",
   defaultOgImage: "/open-graph.webp",
   assets: {
     publicBaseUrl: publicAssetBaseUrl,
