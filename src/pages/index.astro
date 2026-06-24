@@ -1,12 +1,13 @@
 ---
-import { DEFAULT_LOCALE } from "@/config/locales"
+import { DEFAULT_LOCALE, LOCALE_META } from "@/config/locales"
 import { SITE_CONFIG } from "@/config/site"
 
 const homePath = `/${DEFAULT_LOCALE}/`
 const homeUrl = `${SITE_CONFIG.url}${homePath}`
+const meta = LOCALE_META[DEFAULT_LOCALE]
 ---
 
-<html lang="en-US">
+<html lang={meta.hreflang}>
   <head>
     <meta charset="utf-8" />
     <title>{SITE_CONFIG.name}</title>
