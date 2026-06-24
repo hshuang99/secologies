@@ -12,8 +12,8 @@ const googleTagManagerEnabled =
   process.env.PUBLIC_GTM_ENABLED === "true" &&
   /^GTM-[A-Z0-9]+$/i.test(process.env.PUBLIC_GTM_ID ?? "")
 const sitemapLocaleMap = {
-  en: "en-US",
   zh: "zh-TW",
+  en: "en-US",
   fr: "fr-FR",
   es: "es-ES",
   ru: "ru-RU",
@@ -42,7 +42,7 @@ export default defineConfig({
   },
   i18n: {
     defaultLocale: "zh",
-    locales: ["en", "zh", "fr", "es", "ru", "ja", "ko", "pt", "de", "id", "ar"],
+    locales: ["zh", "en", "fr", "es", "ru", "ja", "ko", "pt", "de", "id", "ar"],
     routing: {
       prefixDefaultLocale: true,
       redirectToDefaultLocale: false,
