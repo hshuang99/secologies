@@ -13,7 +13,7 @@ const googleTagManagerEnabled =
   /^GTM-[A-Z0-9]+$/i.test(process.env.PUBLIC_GTM_ID ?? "")
 const sitemapLocaleMap = {
   en: "en-US",
-  zh: "zh-CN",
+  zh: "zh-TW",
   fr: "fr-FR",
   es: "es-ES",
   ru: "ru-RU",
@@ -41,7 +41,7 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
   i18n: {
-    defaultLocale: "en",
+    defaultLocale: "zh",
     locales: ["en", "zh", "fr", "es", "ru", "ja", "ko", "pt", "de", "id", "ar"],
     routing: {
       prefixDefaultLocale: true,
