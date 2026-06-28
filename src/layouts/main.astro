@@ -297,25 +297,6 @@ const alternateOgLocales = LOCALES.filter((locale) => locale !== lang).map(
 
   document.addEventListener('astro:page-load', initFootnoteTooltips)
 </script>
-<script is:inline>
-  document.addEventListener('astro:page-load', () => {
-    console.log('[1] page-load fired')
-    console.log('[2] MathJax available:', !!window.MathJax?.typesetPromise)
-    
-    setTimeout(() => {
-      console.log('[3] after 500ms - MathJax available:', !!window.MathJax?.typesetPromise)
-      console.log('[4] math-inline-wrapper count:', document.querySelectorAll('.math-inline-wrapper').length)
-      console.log('[5] code.math-inline count:', document.querySelectorAll('code.math-inline').length)
-      console.log('[6] mjx-container count:', document.querySelectorAll('mjx-container').length)
-    }, 500)
-
-    setTimeout(() => {
-      console.log('[7] after 2000ms - mjx-container count:', document.querySelectorAll('mjx-container').length)
-      const containers = document.querySelectorAll('mjx-container')
-      containers.forEach((el, i) => console.log(`[8] container ${i}:`, el.outerHTML.slice(0, 100)))
-    }, 2000)
-  })
-</script>
   </head>
   <body>
     <GTMBody />
