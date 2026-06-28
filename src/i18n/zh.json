@@ -29,7 +29,8 @@
     "cryptology": "密碼理論",
     "applied-cryptography": "應用密碼學",
     "cybersecurity": "網路安全",
-    "event": "活動"
+    "event": "活動",
+    "notes": "筆記"
   },
   "tags": {
     "reflect": "沉思",
@@ -102,7 +103,8 @@
     "cryptology": "密碼理論",
     "applied-cryptography": "應用密碼學",
     "cybersecurity": "網路安全",
-    "event": "活動"
+    "event": "活動",
+    "notes": "筆記"
   },
   "pages": {
     "about": {

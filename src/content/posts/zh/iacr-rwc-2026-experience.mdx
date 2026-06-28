@@ -1,0 +1,30 @@
+---
+title: "IACR RWC 2026 參與心得"
+description: "很幸運本次可以在台灣參與由國際密碼研究學會 (International Association for Cryptologic Research, IACR) 所組織的真實世界密碼學研討會 (The Real World Crypto Symposium)
+"
+pubDate: 2026-03-12
+authors:
+  - "hong-sheng-huang"
+category: "events"
+tags: []
+heroImage: "https://media.secologies.com/IMG_0971-scaled.webp"
+heroImageAlt: "IACR-RWC-2026-Cover"
+heroImageWidth: 1920
+heroImageHeight: 2560
+locale: zh
+draft: false
+featured: false
+---
+import OptimizedPicture from "@/components/features/OptimizedPicture.astro"
+
+很幸運本次可以在台灣參與由國際密碼研究學會 (International Association for Cryptologic Research, IACR) 所組織的真實世界密碼學研討會 (The Real World Crypto Symposium)，在台北的萬豪酒店舉辦真的挺方便的，甚至租專車載與會者從中研院過去
+
+雖說我必須早起一點才座得到專車，但該會議也值得我這麼做，本次研討會除了一些 workshop 之外，我主要參與會議本體，許多場次討論真實世界的通訊、儲存安全議題，像是針對 Signal 提出的一些架構進行討論
+
+今年 Levchin Prize 的得主之一 Tamarin prover 團隊也在現場講解，雖然沒見到 Diffie 跟 Hellman 有點小失落，畢竟在大學修課的時候就一直聽 Diffie-Hellman 金鑰交換聽很多次，不過針對現有的密碼系統進行形式化驗證 (Formal Verification) 也是很重要的工作之一
+
+在硬體實作上第一次聽到可信執行環境 (Trusted execution environment, TEE) 這套架構，果然決定來此會議是對的，而後量子的議題目前還是在持續測試中，比較大的問題還是產出的金鑰大小或簽章大小都比目前 public-key 的密碼系統還要來得大，所以現有協定都還得再調整去找出可接受的加解密/簽章驗章速度
+
+話說有些藍牙協定還在使用被破解的 SHA-1 或者有辦法被 Padding Oracle Attack 攻擊的 CBC mode，聽來真的挺危險的，雖然有些演講沒完全聽懂，但至少透過此次研討會，讓我了解到自己的研究除了理論上的探討之外，在實作上的也有很多題目可以嘗試，越聽越有興趣
+
+冀望自己可以不斷地挖掘許多有興趣的題目，以及未來有辦法投稿這類的研討會，畢竟晚宴的餐點都挺不錯的(💀)

@@ -61,6 +61,18 @@ export const TAXONOMY = {
         en: "",
       }),
     },
+    {
+      slug: "notes",
+      order: 4,
+      labelByLocale: localized({
+        zh: "筆記",
+        en: "Notes",
+      }),
+      descriptionByLocale: localized({
+        zh: "",
+        en: "",
+      }),
+    },
   ],
   tags: [
     {
@@ -198,7 +210,7 @@ export const TAXONOMY = {
   ],
 } as const
 
-const PRIMARY_CATEGORY_SLUGS = ["cryptology", "applied_cryptography", "cybersecurity", "events"] as const
+const PRIMARY_CATEGORY_SLUGS = ["cryptology", "applied_cryptography", "cybersecurity", "events", "notes"] as const
 
 const TAGS_BY_CATEGORY: Record<
   (typeof PRIMARY_CATEGORY_SLUGS)[number],
@@ -208,6 +220,7 @@ const TAGS_BY_CATEGORY: Record<
   applied_cryptography: ["cryptographic-engineering", "hardware-security", "quantum-security"],
   cybersecurity: ["penetration-test", "anomaly-detection", "cybersecurity-law-regulation-and-framework"],
   events: [],
+  notes: [],
 }
 
 export function getCategory(slug: string): TaxonomyItem | undefined {
