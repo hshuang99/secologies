@@ -75,12 +75,12 @@ NULL
 PHP 系統函式會接收使用者利用 HTTP REQUEST 提供的 cmd 參數，執行後變成類似網頁互動型的命令提示字元介面，如果我們嘗試上面的 payload 放進前端的 Lookup 欄位裡，在我們的實驗機器上它吐給我們下列的錯誤
 
 ![Writing-the-WebShell-to-Disk](https://media.secologies.com/Writing-the-WebShell-to-Disk.webp)
-*[1]*
+*[^1]*
 
 幸運的是，該錯誤只是顯示回傳的資料型態錯誤，應該不影響我們 webshell 的寫入功能，要確保這一點，我們存取放在 tmp 資料夾底下新的 webshell，並且放入 id 參數檢查權限
 
 ![Accessing-the-newly-Webshell](https://media.secologies.com/Accessing-the-newly-Webshell.webp)
-*[1]*
+*[^1]*
 
 太讚了！webshell 在前端頁面回傳我們所預期的 id 指令結果給我們，代表這個方法是可成功的，可以發現我們是使用 www-data 這個網頁伺服器最通用的使用者執行該指令的，通常這個是 Linux 系統底下架設網頁伺服器時最常見的角色
 
