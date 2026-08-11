@@ -1,0 +1,174 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+import { siteConfig } from '@/config';
+import { shouldShowPost, sortPostsByDate, extractTags } from '@/utils/markdown';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PostCard from '@/components/PostCard.astro';
+import Tags from '@/components/Tags.astro';
+import Pagination from '@/components/Pagination.astro';
+import Icon from '@/components/Icon.astro';
+import LanguageTabs from '@/components/LanguageTabs.astro';
+import RssFeedButtons from '@/components/RssFeedButtons.astro';
+import { getEntryLang, languageName } from '@/utils/translations';
+import { locales } from '@/i18n/lang-tabs';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const isDev = import.meta.env.DEV;
+
+  try {
+    const allPosts = await getCollection('posts');
+    const visiblePosts = allPosts.filter(post => shouldShowPost(post, isDev));
+    const sortedPosts = sortPostsByDate(visiblePosts);
+    const allTags = extractTags(sortedPosts);
+
+    // Generate one listing page per configured language
+    return locales.map(lang => ({
+      params: { lang },
+      props: { lang, allPosts: sortedPosts, allTags }
+    }));
+  } catch (error) {
+    return [];
+  }
+};
+
+const { lang, allPosts, allTags } = Astro.props as {
+  lang: string;
+  allPosts: any[];
+  allTags: string[];
+};
+const isDev = import.meta.env.DEV;
+
+if (!lang || typeof lang !== 'string') {
+  if (!isDev) {
+    return Astro.redirect('/404');
+  }
+}
+
+// Filter posts by language (post's own `lang` field, or the site default)
+let filteredPosts: any[] = [];
+try {
+  filteredPosts = allPosts.filter((post: any) => getEntryLang(post) === lang);
+} catch (error) {
+  filteredPosts = [];
+}
+
+// Pagination
+const postsPerPage = siteConfig.postOptions.postsPerPage;
+const totalPosts = filteredPosts.length;
+const totalPages = Math.ceil(totalPosts / postsPerPage);
+const currentPage = 1; // This is the first page
+const startIndex = 0;
+const endIndex = Math.min(postsPerPage, totalPosts);
+const paginatedPosts = filteredPosts.slice(startIndex, endIndex);
+
+// Generate SEO data
+const pageTitle = `Posts (${languageName(lang)})`;
+const pageDescription = `All posts written in ${languageName(lang)} on ${siteConfig.title}`;
+
+const seoData = {
+  title: `${pageTitle} | ${siteConfig.title}`,
+  description: pageDescription,
+  canonical: Astro.url.href,
+  ogType: 'website' as const
+};
+
+// Pagination info
+const baseUrl = `/posts/lang/${lang}`;
+const pagination = {
+  currentPage,
+  totalPages,
+  hasNext: currentPage < totalPages,
+  hasPrev: false,
+  nextUrl: totalPages > 1 ? `${baseUrl}/2` : undefined,
+  prevUrl: undefined
+};
+---
+
+<BaseLayout seoData={seoData}>
+  <div class="py-8 relative">
+    <div class="mx-auto px-4 sm:px-6 lg:px-8 mb-12" style={`max-width: ${siteConfig.layout.contentWidth}`}>
+      <!-- Header -->
+      <header class="mb-8">
+        <div class="flex items-start justify-between mb-3">
+          <h1 class="text-lg font-bold text-primary-900 dark:text-primary-50">
+            {pageTitle}
+          </h1>
+          <RssFeedButtons variant="single" lang={lang === 'en' ? 'en' : 'zh'} />
+        </div>
+        <p class="text-base text-primary-600 dark:text-primary-300 mb-4">
+          Showing <strong>{filteredPosts.length}</strong> posts in {languageName(lang)}
+        </p>
+
+        <LanguageTabs allUrl="/posts" langBaseUrl="/posts/lang" activeLang={lang} />
+      </header>
+
+      <div class="relative">
+        <!-- Main content -->
+        <div class="max-w-none">
+          {paginatedPosts.length > 0 ? (
+            <>
+              <!-- Posts list -->
+              <div class="space-y-6 mb-12">
+                {paginatedPosts.map((post, index) => (
+                  <PostCard post={post} context="lang" eager={index < 2} />
+                ))}
+              </div>
+
+              <!-- Pagination -->
+              <Pagination pagination={pagination} baseUrl={baseUrl} />
+            </>
+          ) : (
+            <div class="text-center py-16">
+              <Icon name="tag" class="w-16 h-16 text-primary-400 dark:text-primary-500 mx-auto mb-6" />
+              <h2 class="text-2xl font-semibold text-primary-900 dark:text-primary-50 mb-4">
+                No posts found
+              </h2>
+              <p class="text-primary-600 dark:text-primary-300 mb-8 max-w-md mx-auto">
+                There are no {languageName(lang)} posts yet. Try browsing 
+                <a href="/posts" class="text-primary-600 dark:text-primary-300 hover:underline">all posts</a>.
+              </p>
+            </div>
+          )}
+        </div>
+
+        <!-- Mobile sidebar - appears below content on mobile/tablet -->
+        <div class="xl:hidden mt-12 space-y-6">
+          <!-- Tags -->
+          {siteConfig.postOptions.tags && allTags.length > 0 && (
+            <Tags tags={allTags} />
+          )}
+        </div>
+
+        <!-- Desktop sidebar - floats to the right of the content container -->
+        <div class="hidden xl:block absolute top-0 left-full ml-8 w-64">
+          <div class="sticky top-24 space-y-3 max-h-[calc(100vh-12rem)] overflow-y-auto pb-6">
+            <!-- Tags -->
+            {siteConfig.postOptions.tags && allTags.length > 0 && (
+              <Tags tags={allTags} />
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  /* Enhanced posts page styles */
+  .posts-grid {
+    display: grid;
+    gap: 2rem;
+  }
+
+  @media (min-width: 768px) {
+    .posts-grid {
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+  }
+
+  /* Tag highlight in header */
+  .tag-highlight {
+    @apply bg-gradient-to-r from-highlight-500 to-highlight-600 text-white;
+  }
+</style>

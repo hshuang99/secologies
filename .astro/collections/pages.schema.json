@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "title": {
+      "default": "Untitled Page",
+      "type": "string"
+    },
+    "description": {
+      "default": "No description provided",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "draft": {
+      "type": "boolean"
+    },
+    "lastModified": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "image": {
+      "anyOf": [
+        {},
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "imageAlt": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "hideCoverImage": {
+      "type": "boolean"
+    },
+    "hideTOC": {
+      "type": "boolean"
+    },
+    "showTOC": {
+      "type": "boolean"
+    },
+    "noIndex": {
+      "type": "boolean"
+    },
+    "lang": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "translations": {
+      "default": [],
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "$schema": {
+      "type": "string"
+    }
+  }
+}

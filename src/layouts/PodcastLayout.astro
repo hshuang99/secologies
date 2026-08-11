@@ -1,0 +1,418 @@
+---
+import type { Podcast } from '@/types';
+import { siteConfig } from '@/config';
+import { generatePodcastSEO } from '@/utils/seo';
+import { isValidDate } from '@/utils/markdown';
+import { optimizeContentImagePath, getOptimizedFormat } from '@/utils/images';
+import { hasDocCategories } from '@/utils/categories';
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import TableOfContents from '@/components/TableOfContents.astro';
+import Lightbox from '@/components/Lightbox.astro';
+import ImageWrapper from '@/components/ImageWrapper.astro';
+import PodcastsSidebar from '@/components/PodcastsSidebar.astro';
+import Icon from '@/components/Icon.astro';
+import { shouldShowContent, getAdjacentDocs, formatDate } from '@/utils/markdown';
+import { getTranslationsFor, getEntryLang } from '@/utils/translations';
+import TranslationSwitcher from '@/components/TranslationSwitcher.astro';
+
+export interface Props {
+  podcast: Podcast;
+}
+
+const { podcast } = Astro.props;
+
+// Check if there are any real categories in the system
+const allDocs = await getCollection('podcasts');
+const docsHaveCategories = hasDocCategories(allDocs);
+
+// Filter visible podcasts (exclude drafts in production)
+const isDev = import.meta.env.DEV;
+const visibleDocs = allDocs.filter(doc => shouldShowContent(doc, isDev));
+
+// Get current category (normalize "General" to null)
+const currentCategory = podcast.data.category && 
+  podcast.data.category.trim() !== '' && 
+  podcast.data.category !== 'General'
+  ? podcast.data.category
+  : null;
+
+// Render the podcast content
+const { render } = await import('astro:content');
+const { Content, headings } = await render(podcast);
+
+// Generate SEO data
+const seoData = generatePodcastSEO(podcast, Astro.url.href);
+
+// i18n: resolve linked translations (if any) for the switcher + hreflang tags
+const docLang = getEntryLang(podcast as any);
+const docTranslations = await getTranslationsFor(podcast as any, 'podcasts');
+const docUrl = `/podcasts/${podcast.id}`;
+
+// Generate table of contents from headings using configurable depth
+const maxDepth = siteConfig.tableOfContents.depth;
+const toc = headings.filter(h => h.depth >= 2 && h.depth <= maxDepth);
+
+// Check if TOC should be shown - global setting, then hideTOC frontmatter, then showTOC frontmatter (default true for podcasts)
+const hideTOC = podcast.data.hideTOC === true;
+const showTOC = podcast.data.showTOC !== undefined ? podcast.data.showTOC : true;
+const shouldShowTOC = siteConfig.tableOfContents.enabled && !hideTOC && showTOC && toc.length > 0;
+
+// Get adjacent podcasts for navigation (only within same category, sorted by order)
+const { prev: prevDoc, next: nextDoc } = getAdjacentDocs(visibleDocs, podcast.id, currentCategory);
+
+// Generate structured data
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  name: podcast.data.title,
+  description: podcast.data.description,
+  url: Astro.url.href,
+  isPartOf: {
+    '@type': 'WebSite',
+    name: siteConfig.title,
+    url: siteConfig.site
+  },
+  author: {
+    '@type': 'Person',
+    name: siteConfig.author
+  },
+  dateCreated: podcast.data.lastModified?.toISOString() || new Date().toISOString(),
+  dateModified: podcast.data.lastModified?.toISOString() || new Date().toISOString(),
+  version: podcast.data.version || '1.0',
+  articleSection: docsHaveCategories
+    ? (podcast.data.category && podcast.data.category.trim() !== '' && podcast.data.category !== 'General'
+        ? podcast.data.category
+        : 'Unsorted')
+    : undefined
+};
+---
+
+<BaseLayout seoData={seoData}>
+  <Fragment slot="head">
+    <TranslationSwitcher translations={docTranslations} currentLang={docLang} currentUrl={docUrl} mode="head" />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+    <!-- Preload podcast image if exists -->
+    {podcast.data.image && podcast.data.hideCoverImage !== true && typeof podcast.data.image === 'string' && !podcast.data.image.startsWith('http') && (
+      <link
+        rel="preload"
+        as="image"
+        href={optimizeContentImagePath(podcast.data.image, 'podcast', podcast.id, podcast.id)}
+        fetchpriority="high"
+      />
+    )}
+  </Fragment>
+
+  <div class="py-8">
+    <div class="mx-auto px-4 sm:px-6 lg:px-8 relative" style={`max-width: ${siteConfig.layout.contentWidth}`}>
+      <!-- Desktop Sidebar (inside content container, positioned relative to it) -->
+      <PodcastsSidebar 
+        currentDocId={podcast.id}
+        currentCategory={currentCategory}
+        allDocs={visibleDocs}
+      />
+      <!-- Podcasts content -->
+      <article class={`bg-white dark:bg-primary-900 rounded-lg border border-primary-200 dark:border-primary-700 shadow-sm ${podcast.data.image && podcast.data.hideCoverImage !== true ? 'overflow-hidden' : ''}`}>
+        {podcast.data.image && podcast.data.hideCoverImage !== true && (() => {
+          // Process image path similar to other layouts
+          let rawImage = podcast.data.image;
+          if (Array.isArray(rawImage)) {
+            rawImage = rawImage[0];
+          }
+          
+          // Clean Obsidian brackets
+          let cleanImagePath = typeof rawImage === 'string' ? rawImage : '';
+          if (cleanImagePath.startsWith('[[') && cleanImagePath.endsWith(']]')) {
+            cleanImagePath = cleanImagePath.slice(2, -2);
+          }
+          
+          // Determine src and basePath for ImageWrapper
+          let imageSrc = cleanImagePath;
+          let imageBasePath = '';
+          
+          if (typeof cleanImagePath === 'string' && cleanImagePath.startsWith('http')) {
+            // External URL - pass as-is
+            imageSrc = cleanImagePath;
+            imageBasePath = '';
+          } else {
+            // Detect folder-based vs file-based: if image path starts with 'attachments/',
+            // it's a single-file doc (shared attachments folder)
+            const isFileBased = typeof cleanImagePath === 'string' && cleanImagePath.startsWith('attachments/');
+            
+            if (isFileBased) {
+              // Single-file doc - remove attachments/ prefix
+              imageSrc = cleanImagePath.replace('attachments/', '');
+              imageBasePath = '/podcasts/attachments/';
+            } else {
+              // Folder-based doc - sync script copies images to doc folder root
+              // Remove 'images/' or 'attachments/' prefixes if present (sync script removes them)
+              if (cleanImagePath.startsWith('images/') || cleanImagePath.startsWith('attachments/')) {
+                imageSrc = cleanImagePath.replace(/^(images|attachments)\//, '');
+              } else {
+                imageSrc = cleanImagePath;
+              }
+              // Safety check: ensure podcast.id exists before using it
+              if (podcast.id) {
+                imageBasePath = `/podcasts/${podcast.id}/`;
+              } else {
+                // Fallback to attachments directory if podcast.id is undefined
+                imageBasePath = '/podcasts/attachments/';
+              }
+            }
+          }
+          
+          // Convert to WebP if applicable (sync-images.js creates WebP versions)
+          imageSrc = getOptimizedFormat(imageSrc);
+          
+          return (
+            <div class="h-40 sm:h-48 md:h-56 lg:h-64 overflow-hidden rounded-t-lg bg-primary-100 dark:bg-primary-800">
+              <ImageWrapper
+                src={imageSrc}
+                basePath={imageBasePath}
+                alt={podcast.data.imageAlt || `Featured image for podcast: ${podcast.data.title}`}
+                class="w-full h-full object-cover"
+                width={800}
+                height={450}
+                format="webp"
+                quality={85}
+                loading="eager"
+                fetchpriority="high"
+              />
+            </div>
+          );
+        })()}
+
+        <!-- Podcasts content wrapper -->
+        <div class={`p-6 ${podcast.data.image && podcast.data.hideCoverImage !== true ? 'rounded-b-lg' : 'rounded-lg'}`}>
+          <!-- Podcasts header -->
+          <header class="mb-4">
+            <h1 class="text-xl font-bold text-primary-900 dark:text-primary-50 mb-6 leading-tight">
+              {podcast.data.title}
+            </h1>
+
+            <TranslationSwitcher translations={docTranslations} currentLang={docLang} currentUrl={docUrl} />
+
+            <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-primary-600 dark:text-primary-300 mb-6">
+              {docsHaveCategories && (
+                <span class="px-2 py-1 bg-primary-100 dark:bg-primary-800 text-primary-700 dark:text-primary-300 rounded-full text-xs font-medium">
+                  {podcast.data.category && podcast.data.category.trim() !== '' && podcast.data.category !== 'General'
+                    ? podcast.data.category
+                    : 'Unsorted'}
+                </span>
+              )}
+
+              {podcast.data.version && (
+                <>
+                  {docsHaveCategories && (
+                    <>
+                      <span class="text-primary-300 dark:text-primary-600 hidden sm:inline">•</span>
+                      <span class="text-primary-300 dark:text-primary-600 sm:hidden">•</span>
+                    </>
+                  )}
+                  <span class="text-xs">
+                    Version {podcast.data.version}
+                  </span>
+                </>
+              )}
+
+              {podcast.data.lastModified && isValidDate(podcast.data.lastModified) && (
+                <>
+                  {(docsHaveCategories || podcast.data.version) && (
+                    <>
+                      <span class="text-primary-300 dark:text-primary-600 hidden sm:inline">•</span>
+                      <span class="text-primary-300 dark:text-primary-600 sm:hidden">•</span>
+                    </>
+                  )}
+                  <time datetime={podcast.data.lastModified.toISOString()} class="text-xs">
+                    <span class="hidden sm:inline">
+                      Updated {formatDate(podcast.data.lastModified)}
+                    </span>
+                    <span class="sm:hidden">
+                      Updated {formatDate(podcast.data.lastModified)}
+                    </span>
+                  </time>
+                </>
+              )}
+            </div>
+          </header>
+
+          <!-- Podcasts content -->
+          <div class="prose dark:prose-dark max-w-none" id="podcast-content">
+            <Content />
+          </div>
+        </div>
+      </article>
+
+      <!-- Podcasts navigation (only if there are other podcasts in the same category) -->
+      {siteConfig.postOptions.postNavigation && (prevDoc || nextDoc) && (
+        <nav class="mt-8 pt-8 border-t border-primary-200 dark:border-primary-700">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {prevDoc && (
+              <div class="text-left">
+                <a
+                  href={`/podcasts/${prevDoc.id}`}
+                  class="group block p-4 rounded-lg border border-primary-200 dark:border-primary-700 hover:border-highlight-300 dark:hover:border-highlight-600 transition-all duration-200 hover:shadow-md"
+                >
+                  <h3 class="font-semibold text-primary-900 dark:text-primary-50 group-hover:text-highlight-600 dark:group-hover:text-highlight-400 transition-colors">
+                    {prevDoc.data.title}
+                  </h3>
+                  <div class="flex justify-start mt-2">
+                    <Icon name="arrow-left" class="w-5 h-5 text-primary-500 dark:text-primary-400 group-hover:text-highlight-500 dark:group-hover:text-highlight-400 transition-colors" />
+                  </div>
+                </a>
+              </div>
+            )}
+
+            {nextDoc && (
+              <div class={`text-right ${!prevDoc ? 'md:col-start-2' : ''}`}>
+                <a
+                  href={`/podcasts/${nextDoc.id}`}
+                  class="group block p-4 rounded-lg border border-primary-200 dark:border-primary-700 hover:border-highlight-300 dark:hover:border-highlight-600 transition-all duration-200 hover:shadow-md"
+                >
+                  <h3 class="font-semibold text-primary-900 dark:text-primary-50 group-hover:text-highlight-600 dark:group-hover:text-highlight-400 transition-colors">
+                    {nextDoc.data.title}
+                  </h3>
+                  <div class="flex justify-end mt-2">
+                    <Icon name="arrow-right" class="w-5 h-5 text-primary-500 dark:text-primary-400 group-hover:text-highlight-500 dark:group-hover:text-highlight-400 transition-colors" />
+                  </div>
+                </a>
+              </div>
+            )}
+          </div>
+        </nav>
+      )}
+
+      <!-- Desktop TOC - floats to the right of the content container -->
+      {shouldShowTOC && (
+        <div class="hidden xl:block absolute top-0 left-full ml-1 w-64 h-full">
+          <div class="sticky top-24 pb-6" id="toc">
+            <TableOfContents headings={toc} />
+          </div>
+        </div>
+      )}
+    </div>
+  </div>
+
+  <!-- Lightbox is handled globally by BaseLayout -->
+
+  <Fragment slot="scripts">
+    <script>
+      // Initialize lightbox functionality for images
+      document.addEventListener('DOMContentLoaded', () => {
+        function initializeLightbox() {
+          const images = document.querySelectorAll('img');
+          images.forEach((img, index) => {
+            // Skip images that are already clickable (like in galleries)
+            if (img.closest('a') || img.closest('.image-grid')) {
+              return;
+            }
+
+            // Make image clickable
+            img.style.cursor = 'pointer';
+            img.addEventListener('click', () => {
+              // Dispatch custom event to open lightbox
+              window.dispatchEvent(new CustomEvent('openLightbox', {
+                detail: { index }
+              }));
+            });
+          });
+        }
+
+        // Initialize lightbox after a short delay to ensure images are loaded
+        setTimeout(initializeLightbox, 200);
+      });
+
+      // Remove duplicate H1 from podcast content (since we render it in header)
+      document.addEventListener('DOMContentLoaded', function() {
+        const documentationContent = document.getElementById('podcast-content');
+        if (documentationContent) {
+          const firstH1 = documentationContent.querySelector('h1');
+          if (firstH1) {
+            firstH1.remove();
+          }
+        }
+      });
+
+      // Process content after DOM loads
+      document.addEventListener('DOMContentLoaded', function() {
+        // Initialize image grid layouts (fallback for browsers without :has() support)
+        function initializeImageGrids() {
+          // Check if browser supports :has() selector
+          const supportsHas = CSS.supports('selector(:has(img))');
+
+          if (supportsHas) {
+            // Browser supports :has(), CSS will handle it automatically
+            return;
+          }
+
+          // Fallback for browsers without :has() support
+          const paragraphs = document.querySelectorAll('.prose p');
+
+          paragraphs.forEach(p => {
+            const images = p.querySelectorAll('img, picture');
+            const textNodes = Array.from(p.childNodes).filter((node) => {
+              return node.nodeType === Node.TEXT_NODE && (node.textContent || '').trim() !== '';
+            });
+            const otherElements = Array.from(p.childNodes).filter((node) => {
+              return node.nodeType === Node.ELEMENT_NODE && !['IMG', 'PICTURE', 'BR'].includes(((node as Element).tagName || ''));
+            });
+
+            // Only process if paragraph contains 2+ images and no other meaningful content
+            if (images.length >= 2 && textNodes.length === 0 && otherElements.length === 0) {
+              // Remove any existing image-grid classes first
+              p.classList.remove('image-grid', 'image-grid-2', 'image-grid-3', 'image-grid-4', 'image-grid-5', 'image-grid-6');
+
+              // Add the appropriate grid class
+              const gridClass = `image-grid-${Math.min(images.length, 6)}`;
+              p.classList.add('image-grid', gridClass);
+            }
+          });
+        }
+
+      // Initialize image grids
+      initializeImageGrids();
+
+      // Initialize podcasts sidebar
+      if (window.initializePodcastsSidebar) {
+        window.initializePodcastsSidebar();
+      }
+
+        // Process all external links in content to open in new tabs (including reference links)
+        const allLinks = document.querySelectorAll('.prose a[href]');
+        allLinks.forEach(link => {
+          const href = link.getAttribute('href');
+          if (href && (href.startsWith('http://') || href.startsWith('https://'))) {
+            // Skip if already has target attribute (e.g., manually set)
+            if (!link.hasAttribute('target')) {
+              link.setAttribute('target', '_blank');
+            }
+          }
+        });
+
+        // Wrap tables in responsive containers for better mobile experience
+        const tables = document.querySelectorAll('.prose table');
+        tables.forEach((table) => {
+          if (table.parentElement && !table.parentElement.classList.contains('table-wrapper')) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'table-wrapper';
+            // Let CSS handle the styling instead of inline styles
+
+            if (table.parentNode) {
+              (table.parentNode as Node & ParentNode).insertBefore(wrapper, table);
+            }
+            wrapper.appendChild(table);
+
+            // Reset table margin since wrapper handles it
+            (table as unknown as HTMLElement).style.margin = '0';
+          }
+        });
+
+
+      });
+
+    </script>
+  </Fragment>
+</BaseLayout>

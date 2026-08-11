@@ -1,0 +1,56 @@
+import{n as e,r as t,t as n,w as r}from"./src.Cvj73aKn.js";import{a as i,i as a,l as o,n as s,o as c,r as l,s as u,t as d}from"./graph-theme-colors.BPOKD7CW.js";var f=!1,p=null,m=null;function h(e,t){let n=document.getElementById(`graph-modal-stats`);n&&(n.textContent=`${e} ${e===1?`note`:`notes`} · ${t} ${t===1?`connection`:`connections`}`)}function g(){if(document.getElementById(`graph-modal-overlay`))return;let e=document.createElement(`div`);e.id=`graph-modal-overlay`,e.className=`fixed inset-0 z-50 bg-black/50 backdrop-blur-sm animate-fade-in hidden`,e.innerHTML=`
+      <div class="flex min-h-full items-center justify-center p-4">
+        <div class="relative w-full max-w-7xl h-[90vh] bg-primary-50 dark:bg-primary-800 rounded-xl shadow-2xl border border-primary-200 dark:border-primary-700 animate-scale-in">
+          <button 
+            id="graph-modal-close"
+            class="absolute top-4 right-4 z-10 p-2 text-primary-500 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-200 transition-colors rounded-lg hover:bg-primary-100 dark:hover:bg-primary-700"
+            aria-label="Close"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 6L6 18"/>
+              <path d="M6 6l12 12"/>
+            </svg>
+          </button>
+          <div
+            id="graph-modal-stats"
+            class="absolute top-4 left-4 z-10 px-3 py-1.5 rounded-lg bg-white/80 dark:bg-primary-900/80 backdrop-blur-sm border border-primary-200 dark:border-primary-700 text-xs font-medium text-primary-600 dark:text-primary-300"
+            aria-live="polite"
+          >
+            Loading...
+          </div>
+          <div id="graph-modal-container" class="w-full h-full bg-primary-50 dark:bg-primary-800 rounded-xl overflow-hidden" style="touch-action: none;">
+            <div class="flex items-center justify-center h-full text-primary-500 dark:text-primary-400">
+              <div class="text-center">
+                <div class="animate-spin w-8 h-8 mx-auto mb-4 opacity-50">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12a9 9 0 11-6.219-8.56"/>
+                  </svg>
+                </div>
+                <p class="text-sm">Loading graph...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `,document.body.appendChild(e)}function _(){let e=document.getElementById(`graph-modal-overlay`);if(!e){g(),setTimeout(()=>{_()},100);return}e.classList.remove(`hidden`),e.style.display=`block`,e.style.visibility=`visible`,e.style.opacity=`1`,e.style.zIndex=`9999`,e.style.position=`fixed`,e.style.top=`0`,e.style.left=`0`,e.style.width=`100vw`,e.style.height=`100vh`,e.style.backgroundColor=`rgba(0, 0, 0, 0.5)`,document.body.style.overflow=`hidden`,S()}function v(){let e=document.getElementById(`graph-modal-overlay`);e&&(e.classList.add(`hidden`),e.style.display=``,e.style.visibility=``,e.style.opacity=``,e.style.zIndex=``,e.style.position=``,e.style.top=``,e.style.left=``,e.style.width=``,e.style.height=``,e.style.backgroundColor=``,document.body.style.overflow=``,m&&=(m(),null))}function y(e){e.stopPropagation()}function b(){let e=document.getElementById(`graph-modal-close`),t=document.getElementById(`graph-modal-overlay`),n=document.getElementById(`graph-modal-container`);e&&(e.removeEventListener(`click`,v),e.addEventListener(`click`,v)),t&&(t.removeEventListener(`click`,x),t.addEventListener(`click`,x)),n&&(n.removeEventListener(`click`,y),n.addEventListener(`click`,y))}function x(e){let t=e.target,n=t.querySelector(`.relative`),r=t.querySelector(`#graph-modal-container`);e.target===t&&!n?.contains(e.target)&&!r?.contains(e.target)&&v()}function S(){let e=document.getElementById(`graph-modal-container`);e&&(e.innerHTML=`
+      <div style="display:flex;align-items:center;justify-content:center;height:100%;text-align:center;" class="text-primary-500 dark:text-primary-400">
+        <div>
+          <div class="animate-spin" style="width:2rem;height:2rem;margin:0 auto 1rem;opacity:0.5;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12a9 9 0 11-6.219-8.56"/>
+            </svg>
+          </div>
+          <p style="font-size:0.875rem;">Loading graph...</p>
+        </div>
+      </div>
+    `,fetch(`/graph/graph-data.json`).then(e=>e.json()).then(t=>{let n={nodes:t.nodes.map(e=>({id:e.id,name:e.title||e.name,slug:e.slug,radius:Math.max(5,Math.min(15,(e.connections||0)+5)),group:e.type})),links:t.connections.map(e=>({source:e.source,target:e.target,value:1}))};h(n.nodes.length,n.links.length),C(e,n)}).catch(t=>{console.warn(`Could not load graph data:`,t);let n=document.getElementById(`graph-modal-stats`);n&&(n.textContent=``),e.innerHTML=`
+          <div style="display:flex;align-items:center;justify-content:center;height:100%;text-align:center;" class="text-primary-500 dark:text-primary-400">
+            <div>
+              <svg style="width:3rem;height:3rem;margin:0 auto 1rem;opacity:0.5;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+              </svg>
+              <p style="font-size:1.125rem;font-weight:500;">Graph data not available</p>
+              <p style="font-size:0.875rem;margin-top:0.5rem;">Make sure to run the build process to generate graph data</p>
+            </div>
+          </div>
+        `}))}function C(f,h){let g=d(),_=f.offsetWidth,y=f.offsetHeight,b=0,x=0,S=!1;f.innerHTML=``;let C=h.links.map(e=>({...e})),w=h.nodes.map(e=>({...e}));p=i(w).force(`link`,c(C).id(e=>e.id).distance(100)).force(`charge`,a().strength(-300)).force(`x`,l(_/2).strength(.05)).force(`y`,s(y/2).strength(.05)).force(`collision`,u().radius(e=>e.radius+5));let T=r(f).append(`svg`).attr(`width`,_).attr(`height`,y).style(`background`,g.background),E=T.append(`g`),D=n().scaleExtent([.1,8]).wheelDelta(e=>-e.deltaY*.001).filter(e=>S?!1:e.type===`wheel`?!0:e.type===`mousedown`?!e.target.closest(`g[data-id]`):e.type===`touchstart`||e.type===`touchmove`?e.touches&&e.touches.length>=2?!0:!e.target.closest(`g[data-id]`):!1).on(`start`,function(e){e.sourceEvent&&e.sourceEvent.type===`mousedown`&&!e.sourceEvent.target?.closest(`g[data-id]`)&&T&&T.style(`cursor`,`grabbing`)}).on(`end`,function(e){T&&T.style(`cursor`,`default`)}).on(`zoom`,e=>{E.attr(`transform`,e.transform),e.transform.k<.6?j.style(`opacity`,0):j.style(`opacity`,1)});T.call(D),T&&T.style(`cursor`,`default`);let O=E.selectAll(`line`).data(C).enter().append(`line`).attr(`stroke`,g.linkStroke).attr(`stroke-width`,2).attr(`stroke-opacity`,.6),k=E.selectAll(`g`).data(w).enter().append(`g`).attr(`data-id`,e=>e.id).call(o().on(`start`,function(e){b=e.x,x=e.y,S=!0,T&&T.style(`cursor`,`default`),e.active||p.alphaTarget(.1).restart(),e.subject.fx=e.subject.x,e.subject.fy=e.subject.y}).on(`drag`,function(e,t){t.fx=e.x,t.fy=e.y}).on(`end`,function(e,t){S=!1,T&&T.style(`cursor`,`default`),e.active||p.alphaTarget(0),e.subject.fx=null,e.subject.fy=null;let n=e.x-b,r=e.y-x;Math.sqrt(n*n+r*r)<5&&t.slug&&(v(),window.swup?(window.resetLocalGraph&&window.resetLocalGraph(),window.swup.navigate(`/posts/${t.slug}`)):window.location.href=`/posts/${t.slug}`)})),A=new Map;for(let e of C){let t=typeof e.source==`object`?e.source.id:e.source,n=typeof e.target==`object`?e.target.id:e.target;A.has(t)||A.set(t,new Set),A.has(n)||A.set(n,new Set),A.get(t).add(n),A.get(n).add(t)}k.on(`mouseover`,function(e,t){let n=A.get(t.id)??new Set;n.add(t.id),O.transition().duration(150).attr(`stroke`,e=>(typeof e.source==`object`?e.source.id:e.source)===t.id||(typeof e.target==`object`?e.target.id:e.target)===t.id?g.tagFill:g.linkStroke).attr(`stroke-opacity`,e=>(typeof e.source==`object`?e.source.id:e.source)===t.id||(typeof e.target==`object`?e.target.id:e.target)===t.id?.8:.1),k.selectAll(`circle`).attr(`fill-opacity`,e=>n.has(e.id)?1:.3).attr(`fill`,e=>e.id===t.id?g.tagFill:g.linkStroke),j.transition().duration(150).style(`opacity`,e=>n.has(e.id)?1:.1)}).on(`mouseout`,function(){O.transition().duration(150).attr(`stroke`,g.linkStroke).attr(`stroke-opacity`,.6),k.selectAll(`circle`).attr(`fill`,g.linkStroke).attr(`fill-opacity`,1);let e=t(T.node());j.transition().duration(150).style(`opacity`,e.k<.6?0:.6)}),k.append(`circle`).attr(`r`,e=>e.radius).attr(`fill`,g.linkStroke).attr(`cursor`,`pointer`);let j=k.append(`text`).text(e=>e.name).attr(`text-anchor`,`middle`).attr(`dy`,e=>e.radius+8).attr(`font-size`,`12px`).attr(`font-weight`,`500`).attr(`fill`,g.postText).attr(`pointer-events`,`none`).style(`user-select`,`none`).style(`opacity`,.6);p.on(`tick`,()=>{O.attr(`x1`,e=>e.source.x).attr(`y1`,e=>e.source.y).attr(`x2`,e=>e.target.x).attr(`y2`,e=>e.target.y),k.attr(`transform`,e=>`translate(${e.x},${e.y})`)}),p.alpha(1).restart(),m=()=>{p&&=(p.stop(),null),T&&T.remove()};let M=t=>{let n=document.getElementById(`graph-modal-overlay`);if(n&&!n.classList.contains(`hidden`))switch(t.key){case`r`:T&&T.transition().duration(300).call(D.transform,e.scale(1).translate(0,0));break;case`c`:if(T){let t=T.node();if(!t)return;let n=t.getBoundingClientRect(),r=n.width,i=n.height,a=T.selectAll(`g[data-id]`).nodes();if(a.length===0)return;let o=1/0,s=-1/0,c=1/0,l=-1/0;a.forEach(e=>{if(e&&e instanceof Element){let t=e.getAttribute(`transform`);if(t){let e=t.match(/translate\(([^,]+),\s*([^)]+)\)/);if(e){let t=parseFloat(e[1]),n=parseFloat(e[2]);o=Math.min(o,t),s=Math.max(s,t),c=Math.min(c,n),l=Math.max(l,n)}}}});let u=s-o+100,d=l-c+100,f=r/u,p=i/d,m=Math.max(.1,Math.min(3,Math.min(f,p))),h=(o+s)/2,g=(c+l)/2,_=r/2/m-h,v=i/2/m-g;T.transition().duration(300).call(D.transform,e.scale(m).translate(_,v))}break}};document.addEventListener(`keydown`,M);let N=m;m=()=>{document.removeEventListener(`keydown`,M),N&&N()}}function w(){let e=document.getElementById(`graph-modal-overlay`),t=document.getElementById(`graph-modal-close`),n=document.getElementById(`graph-modal-container`);if(!e||!t||!n){g(),setTimeout(()=>{w()},100);return}if(f){window.openGraphModal=_,window.closeGraphModal=v,b();return}f=!0,b(),document.addEventListener(`keydown`,t=>{t.key===`Escape`&&!e.classList.contains(`hidden`)&&v()}),window.openGraphModal=_,window.closeGraphModal=v,window.initializeGraphModal=w}document.readyState===`loading`?document.addEventListener(`DOMContentLoaded`,w):w(),window.swup&&(window.swup.hooks.on(`page:view`,()=>{w()}),window.swup.hooks.on(`visit:end`,()=>{window.openGraphModal||w()})),window.addEventListener(`themechange`,()=>{let e=document.getElementById(`graph-modal-overlay`);e&&e.classList.contains(`hidden`)});

@@ -1,0 +1,858 @@
+{
+  "nodes": [
+    {
+      "id": "2026-real-world-crypto-symposium-in-taiwan",
+      "type": "post",
+      "title": "2026 Real World Crypto 研討會 於 臺北舉辦 活動日期：2026年3月9號至11號",
+      "slug": "2026-real-world-crypto-symposium-in-taiwan",
+      "connections": 0
+    },
+    {
+      "id": "active-information-gathering-dns-enumeration-and-port-scanning",
+      "type": "post",
+      "title": "主動式資料搜集之DNS枚舉與Port掃描",
+      "slug": "active-information-gathering-dns-enumeration-and-port-scanning",
+      "connections": 4
+    },
+    {
+      "id": "active-information-gathering-smb-smtp-snmp-enumeration",
+      "type": "post",
+      "title": "主動式資料搜集之SMB、SMTP、SNMP枚舉",
+      "slug": "active-information-gathering-smb-smtp-snmp-enumeration",
+      "connections": 1
+    },
+    {
+      "id": "administrative-segmentation",
+      "type": "post",
+      "title": "管理員權限分割",
+      "slug": "administrative-segmentation",
+      "connections": 1
+    },
+    {
+      "id": "anatomy-of-cybersecurity",
+      "type": "post",
+      "title": "剖析網路安全結構",
+      "slug": "anatomy-of-cybersecurity",
+      "connections": 0
+    },
+    {
+      "id": "anomaly-detection-problem",
+      "type": "post",
+      "title": "異常檢測的問題分類",
+      "slug": "anomaly-detection-problem",
+      "connections": 0
+    },
+    {
+      "id": "assessment-of-proxylogon-of-apt27-attack-behaviors",
+      "type": "post",
+      "title": "APT27 ProxyLogon 攻擊行為對安全的影響評估與防禦對策",
+      "slug": "assessment-of-proxylogon-of-apt27-attack-behaviors",
+      "connections": 0
+    },
+    {
+      "id": "backups",
+      "type": "post",
+      "title": "備份策略",
+      "slug": "backups",
+      "connections": 1
+    },
+    {
+      "id": "career-opportunities-in-cybersecurity",
+      "type": "post",
+      "title": "網路安全從業職位",
+      "slug": "career-opportunities-in-cybersecurity",
+      "connections": 2
+    },
+    {
+      "id": "challenges-in-cybersecurity",
+      "type": "post",
+      "title": "網路安全的挑戰",
+      "slug": "challenges-in-cybersecurity",
+      "connections": 0
+    },
+    {
+      "id": "chinese-remainder-theorem-isomorphism",
+      "type": "post",
+      "title": "中國餘式定理與同構特性",
+      "slug": "chinese-remainder-theorem-isomorphism",
+      "connections": 1
+    },
+    {
+      "id": "command-injection-vulnerability",
+      "type": "post",
+      "title": "指令注入漏洞",
+      "slug": "command-injection-vulnerability",
+      "connections": 0
+    },
+    {
+      "id": "complexity-measure-in-computing-numbers",
+      "type": "post",
+      "title": "整數複雜度量測",
+      "slug": "complexity-measure-in-computing-numbers",
+      "connections": 1
+    },
+    {
+      "id": "continuous-patching-and-supply-chain-validation",
+      "type": "post",
+      "title": "持續性修復及供應鏈驗證",
+      "slug": "continuous-patching-and-supply-chain-validation",
+      "connections": 0
+    },
+    {
+      "id": "cross-site-scripting-xss-introduction",
+      "type": "post",
+      "title": "Cross-Site Scripting (XSS) 跨網站腳本漏洞",
+      "slug": "cross-site-scripting-xss-introduction",
+      "connections": 2
+    },
+    {
+      "id": "cryptanalysis-attakcs",
+      "type": "post",
+      "title": "基礎密碼分析攻擊",
+      "slug": "cryptanalysis-attakcs",
+      "connections": 2
+    },
+    {
+      "id": "cryptographic-protocols",
+      "type": "post",
+      "title": "密碼學協定",
+      "slug": "cryptographic-protocols",
+      "connections": 1
+    },
+    {
+      "id": "cryptology-confusion-diffusion",
+      "type": "post",
+      "title": "對稱加密函式必要的混淆以及擴散特性",
+      "slug": "cryptology-confusion-diffusion",
+      "connections": 1
+    },
+    {
+      "id": "cybersecurity-attack-breaches",
+      "type": "post",
+      "title": "現代常見的網路安全攻擊",
+      "slug": "cybersecurity-attack-breaches",
+      "connections": 1
+    },
+    {
+      "id": "cybersecurity-encryption",
+      "type": "post",
+      "title": "網路安全的加密策略",
+      "slug": "cybersecurity-encryption",
+      "connections": 1
+    },
+    {
+      "id": "cybersecurity-laws-and-regulations-introduction",
+      "type": "post",
+      "title": "資安法規簡介",
+      "slug": "cybersecurity-laws-and-regulations-introduction",
+      "connections": 0
+    },
+    {
+      "id": "cybersecurity-risk-threat-vulnerability-exploit",
+      "type": "post",
+      "title": "網路威脅種類",
+      "slug": "cybersecurity-risk-threat-vulnerability-exploit",
+      "connections": 4
+    },
+    {
+      "id": "cybersecurity-standards-and-frameworks-introduction",
+      "type": "post",
+      "title": "資安標準與框架簡介",
+      "slug": "cybersecurity-standards-and-frameworks-introduction",
+      "connections": 1
+    },
+    {
+      "id": "directory-traversal-vulnerability",
+      "type": "post",
+      "title": "常見網頁應用服務攻擊之目錄遍歷漏洞 Directory Traversal",
+      "slug": "directory-traversal-vulnerability",
+      "connections": 2
+    },
+    {
+      "id": "emulating-minds-of-opponents",
+      "type": "post",
+      "title": "網路攻防：知己知彼，百戰不殆",
+      "slug": "emulating-minds-of-opponents",
+      "connections": 0
+    },
+    {
+      "id": "entropy-information-theory",
+      "type": "post",
+      "title": "消息理論中的熵",
+      "slug": "entropy-information-theory",
+      "connections": 0
+    },
+    {
+      "id": "error-correction-codes-digital-data-communication-and-storage",
+      "type": "post",
+      "title": "錯誤更正碼之數位資料通訊及儲存",
+      "slug": "error-correction-codes-digital-data-communication-and-storage",
+      "connections": 0
+    },
+    {
+      "id": "euler-totient-function",
+      "type": "post",
+      "title": "尤拉函數",
+      "slug": "euler-totient-function",
+      "connections": 1
+    },
+    {
+      "id": "evaluating-anomaly-detection",
+      "type": "post",
+      "title": "異常檢測的方法評估",
+      "slug": "evaluating-anomaly-detection",
+      "connections": 0
+    },
+    {
+      "id": "file-inclusion-vulnerabilities-lfi-and-rfi",
+      "type": "post",
+      "title": "常見網頁應用服務攻擊之檔案引用漏洞 LFI&RFI",
+      "slug": "file-inclusion-vulnerabilities-lfi-and-rfi",
+      "connections": 2
+    },
+    {
+      "id": "file-upload-vulnerabilities-executable-and-non-executable-files",
+      "type": "post",
+      "title": "常見網頁應用服務攻擊之檔案上傳漏洞",
+      "slug": "file-upload-vulnerabilities-executable-and-non-executable-files",
+      "connections": 2
+    },
+    {
+      "id": "frostygoop-bustleberm-industry-malware",
+      "type": "post",
+      "title": "FrostyGoop/BUSTLEBERM 工控惡意軟體解析",
+      "slug": "frostygoop-bustleberm-industry-malware",
+      "connections": 0
+    },
+    {
+      "id": "global-supply-chain-ic-threat",
+      "type": "post",
+      "title": "全球供應鏈IC之設計威脅",
+      "slug": "global-supply-chain-ic-threat",
+      "connections": 0
+    },
+    {
+      "id": "group-theory",
+      "type": "post",
+      "title": "群論",
+      "slug": "group-theory",
+      "connections": 0
+    },
+    {
+      "id": "hardware-trojan-introduction",
+      "type": "post",
+      "title": "硬體木馬簡介",
+      "slug": "hardware-trojan-introduction",
+      "connections": 0
+    },
+    {
+      "id": "how-to-setup-palo-alto-firewall-vm",
+      "type": "post",
+      "title": "如何 安裝 Palo Alto VM",
+      "slug": "how-to-setup-palo-alto-firewall-vm",
+      "connections": 0
+    },
+    {
+      "id": "iacr-rwc-2026-experience",
+      "type": "post",
+      "title": "IACR RWC 2026 參與心得",
+      "slug": "iacr-rwc-2026-experience",
+      "connections": 0
+    },
+    {
+      "id": "indicators-of-compromise-en",
+      "type": "post",
+      "title": "Indicators of compromise (IoC)",
+      "slug": "indicators-of-compromise-en",
+      "connections": 0
+    },
+    {
+      "id": "indicators-of-compromise",
+      "type": "post",
+      "title": "威脅情報指標",
+      "slug": "indicators-of-compromise",
+      "connections": 2
+    },
+    {
+      "id": "information-gathering-introduction",
+      "type": "post",
+      "title": "資訊搜集簡介",
+      "slug": "information-gathering-introduction",
+      "connections": 0
+    },
+    {
+      "id": "information-theory-information-measures",
+      "type": "post",
+      "title": "消息理論的資訊測量符號",
+      "slug": "information-theory-information-measures",
+      "connections": 0
+    },
+    {
+      "id": "information-theory-mutual-information",
+      "type": "post",
+      "title": "消息理論之相互消息",
+      "slug": "information-theory-mutual-information",
+      "connections": 0
+    },
+    {
+      "id": "introduction-to-anomaly-detection",
+      "type": "post",
+      "title": "異常檢測簡介",
+      "slug": "introduction-to-anomaly-detection",
+      "connections": 0
+    },
+    {
+      "id": "linear-algebra-gaussian-elimination",
+      "type": "post",
+      "title": "高斯消去法",
+      "slug": "linear-algebra-gaussian-elimination",
+      "connections": 0
+    },
+    {
+      "id": "linear-algebravector",
+      "type": "post",
+      "title": "線性向量",
+      "slug": "linear-algebravector",
+      "connections": 0
+    },
+    {
+      "id": "llm-powered-active-information-gathering",
+      "type": "post",
+      "title": "LLM主動式資料搜集",
+      "slug": "llm-powered-active-information-gathering",
+      "connections": 3
+    },
+    {
+      "id": "llm-powered-passive-information-gathering",
+      "type": "post",
+      "title": "LLM被動式資料搜集",
+      "slug": "llm-powered-passive-information-gathering",
+      "connections": 1
+    },
+    {
+      "id": "logging-and-chaos-testing",
+      "type": "post",
+      "title": "Log 檔與混沌測試",
+      "slug": "logging-and-chaos-testing",
+      "connections": 0
+    },
+    {
+      "id": "manual-and-automated-code-execution-in-sql-injection",
+      "type": "post",
+      "title": "自動化 SQL Injection 漏洞執行",
+      "slug": "manual-and-automated-code-execution-in-sql-injection",
+      "connections": 1
+    },
+    {
+      "id": "manual-sql-injection-exploitation",
+      "type": "post",
+      "title": "手動 SQL Injection 漏洞利用",
+      "slug": "manual-sql-injection-exploitation",
+      "connections": 1
+    },
+    {
+      "id": "mitre-attack-framework",
+      "type": "post",
+      "title": "MITRE ATT&CK 框架",
+      "slug": "mitre-attack-framework",
+      "connections": 1
+    },
+    {
+      "id": "np-completeness",
+      "type": "post",
+      "title": "NP完備",
+      "slug": "np-completeness",
+      "connections": 0
+    },
+    {
+      "id": "other-type-turing-machine",
+      "type": "post",
+      "title": "其他種圖靈機",
+      "slug": "other-type-turing-machine",
+      "connections": 0
+    },
+    {
+      "id": "palo-alto-firewall-clear-user-cache",
+      "type": "post",
+      "title": "Palo Alto 防火牆清除使用者快取",
+      "slug": "palo-alto-firewall-clear-user-cache",
+      "connections": 0
+    },
+    {
+      "id": "palo-alto-firewall-high-availability",
+      "type": "post",
+      "title": "Palo Alto 防火牆高可用性 High Availability 設定",
+      "slug": "palo-alto-firewall-high-availability",
+      "connections": 0
+    },
+    {
+      "id": "palo-alto-firewall-nat-setup",
+      "type": "post",
+      "title": "Palo Alto 防火牆網路位址轉譯(NAT)設定",
+      "slug": "palo-alto-firewall-nat-setup",
+      "connections": 0
+    },
+    {
+      "id": "palo-alto-firewall-policy",
+      "type": "post",
+      "title": "Palo Alto 防火牆政策設定",
+      "slug": "palo-alto-firewall-policy",
+      "connections": 0
+    },
+    {
+      "id": "palo-alto-firewall-show-all-configure-command-and-insert-command",
+      "type": "post",
+      "title": "Palo Alto 防火牆指令介面顯示過往指令操作",
+      "slug": "palo-alto-firewall-show-all-configure-command-and-insert-command",
+      "connections": 0
+    },
+    {
+      "id": "palo-alto-firewall-url-filtering-application-block-page",
+      "type": "post",
+      "title": "Palo Alto 防火牆URL過濾與應用服務頁面封鎖功能",
+      "slug": "palo-alto-firewall-url-filtering-application-block-page",
+      "connections": 0
+    },
+    {
+      "id": "passive-information-gathering",
+      "type": "post",
+      "title": "被動式資料搜集",
+      "slug": "passive-information-gathering",
+      "connections": 0
+    },
+    {
+      "id": "perfect-secrecy-en",
+      "type": "post",
+      "title": "Perfect Secrecy",
+      "slug": "perfect-secrecy-en",
+      "connections": 0
+    },
+    {
+      "id": "perfect-secrecy",
+      "type": "post",
+      "title": "完美保密性",
+      "slug": "perfect-secrecy",
+      "connections": 0
+    },
+    {
+      "id": "phishing-basics",
+      "type": "post",
+      "title": "基礎網路釣魚攻擊",
+      "slug": "phishing-basics",
+      "connections": 2
+    },
+    {
+      "id": "phishing-payloads-misdirection-and-speedbumps",
+      "type": "post",
+      "title": "認識網路釣魚之惡意 Payload、誤導以及障礙",
+      "slug": "phishing-payloads-misdirection-and-speedbumps",
+      "connections": 1
+    },
+    {
+      "id": "physical-unclonable-function",
+      "type": "post",
+      "title": "PUF 晶片上的物理不可複製功能",
+      "slug": "physical-unclonable-function",
+      "connections": 0
+    },
+    {
+      "id": "pqcrypto-2025-conference-experience",
+      "type": "post",
+      "title": "PQCrypto 2025 參加心得",
+      "slug": "pqcrypto-2025-conference-experience",
+      "connections": 0
+    },
+    {
+      "id": "pqcrypto-2025-experience",
+      "type": "post",
+      "title": "PQCrypto 2025 Experience",
+      "slug": "pqcrypto-2025-experience",
+      "connections": 0
+    },
+    {
+      "id": "privilege-escalation-via-xss",
+      "type": "post",
+      "title": "利用 XSS 提權",
+      "slug": "privilege-escalation-via-xss",
+      "connections": 1
+    },
+    {
+      "id": "random-number-generator-hardware",
+      "type": "post",
+      "title": "亂數產生器 硬體篇",
+      "slug": "random-number-generator-hardware",
+      "connections": 0
+    },
+    {
+      "id": "ring-theory",
+      "type": "post",
+      "title": "環論",
+      "slug": "ring-theory",
+      "connections": 0
+    },
+    {
+      "id": "rsa-cryptosystem-attack",
+      "type": "post",
+      "title": "密碼系統 RSA 攻防",
+      "slug": "rsa-cryptosystem-attack",
+      "connections": 4
+    },
+    {
+      "id": "security-control-strategies",
+      "type": "post",
+      "title": "安全性管控及策略",
+      "slug": "security-control-strategies",
+      "connections": 2
+    },
+    {
+      "id": "security-models",
+      "type": "post",
+      "title": "安全性模型",
+      "slug": "security-models",
+      "connections": 0
+    },
+    {
+      "id": "security-principles",
+      "type": "post",
+      "title": "安全性原則",
+      "slug": "security-principles",
+      "connections": 1
+    },
+    {
+      "id": "shift-left-security",
+      "type": "post",
+      "title": "左移安全 Shift-Left Security",
+      "slug": "shift-left-security",
+      "connections": 0
+    },
+    {
+      "id": "solvable-groups",
+      "type": "post",
+      "title": "群之可解性",
+      "slug": "solvable-groups",
+      "connections": 0
+    },
+    {
+      "id": "sql-injection-vulnerability-theory-and-database",
+      "type": "post",
+      "title": "SQL注入漏洞之背景介紹",
+      "slug": "sql-injection-vulnerability-theory-and-database",
+      "connections": 0
+    },
+    {
+      "id": "square-and-multiply-algorithm",
+      "type": "post",
+      "title": "Square and Multiply 演算法",
+      "slug": "square-and-multiply-algorithm",
+      "connections": 0
+    },
+    {
+      "id": "symmetric-key-encryption",
+      "type": "post",
+      "title": "對稱式密碼系統",
+      "slug": "symmetric-key-encryption",
+      "connections": 0
+    },
+    {
+      "id": "table-top-tactics",
+      "type": "post",
+      "title": "檯面策略",
+      "slug": "table-top-tactics",
+      "connections": 0
+    },
+    {
+      "id": "the-cia-triad",
+      "type": "post",
+      "title": "CIA安全三角",
+      "slug": "the-cia-triad",
+      "connections": 2
+    },
+    {
+      "id": "the-objectives-of-cryptography",
+      "type": "post",
+      "title": "密碼學的目標",
+      "slug": "the-objectives-of-cryptography",
+      "connections": 1
+    },
+    {
+      "id": "threat-actor-classifications",
+      "type": "post",
+      "title": "網路威脅角色分類",
+      "slug": "threat-actor-classifications",
+      "connections": 1
+    },
+    {
+      "id": "threat-modeling-threat-intelligence",
+      "type": "post",
+      "title": "威脅模型及威脅情報",
+      "slug": "threat-modeling-threat-intelligence",
+      "connections": 1
+    },
+    {
+      "id": "time-complexity",
+      "type": "post",
+      "title": "時間複雜度",
+      "slug": "time-complexity",
+      "connections": 0
+    },
+    {
+      "id": "turing-machine",
+      "type": "post",
+      "title": "圖靈機",
+      "slug": "turing-machine",
+      "connections": 0
+    },
+    {
+      "id": "vulnerability-scanning-theory",
+      "type": "post",
+      "title": "漏洞掃描理論",
+      "slug": "vulnerability-scanning-theory",
+      "connections": 0
+    },
+    {
+      "id": "vulnerability-scanning-with-nessus",
+      "type": "post",
+      "title": "Nessus 弱點掃描",
+      "slug": "vulnerability-scanning-with-nessus",
+      "connections": 0
+    },
+    {
+      "id": "vulnerability-scanning-with-nmap",
+      "type": "post",
+      "title": "Nmap 弱點掃描",
+      "slug": "vulnerability-scanning-with-nmap",
+      "connections": 2
+    },
+    {
+      "id": "web-application-enumeration",
+      "type": "post",
+      "title": "網頁應用服務枚舉",
+      "slug": "web-application-enumeration",
+      "connections": 1
+    },
+    {
+      "id": "web-application-security-assessment",
+      "type": "post",
+      "title": "網頁應用服務安全性評估",
+      "slug": "web-application-security-assessment",
+      "connections": 2
+    },
+    {
+      "id": "workshop-on-advances-in-quantum-error-correction-in-nycu",
+      "type": "post",
+      "title": "《量子錯誤更正發展工作坊》於 陽明交通大學 光復校區 工程四館 219 活動日期：2025年12月29日",
+      "slug": "workshop-on-advances-in-quantum-error-correction-in-nycu",
+      "connections": 0
+    },
+    {
+      "id": "workshop-on-advances-in-quantum-error-correction-reflections-on-participation",
+      "type": "post",
+      "title": "量子錯誤更正發展工作坊 參與心得",
+      "slug": "workshop-on-advances-in-quantum-error-correction-reflections-on-participation",
+      "connections": 0
+    }
+  ],
+  "connections": [
+    {
+      "source": "active-information-gathering-smb-smtp-snmp-enumeration",
+      "target": "active-information-gathering-dns-enumeration-and-port-scanning",
+      "type": "link"
+    },
+    {
+      "source": "administrative-segmentation",
+      "target": "threat-actor-classifications",
+      "type": "link"
+    },
+    {
+      "source": "career-opportunities-in-cybersecurity",
+      "target": "threat-modeling-threat-intelligence",
+      "type": "link"
+    },
+    {
+      "source": "career-opportunities-in-cybersecurity",
+      "target": "indicators-of-compromise",
+      "type": "link"
+    },
+    {
+      "source": "cryptanalysis-attakcs",
+      "target": "phishing-basics",
+      "type": "link"
+    },
+    {
+      "source": "cryptographic-protocols",
+      "target": "cryptanalysis-attakcs",
+      "type": "link"
+    },
+    {
+      "source": "cryptology-confusion-diffusion",
+      "target": "random-number-generator-hardware",
+      "type": "link"
+    },
+    {
+      "source": "cybersecurity-attack-breaches",
+      "target": "threat-actor-classifications",
+      "type": "link"
+    },
+    {
+      "source": "cybersecurity-encryption",
+      "target": "backups",
+      "type": "link"
+    },
+    {
+      "source": "cybersecurity-risk-threat-vulnerability-exploit",
+      "target": "indicators-of-compromise",
+      "type": "link"
+    },
+    {
+      "source": "cybersecurity-standards-and-frameworks-introduction",
+      "target": "table-top-tactics",
+      "type": "link"
+    },
+    {
+      "source": "directory-traversal-vulnerability",
+      "target": "vulnerability-scanning-with-nessus",
+      "type": "link"
+    },
+    {
+      "source": "file-inclusion-vulnerabilities-lfi-and-rfi",
+      "target": "directory-traversal-vulnerability",
+      "type": "link"
+    },
+    {
+      "source": "file-upload-vulnerabilities-executable-and-non-executable-files",
+      "target": "cross-site-scripting-xss-introduction",
+      "type": "link"
+    },
+    {
+      "source": "file-upload-vulnerabilities-executable-and-non-executable-files",
+      "target": "file-inclusion-vulnerabilities-lfi-and-rfi",
+      "type": "link"
+    },
+    {
+      "source": "llm-powered-active-information-gathering",
+      "target": "llm-powered-passive-information-gathering",
+      "type": "link"
+    },
+    {
+      "source": "llm-powered-active-information-gathering",
+      "target": "active-information-gathering-dns-enumeration-and-port-scanning",
+      "type": "link"
+    },
+    {
+      "source": "llm-powered-passive-information-gathering",
+      "target": "passive-information-gathering",
+      "type": "link"
+    },
+    {
+      "source": "manual-and-automated-code-execution-in-sql-injection",
+      "target": "manual-sql-injection-exploitation",
+      "type": "link"
+    },
+    {
+      "source": "manual-sql-injection-exploitation",
+      "target": "sql-injection-vulnerability-theory-and-database",
+      "type": "link"
+    },
+    {
+      "source": "mitre-attack-framework",
+      "target": "indicators-of-compromise",
+      "type": "link"
+    },
+    {
+      "source": "phishing-basics",
+      "target": "llm-powered-active-information-gathering",
+      "type": "link"
+    },
+    {
+      "source": "phishing-payloads-misdirection-and-speedbumps",
+      "target": "phishing-basics",
+      "type": "link"
+    },
+    {
+      "source": "privilege-escalation-via-xss",
+      "target": "cross-site-scripting-xss-introduction",
+      "type": "link"
+    },
+    {
+      "source": "rsa-cryptosystem-attack",
+      "target": "complexity-measure-in-computing-numbers",
+      "type": "link"
+    },
+    {
+      "source": "rsa-cryptosystem-attack",
+      "target": "euler-totient-function",
+      "type": "link"
+    },
+    {
+      "source": "rsa-cryptosystem-attack",
+      "target": "chinese-remainder-theorem-isomorphism",
+      "type": "link"
+    },
+    {
+      "source": "security-control-strategies",
+      "target": "security-principles",
+      "type": "link"
+    },
+    {
+      "source": "security-control-strategies",
+      "target": "the-cia-triad",
+      "type": "link"
+    },
+    {
+      "source": "security-principles",
+      "target": "threat-actor-classifications",
+      "type": "link"
+    },
+    {
+      "source": "the-cia-triad",
+      "target": "cybersecurity-risk-threat-vulnerability-exploit",
+      "type": "link"
+    },
+    {
+      "source": "the-cia-triad",
+      "target": "indicators-of-compromise",
+      "type": "link"
+    },
+    {
+      "source": "the-objectives-of-cryptography",
+      "target": "rsa-cryptosystem-attack",
+      "type": "link"
+    },
+    {
+      "source": "threat-actor-classifications",
+      "target": "cybersecurity-risk-threat-vulnerability-exploit",
+      "type": "link"
+    },
+    {
+      "source": "threat-modeling-threat-intelligence",
+      "target": "cybersecurity-risk-threat-vulnerability-exploit",
+      "type": "link"
+    },
+    {
+      "source": "vulnerability-scanning-with-nmap",
+      "target": "active-information-gathering-dns-enumeration-and-port-scanning",
+      "type": "link"
+    },
+    {
+      "source": "web-application-enumeration",
+      "target": "web-application-security-assessment",
+      "type": "link"
+    },
+    {
+      "source": "web-application-security-assessment",
+      "target": "active-information-gathering-dns-enumeration-and-port-scanning",
+      "type": "link"
+    },
+    {
+      "source": "web-application-security-assessment",
+      "target": "vulnerability-scanning-with-nmap",
+      "type": "link"
+    }
+  ],
+  "metadata": {
+    "totalPosts": 93,
+    "totalConnections": 39,
+    "maxNodesApplied": false,
+    "originalNodeCount": 93
+  }
+}

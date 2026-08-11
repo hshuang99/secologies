@@ -1,0 +1,58 @@
+---
+// Renders "Also available in: English" style links, plus emits the matching
+// <link rel="alternate" hreflang="..."> SEO tags for this entry's translations.
+// Usage: pass `mode="head"` inside a <Fragment slot="head"> to get just the
+// hreflang tags, and render <TranslationSwitcher translations={...} currentLang={...} />
+// (no mode prop) in the body for the visible switcher links.
+import { languageName, type ResolvedTranslation } from '@/utils/translations';
+import { siteConfig } from '@/config';
+
+export interface Props {
+  translations: ResolvedTranslation[];
+  currentLang: string;
+  currentUrl: string; // this entry's own path, e.g. /posts/perfect-secrecy
+  mode?: 'head' | 'body';
+}
+
+const { translations, currentLang, currentUrl, mode = 'body' } = Astro.props;
+const siteUrl = (siteConfig.site || '').replace(/\/+$/, '');
+---
+
+{translations.length > 0 && mode === 'head' && (
+  <>
+    <link rel="alternate" hreflang={currentLang} href={`${siteUrl}${currentUrl}`} />
+    {translations.map((t) => (
+      <link rel="alternate" hreflang={t.lang} href={`${siteUrl}${t.url}`} />
+    ))}
+    {/* x-default points at the site's default language version */}
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href={`${siteUrl}${currentLang === siteConfig.language ? currentUrl : (translations.find(t => t.lang === siteConfig.language)?.url || currentUrl)}`}
+    />
+  </>
+)}
+
+{translations.length > 0 && mode === 'body' && (
+  <div class="flex flex-wrap items-center gap-2 text-sm text-primary-600 dark:text-primary-300 mb-4" aria-label="Available translations">
+    <span
+      class="inline-flex items-center px-2 py-0.5 rounded bg-primary-100 dark:bg-primary-800 text-primary-700 dark:text-primary-200 font-medium text-xs"
+      aria-current="true"
+    >
+      {languageName(currentLang)}
+    </span>
+    <span>Also available in:</span>
+    {translations.map((t, i) => (
+      <>
+        <a
+          href={t.url}
+          class="text-highlight-600 dark:text-highlight-400 hover:underline font-medium"
+          hreflang={t.lang}
+        >
+          {languageName(t.lang)}
+        </a>
+        {i < translations.length - 1 && <span class="text-primary-400">·</span>}
+      </>
+    ))}
+  </div>
+)}

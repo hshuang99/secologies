@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Secologies</title>
+  <subtitle>探索資安的科學與實務</subtitle>
+  <link href="https://secologies.com/"/>
+  <link href="https://secologies.com/feed-en.xml" rel="self"/>
+  <id>https://secologies.com/feed-en.xml</id>
+  <author>
+    <name>黃宏勝 | Hong-Sheng Huang</name>
+  </author>
+  <updated>2026-08-11T03:23:12.228Z</updated>
+
+  
+  <entry>
+    <title>PQCrypto 2025 Experience</title>
+    <link href="https://secologies.com/posts/pqcrypto-2025-experience/"/>
+    <id>https://secologies.com/posts/pqcrypto-2025-experience/</id>
+    <published>2025-04-10T00:00:00.000Z</published>
+    <updated>2025-04-10T00:00:00.000Z</updated>
+    <summary>The 2025 PQCrypto conference is being held in Taiwan, and it just so happens that PIs from the Institute of Information Science at Academia Sinica are serving as co-chairs to organize it. Since I have the opportunity, I decided to attend.</summary>
+    <category term="academia-sinica"/><category term="conference"/><category term="nist-en"/><category term="post-quantum-cryptography"/><category term="pqcrypto-en"/>
+  </entry>
+  <entry>
+    <title>Perfect Secrecy</title>
+    <link href="https://secologies.com/posts/perfect-secrecy-en/"/>
+    <id>https://secologies.com/posts/perfect-secrecy-en/</id>
+    <published>2025-01-26T00:00:00.000Z</published>
+    <updated>2025-01-26T00:00:00.000Z</updated>
+    <summary>When Ralph C. Merkle proposed "Secure Communications Over Insecure Channels" in 1978 (https://dl.acm.org/doi/10.1145/359460.359473), we began to consider the existence of adversaries eavesdropping on our communication channels over the internet, and we started thinking about how to obscure our data</summary>
+    <category term="ciphertext-space"/><category term="message-space"/><category term="perfect-secrecy-en"/><category term="probability-distribution"/>
+  </entry>
+  <entry>
+    <title>Indicators of compromise (IoC)</title>
+    <link href="https://secologies.com/posts/indicators-of-compromise-en/"/>
+    <id>https://secologies.com/posts/indicators-of-compromise-en/</id>
+    <published>2024-09-13T00:00:00.000Z</published>
+    <updated>2024-09-13T00:00:00.000Z</updated>
+    <summary>When collecting malicious APT (Advanced Persistent Threats) incidents, we need some relevant information. Through this information, we can identify specific characteristics or indicators</summary>
+    <category term="cyber-security-en"/><category term="indicator-of-compromise"/>
+  </entry>
+</feed>

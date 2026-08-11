@@ -1,0 +1,825 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+  
+    <url>
+      <loc>https://secologies.com/</loc>
+      <lastmod>2026-08-11T03:25:56.654Z</lastmod>
+      <changefreq>daily</changefreq>
+      <priority>1.0</priority>
+    </url>
+  
+    <url>
+      <loc>https://secologies.com/posts/</loc>
+      <lastmod>2026-08-11T03:25:56.654Z</lastmod>
+      <changefreq>daily</changefreq>
+      <priority>0.8</priority>
+    </url>
+  
+      <url>
+        <loc>https://secologies.com/projects/</loc>
+        <lastmod>2026-08-11T03:25:56.654Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/podcasts/</loc>
+        <lastmod>2026-08-11T03:25:56.654Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/2026-real-world-crypto-symposium-in-taiwan/</loc>
+        <lastmod>2026-01-21T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/active-information-gathering-dns-enumeration-and-port-scanning/</loc>
+        <lastmod>2025-09-13T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/active-information-gathering-smb-smtp-snmp-enumeration/</loc>
+        <lastmod>2025-09-18T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/administrative-segmentation/</loc>
+        <lastmod>2025-08-26T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/anatomy-of-cybersecurity/</loc>
+        <lastmod>2025-09-04T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/anomaly-detection-problem/</loc>
+        <lastmod>2024-03-14T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/assessment-of-proxylogon-of-apt27-attack-behaviors/</loc>
+        <lastmod>2025-10-12T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/backups/</loc>
+        <lastmod>2025-08-31T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/career-opportunities-in-cybersecurity/</loc>
+        <lastmod>2025-09-04T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/challenges-in-cybersecurity/</loc>
+        <lastmod>2025-05-10T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/chinese-remainder-theorem-isomorphism/</loc>
+        <lastmod>2023-06-03T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/command-injection-vulnerability/</loc>
+        <lastmod>2025-11-29T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/complexity-measure-in-computing-numbers/</loc>
+        <lastmod>2023-06-02T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/continuous-patching-and-supply-chain-validation/</loc>
+        <lastmod>2025-08-31T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/cross-site-scripting-xss-introduction/</loc>
+        <lastmod>2025-10-16T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/cryptanalysis-attakcs/</loc>
+        <lastmod>2026-02-07T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/cryptographic-protocols/</loc>
+        <lastmod>2026-03-27T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/cryptology-confusion-diffusion/</loc>
+        <lastmod>2024-11-11T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/cybersecurity-attack-breaches/</loc>
+        <lastmod>2025-07-27T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/cybersecurity-encryption/</loc>
+        <lastmod>2025-09-01T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/cybersecurity-laws-and-regulations-introduction/</loc>
+        <lastmod>2025-09-03T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/cybersecurity-risk-threat-vulnerability-exploit/</loc>
+        <lastmod>2025-05-28T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/cybersecurity-standards-and-frameworks-introduction/</loc>
+        <lastmod>2025-09-04T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/directory-traversal-vulnerability/</loc>
+        <lastmod>2025-10-25T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/emulating-minds-of-opponents/</loc>
+        <lastmod>2025-05-10T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/entropy-information-theory/</loc>
+        <lastmod>2023-10-31T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/error-correction-codes-digital-data-communication-and-storage/</loc>
+        <lastmod>2025-10-11T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/euler-totient-function/</loc>
+        <lastmod>2023-06-02T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/evaluating-anomaly-detection/</loc>
+        <lastmod>2024-03-14T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/file-inclusion-vulnerabilities-lfi-and-rfi/</loc>
+        <lastmod>2025-11-02T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/file-upload-vulnerabilities-executable-and-non-executable-files/</loc>
+        <lastmod>2025-11-15T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/frostygoop-bustleberm-industry-malware/</loc>
+        <lastmod>2024-12-17T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/global-supply-chain-ic-threat/</loc>
+        <lastmod>2025-03-30T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/group-theory/</loc>
+        <lastmod>2024-04-24T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/hardware-trojan-introduction/</loc>
+        <lastmod>2025-08-30T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/how-to-setup-palo-alto-firewall-vm/</loc>
+        <lastmod>2023-05-26T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/iacr-rwc-2026-experience/</loc>
+        <lastmod>2026-03-12T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/indicators-of-compromise/</loc>
+        <lastmod>2024-09-13T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/indicators-of-compromise-en/</loc>
+        <lastmod>2024-09-13T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/information-gathering-introduction/</loc>
+        <lastmod>2025-09-06T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/information-theory-information-measures/</loc>
+        <lastmod>2023-10-31T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/information-theory-mutual-information/</loc>
+        <lastmod>2023-08-01T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/introduction-to-anomaly-detection/</loc>
+        <lastmod>2024-02-26T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/linear-algebra-gaussian-elimination/</loc>
+        <lastmod>2024-02-01T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/linear-algebravector/</loc>
+        <lastmod>2024-02-01T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/llm-powered-active-information-gathering/</loc>
+        <lastmod>2025-09-20T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/llm-powered-passive-information-gathering/</loc>
+        <lastmod>2025-09-10T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/logging-and-chaos-testing/</loc>
+        <lastmod>2025-09-03T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/manual-and-automated-code-execution-in-sql-injection/</loc>
+        <lastmod>2026-01-20T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/manual-sql-injection-exploitation/</loc>
+        <lastmod>2026-01-12T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/mitre-attack-framework/</loc>
+        <lastmod>2025-12-25T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/np-completeness/</loc>
+        <lastmod>2024-03-15T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/other-type-turing-machine/</loc>
+        <lastmod>2023-11-05T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/palo-alto-firewall-clear-user-cache/</loc>
+        <lastmod>2023-06-29T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/palo-alto-firewall-high-availability/</loc>
+        <lastmod>2023-06-28T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/palo-alto-firewall-nat-setup/</loc>
+        <lastmod>2023-06-27T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/palo-alto-firewall-policy/</loc>
+        <lastmod>2023-07-01T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/palo-alto-firewall-show-all-configure-command-and-insert-command/</loc>
+        <lastmod>2023-06-30T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/palo-alto-firewall-url-filtering-application-block-page/</loc>
+        <lastmod>2024-04-25T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/passive-information-gathering/</loc>
+        <lastmod>2025-09-07T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/perfect-secrecy/</loc>
+        <lastmod>2025-01-26T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/perfect-secrecy-en/</loc>
+        <lastmod>2025-01-26T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/phishing-basics/</loc>
+        <lastmod>2026-02-03T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/phishing-payloads-misdirection-and-speedbumps/</loc>
+        <lastmod>2026-03-24T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/physical-unclonable-function/</loc>
+        <lastmod>2025-01-01T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/pqcrypto-2025-conference-experience/</loc>
+        <lastmod>2025-04-10T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/pqcrypto-2025-experience/</loc>
+        <lastmod>2025-04-10T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/privilege-escalation-via-xss/</loc>
+        <lastmod>2025-10-18T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/random-number-generator-hardware/</loc>
+        <lastmod>2024-11-03T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/ring-theory/</loc>
+        <lastmod>2024-10-30T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/rsa-cryptosystem-attack/</loc>
+        <lastmod>2023-06-03T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/security-control-strategies/</loc>
+        <lastmod>2025-08-16T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/security-models/</loc>
+        <lastmod>2025-08-19T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/security-principles/</loc>
+        <lastmod>2025-08-15T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/shift-left-security/</loc>
+        <lastmod>2025-08-26T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/solvable-groups/</loc>
+        <lastmod>2024-09-15T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/sql-injection-vulnerability-theory-and-database/</loc>
+        <lastmod>2025-12-07T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/square-and-multiply-algorithm/</loc>
+        <lastmod>2023-06-03T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/symmetric-key-encryption/</loc>
+        <lastmod>2026-05-23T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/table-top-tactics/</loc>
+        <lastmod>2025-08-31T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/the-cia-triad/</loc>
+        <lastmod>2025-08-03T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/the-objectives-of-cryptography/</loc>
+        <lastmod>2026-02-10T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/threat-actor-classifications/</loc>
+        <lastmod>2025-07-13T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/threat-modeling-threat-intelligence/</loc>
+        <lastmod>2025-08-29T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/time-complexity/</loc>
+        <lastmod>2023-11-07T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/turing-machine/</loc>
+        <lastmod>2023-11-04T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/vulnerability-scanning-theory/</loc>
+        <lastmod>2025-09-22T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/vulnerability-scanning-with-nessus/</loc>
+        <lastmod>2025-09-29T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/vulnerability-scanning-with-nmap/</loc>
+        <lastmod>2025-09-30T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/web-application-enumeration/</loc>
+        <lastmod>2025-10-10T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/web-application-security-assessment/</loc>
+        <lastmod>2025-10-01T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/workshop-on-advances-in-quantum-error-correction-in-nycu/</loc>
+        <lastmod>2025-12-15T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/workshop-on-advances-in-quantum-error-correction-reflections-on-participation/</loc>
+        <lastmod>2025-12-29T00:00:00.000Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/about/</loc>
+        <lastmod>2026-08-11T03:25:56.654Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/about-en/</loc>
+        <lastmod>2026-08-11T03:25:56.654Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/contact/</loc>
+        <lastmod>2026-08-11T03:25:56.654Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/newsletter/</loc>
+        <lastmod>2026-08-11T03:25:56.654Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/newsletter-en/</loc>
+        <lastmod>2026-08-11T03:25:56.654Z</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/2/</loc>
+        <lastmod>2026-08-11T03:25:56.655Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/3/</loc>
+        <lastmod>2026-08-11T03:25:56.655Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/4/</loc>
+        <lastmod>2026-08-11T03:25:56.655Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/5/</loc>
+        <lastmod>2026-08-11T03:25:56.655Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/6/</loc>
+        <lastmod>2026-08-11T03:25:56.655Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/7/</loc>
+        <lastmod>2026-08-11T03:25:56.655Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/8/</loc>
+        <lastmod>2026-08-11T03:25:56.655Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/9/</loc>
+        <lastmod>2026-08-11T03:25:56.655Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/10/</loc>
+        <lastmod>2026-08-11T03:25:56.655Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/11/</loc>
+        <lastmod>2026-08-11T03:25:56.655Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/12/</loc>
+        <lastmod>2026-08-11T03:25:56.655Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/13/</loc>
+        <lastmod>2026-08-11T03:25:56.655Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/14/</loc>
+        <lastmod>2026-08-11T03:25:56.655Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/15/</loc>
+        <lastmod>2026-08-11T03:25:56.655Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
+      </url>
+    
+      <url>
+        <loc>https://secologies.com/posts/16/</loc>
+        <lastmod>2026-08-11T03:25:56.655Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
+      </url>
+    
+</urlset>

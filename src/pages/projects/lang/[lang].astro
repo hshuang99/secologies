@@ -1,0 +1,97 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+import { siteConfig } from '@/config';
+import { generatePostsListSEO } from '@/utils/seo';
+import { shouldShowContent, isValidDate } from '@/utils/markdown';
+import { hasProjectCategories, getProjectCategories } from '@/utils/categories';
+import { getEntryLang, languageName } from '@/utils/translations';
+import { locales } from '@/i18n/lang-tabs';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ProjectCard from '@/components/ProjectCard.astro';
+import ProjectCategories from '@/components/ProjectCategories.astro';
+import LanguageTabs from '@/components/LanguageTabs.astro';
+import Icon from '@/components/Icon.astro';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return locales.map((lang) => ({ params: { lang } }));
+};
+
+const { lang } = Astro.params as { lang: string };
+
+const allProjects = await getCollection('projects');
+const isDev = import.meta.env.DEV;
+
+const visibleProjects = allProjects
+  .filter(project => shouldShowContent(project, isDev))
+  .filter(project => getEntryLang(project) === lang)
+  .sort((a, b) => {
+    const dateA = isValidDate(a.data.date) ? a.data.date : new Date(0);
+    const dateB = isValidDate(b.data.date) ? b.data.date : new Date(0);
+    return dateB.getTime() - dateA.getTime();
+  });
+
+const projectsHaveCategories = hasProjectCategories(visibleProjects);
+const allCategories = projectsHaveCategories ? getProjectCategories(visibleProjects) : [];
+
+const seoData = generatePostsListSEO(import.meta.env.SITE || '', undefined);
+seoData.title = `Projects (${languageName(lang)}) | ${siteConfig.title}`;
+seoData.description = `Browse all ${languageName(lang)} projects on ${siteConfig.title}`;
+---
+
+<BaseLayout seoData={seoData}>
+  <div class="pt-4 pb-8 md:py-8 relative">
+    <div class="mx-auto px-4 sm:px-6 lg:px-8 mb-8 md:mb-12" style={`max-width: ${siteConfig.layout.contentWidth}`}>
+      <header class="mb-6 md:mb-8">
+        <h1 class="text-lg font-bold text-primary-900 dark:text-primary-50 mb-3">
+          Projects ({languageName(lang)})
+        </h1>
+        <p class="text-primary-600 dark:text-primary-300 mb-4">
+          Showing <strong>{visibleProjects.length}</strong> projects in {languageName(lang)}
+        </p>
+        <LanguageTabs allUrl="/projects" langBaseUrl="/projects/lang" activeLang={lang} />
+      </header>
+
+      <div class="relative">
+        <div class="max-w-none">
+          {visibleProjects.length > 0 ? (
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 justify-items-center md:justify-items-stretch">
+              {visibleProjects.map((project, index) => (
+                <ProjectCard
+                  project={project}
+                  eager={index < 4}
+                  context="projects"
+                  showCategories={projectsHaveCategories}
+                />
+              ))}
+            </div>
+          ) : (
+            <div class="text-center py-12">
+              <Icon name="folder-open" class="w-12 h-12 text-primary-300 dark:text-primary-600 mx-auto mb-4" />
+              <h3 class="text-lg font-medium text-primary-900 dark:text-primary-50 mb-2">
+                No projects yet
+              </h3>
+              <p class="text-primary-600 dark:text-primary-300">
+                There are no {languageName(lang)} projects yet.
+              </p>
+            </div>
+          )}
+        </div>
+
+        <div class="xl:hidden mt-12 space-y-6">
+          {projectsHaveCategories && allCategories.length > 0 && (
+            <ProjectCategories categories={allCategories} />
+          )}
+        </div>
+
+        <div class="hidden xl:block absolute top-0 left-full ml-8 w-64 h-full">
+          <div class="sticky top-24 pb-6 overflow-x-hidden overflow-y-auto" id="categories-sidebar" style="max-height: 60vh;">
+            {projectsHaveCategories && allCategories.length > 0 && (
+              <ProjectCategories categories={allCategories} />
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

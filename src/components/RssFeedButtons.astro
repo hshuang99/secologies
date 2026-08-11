@@ -1,0 +1,81 @@
+---
+// Renders RSS/Atom subscribe buttons for the posts feeds. Chinese and
+// English feeds are styled differently on purpose (tinted vs. solid) so the
+// two are easy to tell apart at a glance, not just by their text label.
+import Icon from './Icon.astro';
+
+export interface Props {
+  // 'all' (default) shows both language feeds side by side, e.g. on the
+  // unfiltered posts listing. 'single' shows just the feed for `lang`,
+  // e.g. on a /posts/lang/[lang] page.
+  variant?: 'all' | 'single';
+  lang?: 'zh' | 'en';
+}
+
+const { variant = 'all', lang } = Astro.props;
+
+const feeds = {
+  zh: {
+    rss: '/rss.xml',
+    atom: '/feed.xml',
+    label: '中文',
+    rssTitle: 'Subscribe to RSS feed (中文)',
+    atomTitle: 'Subscribe to Atom feed (中文)',
+  },
+  en: {
+    rss: '/rss-en.xml',
+    atom: '/feed-en.xml',
+    label: 'English',
+    rssTitle: 'Subscribe to RSS feed (English)',
+    atomTitle: 'Subscribe to Atom feed (English)',
+  },
+} as const;
+
+const langsToShow = variant === 'all' ? (['zh', 'en'] as const) : ([lang ?? 'zh'] as const);
+---
+
+<div class="flex flex-wrap items-center gap-3">
+  {langsToShow.map((l) => {
+    const feed = feeds[l];
+    // English gets a solid, inverted button; Chinese keeps the site's usual
+    // tinted/outlined button. The two styles read as different at a glance
+    // in both light and dark mode, independent of whichever accent color
+    // the active theme happens to use.
+    const solid = l === 'en';
+    const rssClasses = solid
+      ? 'bg-primary-900 dark:bg-primary-50 text-primary-50 dark:text-primary-900 border-primary-900 dark:border-primary-50 hover:bg-primary-700 dark:hover:bg-primary-200'
+      : 'text-highlight-600 dark:text-highlight-400 bg-highlight-50 dark:bg-highlight-900/20 border-highlight-200 dark:border-highlight-700 hover:bg-highlight-100 dark:hover:bg-highlight-900/40 hover:text-highlight-700 dark:hover:text-highlight-300';
+    const atomClasses = solid
+      ? 'text-primary-900 dark:text-primary-50 border-primary-300 dark:border-primary-600 hover:bg-primary-100 dark:hover:bg-primary-800'
+      : 'text-highlight-600 dark:text-highlight-400 border-highlight-200 dark:border-highlight-700 hover:bg-highlight-50 dark:hover:bg-highlight-900/20';
+
+    return (
+      <div class="flex items-center gap-1.5" data-feed-lang={l}>
+        <a
+          href={feed.rss}
+          class:list={[
+            'inline-flex items-center px-3 py-2 text-sm font-medium rounded-lg border transition-all duration-200',
+            rssClasses,
+          ]}
+          title={feed.rssTitle}
+          data-no-swup
+        >
+          <Icon name="rss" class="w-4 h-4 mr-1.5" />
+          {feed.label} RSS
+        </a>
+        <a
+          href={feed.atom}
+          class:list={[
+            'inline-flex items-center justify-center w-9 h-9 rounded-lg border transition-all duration-200',
+            atomClasses,
+          ]}
+          title={feed.atomTitle}
+          data-no-swup
+        >
+          <Icon name="atom" class="w-4 h-4" />
+          <span class="sr-only">{feed.atomTitle}</span>
+        </a>
+      </div>
+    );
+  })}
+</div>

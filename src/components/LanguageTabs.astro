@@ -1,0 +1,48 @@
+---
+// Renders 全部/中文/English-style filter tabs linking between a collection's
+// unfiltered listing (`allUrl`) and its per-language listing pages
+// (`/{collection}/lang/{code}/`). Works via real static pages, not query
+// params, since this site has no server to interpret query strings at
+// request time.
+import { locales } from '@/i18n/lang-tabs';
+import { languageName } from '@/utils/translations';
+
+export interface Props {
+  allUrl: string; // e.g. "/posts"
+  langBaseUrl: string; // e.g. "/posts/lang"
+  activeLang?: string; // omit/undefined when on the unfiltered "all" view
+}
+
+const { allUrl, langBaseUrl, activeLang } = Astro.props;
+---
+
+<div class="flex flex-wrap items-center gap-2 mb-6" role="tablist" aria-label="Filter by language">
+  <a
+    href={allUrl}
+    role="tab"
+    aria-selected={activeLang === undefined ? 'true' : 'false'}
+    class:list={[
+      'px-3 py-1.5 rounded-full text-sm font-medium transition-colors',
+      activeLang === undefined
+        ? 'bg-highlight-600 text-white'
+        : 'bg-primary-100 dark:bg-primary-800 text-primary-700 dark:text-primary-200 hover:bg-primary-200 dark:hover:bg-primary-700'
+    ]}
+  >
+    全部
+  </a>
+  {locales.map((lang) => (
+    <a
+      href={`${langBaseUrl}/${lang}`}
+      role="tab"
+      aria-selected={activeLang === lang ? 'true' : 'false'}
+      class:list={[
+        'px-3 py-1.5 rounded-full text-sm font-medium transition-colors',
+        activeLang === lang
+          ? 'bg-highlight-600 text-white'
+          : 'bg-primary-100 dark:bg-primary-800 text-primary-700 dark:text-primary-200 hover:bg-primary-200 dark:hover:bg-primary-700'
+      ]}
+    >
+      {languageName(lang)}
+    </a>
+  ))}
+</div>

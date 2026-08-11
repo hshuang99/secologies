@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "title": {
+      "default": "Untitled Post",
+      "type": "string"
+    },
+    "description": {
+      "default": "No description provided",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "date": {
+      "default": "2026-08-11T03:26:35.597Z",
+      "type": "string",
+      "format": "date-time"
+    },
+    "tags": {
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "draft": {
+      "type": "boolean"
+    },
+    "image": {
+      "anyOf": [
+        {},
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "imageOG": {
+      "type": "boolean"
+    },
+    "imageAlt": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "hideCoverImage": {
+      "type": "boolean"
+    },
+    "hideTOC": {
+      "type": "boolean"
+    },
+    "showTOC": {
+      "type": "boolean"
+    },
+    "targetKeyword": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "author": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "noIndex": {
+      "type": "boolean"
+    },
+    "lang": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "translations": {
+      "default": [],
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "$schema": {
+      "type": "string"
+    }
+  }
+}
