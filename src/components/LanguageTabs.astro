@@ -1,5 +1,5 @@
 ---
-// Renders 全部/中文/English-style filter tabs linking between a collection's
+// Renders All/中文/English-style filter tabs linking between a collection's
 // unfiltered listing (`allUrl`) and its per-language listing pages
 // (`/{collection}/lang/{code}/`). Works via real static pages, not query
 // params, since this site has no server to interpret query strings at
@@ -28,7 +28,7 @@ const { allUrl, langBaseUrl, activeLang } = Astro.props;
         : 'bg-primary-100 dark:bg-primary-800 text-primary-700 dark:text-primary-200 hover:bg-primary-200 dark:hover:bg-primary-700'
     ]}
   >
-    全部
+    All
   </a>
   {locales.map((lang) => (
     <a
