@@ -170,18 +170,6 @@
   force = true
 
 [[redirects]]
-  from = "/contact-me"
-  to = "/contact"
-  status = 301
-  force = true
-
-[[redirects]]
-  from = "/contact-us"
-  to = "/contact"
-  status = 301
-  force = true
-
-[[redirects]]
   from = "/author"
   to = "/hong-sheng-huang"
   status = 301

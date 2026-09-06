@@ -6,11 +6,11 @@ hideTOC: false
 draft: false
 aliases: author
 ---
-> Last update: 2026/April/22
+> Last update: 2026/September/02
 
 ![Hong-Sheng Huang](https://media.secologies.com/author-2.jpg)
 
-Hong-Sheng Huang was born in Taitung, Taiwan. He currently is a master's student in the [National Tsing Hua University](https://www.nthu.edu.tw/)'s [Institute of Information Security](https://iis.site.nthu.edu.tw/index.php) at [College of Electrical Engineering and Computer Science](https://eecs.site.nthu.edu.tw/?Lang=zh-tw). And he has joined the [Information Security Laboratory](http://is.cs.nthu.edu.tw/), where Professor [Hung-Min Sun](https://scholars.nthu.edu.tw/esploro/profile/hungmin_sun/overview?institution=886UST_NTHU) is his advisor.
+Hong-Sheng Huang was born in Taitung, Taiwan. He received his MS degree from the [National Tsing Hua University](https://www.nthu.edu.tw/)'s [Institute of Information Security](https://iis.site.nthu.edu.tw/index.php) at [College of Electrical Engineering and Computer Science](https://eecs.site.nthu.edu.tw/?Lang=zh-tw). And he has joined the [Information Security Laboratory](http://is.cs.nthu.edu.tw/), where Professor [Hung-Min Sun](https://scholars.nthu.edu.tw/esploro/profile/hungmin_sun/overview?institution=886UST_NTHU) is his advisor.
 
 Before that, he received his BS from the [Department of Computer Science and Engineering](https://cse.ntou.edu.tw/?Lang=zh-tw) at [National Taiwan Ocean University](https://www.ntou.edu.tw/). During that time, he joined the Cryptography & Information Security (CIS) Laboratory, where his advisor was Professor [Han-Yu Lin](https://cse.ntou.edu.tw/p/412-1063-7776.php?Lang=zh-tw).
 
@@ -18,13 +18,18 @@ Hong-Sheng's research interests lie in the field of Cryptology and Applied Crypt
 
 His personal research focus is centered on Cryptography, whether it involves providing more robust frameworks in various application areas using cryptographic mechanisms or deriving new ideas for cryptographic theory from those application areas that have not yet been considered.
 
-## Contact
+## Info
 
 - Mail: hshuang at secologies dot com
+- [Google Scholar Page](https://scholar.google.com/citations?user=nnHNQggAAAAJ&hl=en)
 
 ## Publications
 
-### Conference
+### Preprint
+
+\[1\] Hong-Sheng Huang, Yu-Lei Fu, Han-Yu Lin, "The Variant of Designated Verifier Signature Scheme with Message Recovery," 2021, Undergraduate Independent Study. [https://arxiv.org/abs/2403.07820](https://arxiv.org/abs/2403.07820)
+
+### Conference papers
 
 \[5\] Hong-Sheng Huang, Jen-Yi Ho, Hao-Wen Chen and Hung-Min Sun, "EthCluster: An Unsupervised Static Analysis Method for Ethereum Smart Contract," International Conference on Information and Knowledge Management, April, 2025. [https://arxiv.org/abs/2504.09977](https://arxiv.org/abs/2504.09977)
 
@@ -36,13 +41,12 @@ His personal research focus is centered on Cryptography, whether it involves pro
 
 \[1\] Hong-Sheng Huang, Zhe-Yi Jiang, Hsuan-Tung Chen, Hung-Min Sun, "Hybrid Online Certificate Status Protocol with Certificate Revocation List for Smart Grid Public Key Infrastructure," 5th International Congress on Natural Sciences and Engineering(ICNSE), 2024, [https://arxiv.org/abs/2401.10787](https://arxiv.org/abs/2401.10787)
 
-### Preprint
-
-\[1\] Hong-Sheng Huang, Yu-Lei Fu, Han-Yu Lin, "The Variant of Designated Verifier Signature Scheme with Message Recovery," 2021, Undergraduate Independent Study. [https://arxiv.org/abs/2403.07820](https://arxiv.org/abs/2403.07820)
 
 ## Employment Experiences
 
-\[3\] Adjunct Research Assistant at [Research Center for Information Technology Innovation (CITI)](https://www.citi.sinica.edu.tw/main) at [Academia Sinica](https://www.sinica.edu.tw/), Taipei, Taiwan (January 2025 - Present)
+\[3\] Adjunct Research Assistant at [Research Center for Information Technology Innovation (CITI)](https://www.citi.sinica.edu.tw/main) at [Academia Sinica](https://www.sinica.edu.tw/), Taipei, Taiwan (January 2025 - August 2026)
+
+Advisor: [Dr. Tung Chou](https://tungchou.github.io)
 
 \[2\] Research Internship at [National Center for High-performance Computing](https://www.nchc.org.tw/) at [National Applied Research Laboratories](https://www.niar.org.tw/), Hsinchu, Taiwan (July 2023 - August 2023)
 
@@ -52,7 +56,7 @@ Advisor: [Dr. Chun-Yu Lin](https://sites.google.com/site/lincytw/)
 
 ## Teaching Experiences
 
-\[6\] Teaching Assistant, [MS in Regulatory Affairs for Drugs & Medical Devices](https://radmd.site.nthu.edu.tw/), [National Tsing Hua University](https://www.nthu.edu.tw/), Hsinchu/[Taipei](https://nbrp.sinica.edu.tw/pages/27), Taiwan (October 2024 ~ present)
+\[6\] Teaching Assistant, [MS in Regulatory Affairs for Drugs & Medical Devices](https://radmd.site.nthu.edu.tw/), [National Tsing Hua University](https://www.nthu.edu.tw/), Hsinchu/[Taipei](https://nbrp.sinica.edu.tw/pages/27), Taiwan (October 2024 ~ June 2026)
 
 \[5\] Teaching Assistant, [Applied Cryptography](https://ocw.nthu.edu.tw/ocw/index.php?page=course&cid=327&), [Institute of Information Security](https://iis.site.nthu.edu.tw/index.php), [National Tsing Hua University](https://www.nthu.edu.tw/), Hsinchu, Taiwan (February 2024 ~ June 2024)
 

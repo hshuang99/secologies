@@ -63,4 +63,4 @@ The privacy protection policy of this website may be amended at any time in resp
 
 ## Contact Information
 
-If you have any questions about the privacy policy of this website or wish to request changes or removal of personal data, please email to: [hshuang@secologies.com](mailto:hshuang@secologies.com)
+If you have any questions about the privacy policy of this website or wish to request changes or removal of personal data, please email to: hshuang at secologies dot com

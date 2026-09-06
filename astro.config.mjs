@@ -85,8 +85,6 @@ export default defineConfig({
   redirects: (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'build') ? {
   '/about-site': '/about',
   '/about-us': '/about',
-  '/contact-me': '/contact',
-  '/contact-us': '/contact',
   '/author': '/hong-sheng-huang',
   '/subscribe-en': '/newsletter-en',
   '/subscribe': '/newsletter',

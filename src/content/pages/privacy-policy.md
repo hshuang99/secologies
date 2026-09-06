@@ -58,4 +58,4 @@ lang: zh
 
 ## 聯繫管道
 
-對於本站之隱私權政策有任何疑問，或者想提出變更、移除個人資料之請求，請Email至：[hshuang@secologies.com](mailto:hshuang@secologies.com)
+對於本站之隱私權政策有任何疑問，或者想提出變更、移除個人資料之請求，請Email至：hshuang at secologies dot com

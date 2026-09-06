@@ -26,7 +26,7 @@ lang: zh
 
 因此，本網站希望從各式各樣的角度來建立整個資訊安全生態系，帶給讀者我們獨特的觀點，為此我們將從原子等級的事物開始出發，最終實現資訊、通訊安全上的探討
 
-任何問題請寄到信箱內：[hshuang@secologies.com](mailto:hshuang@secologies.com)
+任何問題請寄到信箱內：hshuang at secologies dot com
 
 歡迎逛逛我的社群部落格：[https://hshuang.com/](https://hshuang.com/)
 
