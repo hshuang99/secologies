@@ -373,153 +373,16 @@ const { workerUrl, maxLength } = siteConfig.postOptions.comments;
 </style>
 
 <script>
+  import {
+    escapeHtml,
+    formatRelativeDate,
+    normalizeWebsite,
+    renderMarkdown,
+    getAdminKey,
+    setAdminKey,
+  } from '@/utils/comments-client';
+
   // Types kept loose on purpose - this file is loaded as a plain client script.
-
-  function escapeHtml(str) {
-    const div = document.createElement('div');
-    div.textContent = str == null ? '' : String(str);
-    return div.innerHTML;
-  }
-
-  function formatRelativeDate(iso) {
-    try {
-      const then = new Date(iso).getTime();
-      const now = Date.now();
-      const diffSec = Math.max(1, Math.floor((now - then) / 1000));
-      const units = [
-        ['year', 31536000],
-        ['month', 2592000],
-        ['day', 86400],
-        ['hour', 3600],
-        ['minute', 60],
-      ];
-      for (const [name, secs] of units) {
-        const val = Math.floor(diffSec / secs);
-        if (val >= 1) {
-          return `${val} ${name}${val > 1 ? 's' : ''} ago`;
-        }
-      }
-      return 'just now';
-    } catch {
-      return '';
-    }
-  }
-
-  function normalizeWebsite(raw) {
-    if (!raw) return '';
-    const trimmed = raw.trim();
-    if (!trimmed) return '';
-    if (/^https?:\/\//i.test(trimmed)) return trimmed;
-    return `https://${trimmed}`;
-  }
-
-  // A small, safe Markdown subset - no library, no dependencies.
-  // Everything is HTML-escaped FIRST, so raw markup a commenter types
-  // (<script>, <img onerror>, etc.) can never survive into the DOM.
-  // Only the whitelisted patterns below are turned back into real tags.
-  function renderMarkdown(raw) {
-    let html = escapeHtml(raw);
-
-    // Inline code: `code`
-    html = html.replace(/`([^`\n]+)`/g, '<code>$1</code>');
-
-    // Links: [text](https://example.com) - http(s) only
-    html = html.replace(
-      /\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)/g,
-      (_m, text, url) =>
-        `<a href="${url}" target="_blank" rel="nofollow ugc noopener noreferrer">${text}</a>`
-    );
-
-    // Bold: **text** or __text__
-    html = html.replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>');
-    html = html.replace(/__([^_\n]+)__/g, '<strong>$1</strong>');
-
-    // Italic: *text* or _text_ (run after bold so ** isn't eaten by *)
-    html = html.replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
-    html = html.replace(/\b_([^_\n]+)_\b/g, '<em>$1</em>');
-
-    // Line-by-line block structure: lists (- / *) and blockquotes (>)
-    const lines = html.split('\n');
-    const out = [];
-    let inList = false;
-    let inQuote = false;
-
-    const closeList = () => {
-      if (inList) {
-        out.push('</ul>');
-        inList = false;
-      }
-    };
-    const closeQuote = () => {
-      if (inQuote) {
-        out.push('</blockquote>');
-        inQuote = false;
-      }
-    };
-
-    for (const line of lines) {
-      const listMatch = line.match(/^[-*]\s+(.*)/);
-      const quoteMatch = line.match(/^&gt;\s?(.*)/);
-
-      if (listMatch) {
-        closeQuote();
-        if (!inList) {
-          out.push('<ul>');
-          inList = true;
-        }
-        out.push(`<li>${listMatch[1]}</li>`);
-        continue;
-      }
-      closeList();
-
-      if (quoteMatch) {
-        if (!inQuote) {
-          out.push('<blockquote>');
-          inQuote = true;
-        }
-        out.push(quoteMatch[1]);
-        continue;
-      }
-      closeQuote();
-
-      out.push(line);
-    }
-    closeList();
-    closeQuote();
-    html = out.join('\n');
-
-    // Paragraphs: blank-line-separated blocks become <p>, single
-    // newlines inside a block become <br>. Already-block-level chunks
-    // (lists/blockquotes) pass through untouched.
-    return html
-      .split(/\n{2,}/)
-      .map((block) => {
-        const trimmed = block.trim();
-        if (!trimmed) return '';
-        if (/^<(ul|blockquote)>/.test(trimmed)) return trimmed;
-        return `<p>${block.replace(/\n/g, '<br>')}</p>`;
-      })
-      .filter(Boolean)
-      .join('');
-  }
-
-  function getAdminKey() {
-    try {
-      return localStorage.getItem('cs_admin_key') || '';
-    } catch {
-      return '';
-    }
-  }
-
-  function setAdminKey(key) {
-    try {
-      if (key) localStorage.setItem('cs_admin_key', key);
-      else localStorage.removeItem('cs_admin_key');
-    } catch {
-      // localStorage unavailable (private mode, etc.) - admin mode just won't persist
-    }
-  }
-
   function initializeComments() {
     const root = document.querySelector('#comments-system');
     if (!root) return;
@@ -812,7 +675,7 @@ const { workerUrl, maxLength } = siteConfig.postOptions.comments;
 
   // Expose globally so BaseLayout can re-trigger this on Swup page transitions,
   // the same way it previously drove Giscus.
-  window.initializeComments = initializeComments;
+  (window as any).initializeComments = initializeComments;
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initializeComments);

@@ -16,7 +16,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const isDev = import.meta.env.DEV;
   const visiblePages = pages.filter(page => {
     // Filter out special pages that are handled by dedicated routes
-    const specialPageSlugs = ['home', '404'];
+    const specialPageSlugs = ['home', '404', 'guestbook', 'guestbook-en'];
     if (specialPageSlugs.includes(page.id)) {
       return false;
     }

@@ -1,0 +1,47 @@
+---
+import { getCollection } from 'astro:content';
+import { siteConfig } from '@/config';
+import { generatePageSEO } from '@/utils/seo';
+import { getTranslationsFor, getEntryLang } from '@/utils/translations';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import TranslationSwitcher from '@/components/TranslationSwitcher.astro';
+import GuestbookWidget from '@/components/GuestbookWidget.astro';
+
+const [page] = await getCollection('pages', ({ id }) => id === 'guestbook-en');
+
+if (!page) {
+  return Astro.redirect('/404');
+}
+
+const seoData = generatePageSEO(page, Astro.url.href);
+
+const pageLang = getEntryLang(page as any);
+const pageTranslations = await getTranslationsFor(page as any, 'pages');
+const pageUrl = `/${page.id}`;
+---
+
+<BaseLayout seoData={seoData}>
+  <Fragment slot="head">
+    <TranslationSwitcher translations={pageTranslations} currentLang={pageLang} currentUrl={pageUrl} mode="head" />
+  </Fragment>
+
+  <div class="py-8 relative">
+    <div class="mx-auto px-4 sm:px-6 lg:px-8 relative" style={`max-width: ${siteConfig.layout.contentWidth}`}>
+      <article class="bg-white dark:bg-primary-900 rounded-lg border border-primary-200 dark:border-primary-700 shadow-sm">
+        <div class="p-6">
+          <header class="mb-4">
+            <h1 class="text-xl font-bold text-primary-900 dark:text-primary-50 mb-3 leading-tight">
+              {page.data.title}
+            </h1>
+            <p class="text-base text-primary-600 dark:text-primary-300 mb-4">
+              {page.data.description}
+            </p>
+            <TranslationSwitcher translations={pageTranslations} currentLang={pageLang} currentUrl={pageUrl} />
+          </header>
+
+          <GuestbookWidget lang="en" pageTitle={page.data.title} />
+        </div>
+      </article>
+    </div>
+  </div>
+</BaseLayout>

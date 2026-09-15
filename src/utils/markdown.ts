@@ -225,8 +225,12 @@ export async function processPost(post: any) {
   };
 }
 
-// Format date for display
-export function formatDate(date: Date): string {
+// Format date for display.
+// `locale` overrides the site-wide DATE_LOCALE - pass the entry's own
+// `data.lang` (falling back to the site default) so an English post always
+// renders "January 15, 2026" even when the site's default language is zh.
+export function formatDate(date: Date, locale?: string | null): string {
+  const useLocale = locale || DATE_LOCALE;
   // If the date is at midnight UTC, it was likely a YYYY-MM-DD date
   // that was parsed as UTC but should be treated as local
   if (
@@ -240,22 +244,23 @@ export function formatDate(date: Date): string {
       date.getUTCMonth(),
       date.getUTCDate()
     );
-    return localDate.toLocaleDateString(DATE_LOCALE, {
+    return localDate.toLocaleDateString(useLocale, {
       year: "numeric",
       month: "long",
       day: "numeric",
     });
   }
 
-  return date.toLocaleDateString(DATE_LOCALE, {
+  return date.toLocaleDateString(useLocale, {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
 }
 
-// Format date for mobile display (shorter format)
-export function formatDateMobile(date: Date): string {
+// Format date for mobile display (shorter format). See `formatDate` for `locale`.
+export function formatDateMobile(date: Date, locale?: string | null): string {
+  const useLocale = locale || DATE_LOCALE;
   // If the date is at midnight UTC, it was likely a YYYY-MM-DD date
   // that was parsed as UTC but should be treated as local
   if (
@@ -269,14 +274,14 @@ export function formatDateMobile(date: Date): string {
       date.getUTCMonth(),
       date.getUTCDate()
     );
-    return localDate.toLocaleDateString(DATE_LOCALE, {
+    return localDate.toLocaleDateString(useLocale, {
       year: "numeric",
       month: "short",
       day: "numeric",
     });
   }
 
-  return date.toLocaleDateString(DATE_LOCALE, {
+  return date.toLocaleDateString(useLocale, {
     year: "numeric",
     month: "short",
     day: "numeric",

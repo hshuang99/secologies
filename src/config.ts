@@ -312,6 +312,7 @@ export const siteConfig: SiteConfig = {
       { title: "Projects", url: "/projects/" },
       { title: "Podcasts", url: "/podcasts/" },
       { title: "Newsletter", url: "/newsletter/" },
+      { title: "Guestbook", url: "/guestbook/" },
       { title: "About", url: "/about/",
         children: [
           { title: "Hong-Sheng Huang", url: "/hong-sheng-huang/" },

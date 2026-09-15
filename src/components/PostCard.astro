@@ -154,8 +154,8 @@ const shouldShowCoverImage = (() => {
     <div class={`p-4 ${image && shouldShowCoverImage ? 'rounded-b-lg' : 'rounded-lg'}`}>
       <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-primary-500 dark:text-primary-400 mb-1">
         <time datetime={date.toISOString()}>
-          <span class="hidden sm:inline">{formatDate(date)}</span>
-          <span class="sm:hidden">{formatDateMobile(date)}</span>
+          <span class="hidden sm:inline">{formatDate(date, post.data.lang)}</span>
+          <span class="sm:hidden">{formatDateMobile(date, post.data.lang)}</span>
         </time>
 
         {siteConfig.postOptions.readingTime && readingTime && (

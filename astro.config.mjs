@@ -90,7 +90,8 @@ export default defineConfig({
   '/subscribe': '/newsletter',
   '/newsletter-subscribe': '/newsletter',
   '/privacy-en': '/privacy-policy-en',
-  '/privacy': '/privacy-policy'
+  '/privacy': '/privacy-policy',
+  '/projects/depth-oriented-greedy-algorithms': '/projects/generalized-greedy-algorithms-for-optimizing-cnot-circuits-of-block-ciphers-en'
 } : {},
 image: {
     service: {

@@ -229,10 +229,10 @@ const structuredData = {
                   )}
                   <time datetime={podcast.data.lastModified.toISOString()} class="text-xs">
                     <span class="hidden sm:inline">
-                      Updated {formatDate(podcast.data.lastModified)}
+                      Updated {formatDate(podcast.data.lastModified, docLang)}
                     </span>
                     <span class="sm:hidden">
-                      Updated {formatDate(podcast.data.lastModified)}
+                      Updated {formatDate(podcast.data.lastModified, docLang)}
                     </span>
                   </time>
                 </>

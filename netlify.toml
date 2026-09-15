@@ -206,6 +206,12 @@
   force = true
 
 [[redirects]]
+  from = "/projects/depth-oriented-greedy-algorithms"
+  to = "/projects/generalized-greedy-algorithms-for-optimizing-cnot-circuits-of-block-ciphers-en"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "/*"
   to = "/404"
   status = 404

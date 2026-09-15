@@ -1,0 +1,763 @@
+---
+import { siteConfig } from '@/config';
+
+export interface Props {
+  lang: 'zh' | 'en';
+  pageTitle: string; // recorded as page_title when someone posts directly on this page
+}
+
+const { lang, pageTitle } = Astro.props;
+
+if (!siteConfig.postOptions.comments.enabled) {
+  return null;
+}
+
+const { workerUrl, maxLength } = siteConfig.postOptions.comments;
+
+const STRINGS = {
+  zh: {
+    heading: '留言板',
+    namePlaceholder: '您的稱呼',
+    websitePlaceholder: '網站（選填）',
+    contentPlaceholder: '留下一則訊息...',
+    mdHint: '支援 Markdown：**粗體**、*斜體*、`程式碼`、[連結](https://…)、以 - 或 &gt; 開頭的行',
+    submit: '送出留言',
+    posting: '送出中...',
+    loading: '載入留言中...',
+    empty: '目前還沒有留言，來寫下第一則吧！',
+    loadMore: '載入更多',
+    loadingMore: '載入中...',
+    nameRequired: '請填寫姓名與留言內容。',
+    postedSuccess: '留言成功！',
+    tooFast: '留言速度過快，請稍後再試。',
+    networkError: '網路錯誤，請再試一次。',
+    genericError: '無法送出留言。',
+    deleteConfirm: '確定要刪除這則留言嗎？',
+    deleteFailed: '無法刪除這則留言。',
+    adminPromptEnter: '請輸入管理員金鑰：',
+    adminPromptUpdate: '更新管理員金鑰（留空以登出）：',
+    adminRejected: '管理員金鑰錯誤，已登出管理員模式。',
+    reply: '回覆',
+    replyPlaceholder: '回覆這則留言...',
+    replySend: '送出回覆',
+    replyCancel: '取消',
+    replyFailed: '無法送出回覆。',
+    authorReplied: '站長回覆',
+    delete: '刪除',
+    sourcePrefix: '留言於',
+    guestbookTag: '留言板',
+    notConfigured: '留言系統尚未設定。',
+  },
+  en: {
+    heading: 'Guestbook',
+    namePlaceholder: 'Your name',
+    websitePlaceholder: 'Website (optional)',
+    contentPlaceholder: 'Leave a message...',
+    mdHint: 'Markdown supported: **bold**, *italic*, `code`, [link](https://…), lines starting with - or &gt;',
+    submit: 'Post message',
+    posting: 'Posting...',
+    loading: 'Loading messages...',
+    empty: 'No messages yet — be the first to say hello!',
+    loadMore: 'Load more',
+    loadingMore: 'Loading...',
+    nameRequired: 'Please fill in your name and a message.',
+    postedSuccess: 'Message posted!',
+    tooFast: "You're posting too fast — please wait a moment.",
+    networkError: 'Network error - please try again.',
+    genericError: 'Could not post your message.',
+    deleteConfirm: 'Delete this message?',
+    deleteFailed: 'Could not delete that message.',
+    adminPromptEnter: 'Enter admin key:',
+    adminPromptUpdate: 'Update admin key (leave blank to sign out):',
+    adminRejected: 'Admin key rejected. Signing out of admin mode.',
+    reply: 'Reply',
+    replyPlaceholder: 'Write a reply...',
+    replySend: 'Send reply',
+    replyCancel: 'Cancel',
+    replyFailed: 'Could not post that reply.',
+    authorReplied: 'Author replied',
+    delete: 'Delete',
+    sourcePrefix: 'said this on',
+    guestbookTag: 'Guestbook',
+    notConfigured: 'The guestbook is not configured yet.',
+  },
+} as const;
+---
+
+<div class="guestbook-widget-container">
+  <div
+    id="guestbook-widget"
+    class="guestbook-widget"
+    data-worker-url={workerUrl}
+    data-lang={lang}
+    data-page-title={pageTitle}
+    data-max-length={maxLength}
+    data-strings={JSON.stringify(STRINGS[lang])}
+  >
+    <!-- Populated client-side by initializeGuestbook() -->
+  </div>
+</div>
+
+<style>
+  .guestbook-widget-container {
+    max-width: 100% !important;
+  }
+  .guestbook-widget {
+    width: 100%;
+    max-width: 100% !important;
+  }
+
+  .gb-form {
+    border: 1px solid var(--color-primary-200);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 2rem;
+  }
+  :global(.dark) .gb-form {
+    border-color: var(--color-primary-700);
+  }
+  .gb-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+  @media (max-width: 480px) {
+    .gb-form-row {
+      grid-template-columns: 1fr;
+    }
+  }
+  .gb-input,
+  .gb-textarea {
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--color-primary-300);
+    border-radius: 0.375rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+    color: var(--color-primary-900);
+    font-family: inherit;
+  }
+  :global(.dark) .gb-input,
+  :global(.dark) .gb-textarea {
+    border-color: var(--color-primary-600);
+    color: var(--color-primary-50);
+  }
+  .gb-input:focus,
+  .gb-textarea:focus {
+    outline: none;
+    border-color: var(--color-highlight-400);
+  }
+  .gb-textarea {
+    resize: vertical;
+    min-height: 100px;
+    margin-bottom: 0.5rem;
+  }
+  .gb-md-hint {
+    font-size: 0.72rem;
+    color: var(--color-primary-400);
+    margin-bottom: 0.6rem;
+  }
+  .gb-form-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  .gb-counter {
+    font-size: 0.75rem;
+    color: var(--color-primary-400);
+  }
+  .gb-submit {
+    background: var(--color-highlight-500);
+    color: white;
+    font-weight: 500;
+    font-size: 0.875rem;
+    padding: 0.5rem 1.1rem;
+    border-radius: 0.375rem;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .gb-submit:hover:not(:disabled) {
+    background: var(--color-highlight-600);
+  }
+  .gb-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  .gb-status {
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+  }
+  .gb-status[data-kind='error'] {
+    color: #dc2626;
+  }
+  .gb-status[data-kind='success'] {
+    color: #16a34a;
+  }
+
+  /* Honeypot - hidden from real people, visible to bots that fill every field */
+  .gb-hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .gb-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  .gb-empty,
+  .gb-loading {
+    color: var(--color-primary-500);
+    font-size: 0.9rem;
+    font-style: italic;
+    padding: 0.5rem 0;
+  }
+  .gb-item {
+    border-bottom: 1px solid var(--color-primary-200);
+    padding-bottom: 1.1rem;
+  }
+  :global(.dark) .gb-item {
+    border-color: var(--color-primary-700);
+  }
+  .gb-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .gb-item-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.35rem;
+    font-size: 0.85rem;
+  }
+  .gb-item-author {
+    font-weight: 600;
+    color: var(--color-primary-900);
+  }
+  :global(.dark) .gb-item-author {
+    color: var(--color-primary-50);
+  }
+  .gb-item-author-link {
+    color: inherit;
+    text-decoration: none;
+  }
+  .gb-item-author-link:hover {
+    text-decoration: underline;
+  }
+  .gb-item-date {
+    color: var(--color-primary-400);
+    font-size: 0.78rem;
+  }
+  .gb-source-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3em;
+    font-size: 0.78rem;
+    color: var(--color-highlight-500);
+    text-decoration: none;
+    background: var(--color-highlight-50, transparent);
+    border: 1px solid var(--color-highlight-200, var(--color-primary-200));
+    padding: 0.05rem 0.5rem;
+    border-radius: 999px;
+  }
+  .gb-source-badge:hover {
+    text-decoration: underline;
+  }
+  :global(.dark) .gb-source-badge {
+    border-color: var(--color-primary-700);
+  }
+
+  .gb-item-body {
+    color: var(--color-primary-800);
+    font-size: 0.925rem;
+    line-height: 1.6;
+    word-break: break-word;
+  }
+  :global(.dark) .gb-item-body {
+    color: var(--color-primary-200);
+  }
+  .gb-item-body :global(p) {
+    margin: 0 0 0.6em 0;
+  }
+  .gb-item-body :global(p:last-child) {
+    margin-bottom: 0;
+  }
+  .gb-item-body :global(strong) {
+    font-weight: 600;
+  }
+  .gb-item-body :global(code) {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.85em;
+    background: var(--color-primary-100);
+    padding: 0.1em 0.35em;
+    border-radius: 0.25em;
+  }
+  :global(.dark) .gb-item-body :global(code) {
+    background: rgba(255, 255, 255, 0.08);
+  }
+  .gb-item-body :global(a) {
+    color: var(--color-highlight-500);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .gb-item-body :global(ul) {
+    margin: 0 0 0.6em 0;
+    padding-left: 1.25em;
+    list-style: disc;
+  }
+  .gb-item-body :global(blockquote) {
+    margin: 0 0 0.6em 0;
+    padding-left: 0.75em;
+    border-left: 2px solid var(--color-primary-300);
+    color: var(--color-primary-600);
+  }
+  :global(.dark) .gb-item-body :global(blockquote) {
+    border-color: var(--color-primary-600);
+    color: var(--color-primary-400);
+  }
+
+  .gb-item-actions {
+    display: none;
+    gap: 0.75rem;
+    margin-top: 0.4rem;
+  }
+  .gb-item-actions[data-admin='true'] {
+    display: flex;
+  }
+  .gb-item-actions button {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 0.78rem;
+    cursor: pointer;
+    color: var(--color-primary-400);
+  }
+  .gb-item-actions button:hover {
+    color: var(--color-highlight-500);
+  }
+  .gb-item-actions button.gb-delete-btn:hover {
+    color: #dc2626;
+  }
+
+  .gb-admin-reply {
+    margin-top: 0.6rem;
+    margin-left: 1rem;
+    padding: 0.6rem 0.75rem;
+    border-left: 2px solid var(--color-highlight-400);
+    background: var(--color-primary-50);
+    border-radius: 0 0.375rem 0.375rem 0;
+  }
+  :global(.dark) .gb-admin-reply {
+    background: rgba(255, 255, 255, 0.03);
+  }
+  .gb-admin-reply-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--color-highlight-500);
+    margin-bottom: 0.2rem;
+  }
+  .gb-admin-reply-body {
+    font-size: 0.9rem;
+    color: var(--color-primary-800);
+    word-break: break-word;
+  }
+  :global(.dark) .gb-admin-reply-body {
+    color: var(--color-primary-200);
+  }
+
+  .gb-reply-form {
+    margin-top: 0.5rem;
+    margin-left: 1rem;
+    display: none;
+    gap: 0.5rem;
+  }
+  .gb-reply-form[data-open='true'] {
+    display: flex;
+    flex-direction: column;
+  }
+  .gb-reply-form textarea {
+    min-height: 60px;
+  }
+  .gb-reply-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .gb-reply-actions button {
+    font-size: 0.78rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 0.3rem;
+    border: 1px solid var(--color-primary-300);
+    background: transparent;
+    cursor: pointer;
+    color: var(--color-primary-700);
+  }
+  :global(.dark) .gb-reply-actions button {
+    border-color: var(--color-primary-600);
+    color: var(--color-primary-200);
+  }
+  .gb-reply-actions button.gb-reply-send {
+    background: var(--color-highlight-500);
+    border-color: var(--color-highlight-500);
+    color: white;
+  }
+
+  .gb-load-more-wrap {
+    text-align: center;
+    margin-top: 1.5rem;
+  }
+  .gb-load-more {
+    font-size: 0.85rem;
+    padding: 0.5rem 1.25rem;
+    border-radius: 0.375rem;
+    border: 1px solid var(--color-primary-300);
+    background: transparent;
+    cursor: pointer;
+    color: var(--color-primary-700);
+  }
+  :global(.dark) .gb-load-more {
+    border-color: var(--color-primary-600);
+    color: var(--color-primary-200);
+  }
+  .gb-load-more:hover:not(:disabled) {
+    border-color: var(--color-highlight-400);
+    color: var(--color-highlight-500);
+  }
+  .gb-load-more:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+</style>
+
+<script>
+  import {
+    escapeHtml,
+    formatRelativeDate,
+    normalizeWebsite,
+    renderMarkdown,
+    getAdminKey,
+    setAdminKey,
+    sourceUrlFor,
+    type PublicComment,
+  } from '@/utils/comments-client';
+
+  function initializeGuestbook() {
+    const root = document.querySelector('#guestbook-widget') as HTMLElement | null;
+    if (!root) return;
+
+    const workerUrl = (root.dataset.workerUrl || '').replace(/\/$/, '');
+    const pageTitle = root.dataset.pageTitle || 'Guestbook';
+    const maxLength = parseInt(root.dataset.maxLength || '2000', 10);
+    const strings = JSON.parse(root.dataset.strings || '{}');
+    const loadedAt = Date.now();
+    const PAGE_SIZE = 25;
+
+    if (!workerUrl) {
+      root.innerHTML = `<p class="gb-empty">${escapeHtml(strings.notConfigured)}</p>`;
+      return;
+    }
+
+    if (root.dataset.gbReady === 'true') return;
+    root.dataset.gbReady = 'true';
+
+    let adminKey = getAdminKey();
+    let clickCount = 0;
+    let clickTimer: ReturnType<typeof setTimeout> | null = null;
+    let nextCursor: string | null = null;
+    let items: PublicComment[] = [];
+
+    root.innerHTML = `
+      <div class="gb-heading" id="gb-heading" style="display:flex;align-items:baseline;gap:0.5rem;font-weight:600;font-size:1.125rem;margin-bottom:1.25rem;cursor:default;user-select:none;">
+        ${escapeHtml(strings.heading)}
+      </div>
+      <form class="gb-form" id="gb-form" autocomplete="off">
+        <div class="gb-form-row">
+          <input class="gb-input" type="text" id="gb-name" placeholder="${escapeHtml(strings.namePlaceholder)}" maxlength="60" required />
+          <input class="gb-input" type="text" id="gb-website" placeholder="${escapeHtml(strings.websitePlaceholder)}" maxlength="200" />
+        </div>
+        <textarea class="gb-textarea" id="gb-content" placeholder="${escapeHtml(strings.contentPlaceholder)}" maxlength="${maxLength}" required></textarea>
+        <div class="gb-md-hint">${strings.mdHint}</div>
+        <div class="gb-hp" aria-hidden="true">
+          <label for="gb-hp-field">Leave this field empty</label>
+          <input type="text" id="gb-hp-field" name="gb-hp-field" tabindex="-1" autocomplete="off" />
+        </div>
+        <div class="gb-form-footer">
+          <span class="gb-counter"><span id="gb-charcount">0</span>/${maxLength}</span>
+          <button type="submit" class="gb-submit" id="gb-submit">${escapeHtml(strings.submit)}</button>
+        </div>
+        <div class="gb-status" id="gb-status"></div>
+      </form>
+      <div class="gb-list" id="gb-list">
+        <div class="gb-loading">${escapeHtml(strings.loading)}</div>
+      </div>
+      <div class="gb-load-more-wrap" id="gb-load-more-wrap" style="display:none;">
+        <button type="button" class="gb-load-more" id="gb-load-more">${escapeHtml(strings.loadMore)}</button>
+      </div>
+    `;
+
+    const heading = root.querySelector('#gb-heading') as HTMLElement;
+    const listEl = root.querySelector('#gb-list') as HTMLElement;
+    const formEl = root.querySelector('#gb-form') as HTMLFormElement;
+    const statusEl = root.querySelector('#gb-status') as HTMLElement;
+    const submitBtn = root.querySelector('#gb-submit') as HTMLButtonElement;
+    const contentEl = root.querySelector('#gb-content') as HTMLTextAreaElement;
+    const charcountEl = root.querySelector('#gb-charcount') as HTMLElement;
+    const loadMoreWrap = root.querySelector('#gb-load-more-wrap') as HTMLElement;
+    const loadMoreBtn = root.querySelector('#gb-load-more') as HTMLButtonElement;
+
+    contentEl.addEventListener('input', () => {
+      charcountEl.textContent = String(contentEl.value.length);
+    });
+
+    // Hidden admin activation: click the heading 5 times in quick succession
+    heading.addEventListener('click', () => {
+      clickCount += 1;
+      if (clickTimer) clearTimeout(clickTimer);
+      clickTimer = setTimeout(() => (clickCount = 0), 1500);
+      if (clickCount >= 5) {
+        clickCount = 0;
+        const entered = window.prompt(adminKey ? strings.adminPromptUpdate : strings.adminPromptEnter);
+        if (entered === null) return;
+        adminKey = entered.trim();
+        setAdminKey(adminKey);
+        renderItems();
+      }
+    });
+
+    function renderSourceBadge(item: PublicComment): string {
+      if (item.content_type === 'guestbook') return '';
+      const url = sourceUrlFor(item);
+      if (!url) return '';
+      const title = item.page_title || item.slug;
+      return `<a class="gb-source-badge" href="${escapeHtml(url)}">💬 ${escapeHtml(strings.sourcePrefix)} “${escapeHtml(title)}”</a>`;
+    }
+
+    function renderItems() {
+      if (!items.length) {
+        listEl.innerHTML = `<p class="gb-empty">${escapeHtml(strings.empty)}</p>`;
+        return;
+      }
+
+      listEl.innerHTML = items
+        .map((item) => {
+          const website = normalizeWebsite(item.author_website || '');
+          const authorHtml = website
+            ? `<a class="gb-item-author-link" href="${escapeHtml(website)}" target="_blank" rel="nofollow ugc noopener noreferrer">${escapeHtml(item.author_name)}</a>`
+            : escapeHtml(item.author_name);
+
+          const replyHtml = item.admin_reply
+            ? `<div class="gb-admin-reply">
+                 <div class="gb-admin-reply-label">${escapeHtml(strings.authorReplied)}</div>
+                 <div class="gb-admin-reply-body">${renderMarkdown(item.admin_reply)}</div>
+               </div>`
+            : '';
+
+          return `
+            <div class="gb-item" data-id="${item.id}">
+              <div class="gb-item-meta">
+                <span class="gb-item-author">${authorHtml}</span>
+                <span class="gb-item-date">${formatRelativeDate(item.created_at)}</span>
+                ${renderSourceBadge(item)}
+              </div>
+              <div class="gb-item-body">${renderMarkdown(item.content)}</div>
+              <div class="gb-item-actions" data-admin="${adminKey ? 'true' : 'false'}">
+                ${item.admin_reply ? '' : `<button type="button" class="gb-reply-toggle-btn">${escapeHtml(strings.reply)}</button>`}
+                <button type="button" class="gb-delete-btn">${escapeHtml(strings.delete)}</button>
+              </div>
+              <form class="gb-reply-form" data-open="false">
+                <textarea class="gb-textarea" placeholder="${escapeHtml(strings.replyPlaceholder)}" maxlength="${maxLength}"></textarea>
+                <div class="gb-reply-actions">
+                  <button type="submit" class="gb-reply-send">${escapeHtml(strings.replySend)}</button>
+                  <button type="button" class="gb-reply-cancel">${escapeHtml(strings.replyCancel)}</button>
+                </div>
+              </form>
+              ${replyHtml}
+            </div>
+          `;
+        })
+        .join('');
+
+      listEl.querySelectorAll('.gb-item').forEach((itemEl) => {
+        const id = itemEl.getAttribute('data-id');
+        const deleteBtn = itemEl.querySelector('.gb-delete-btn');
+        const replyToggle = itemEl.querySelector('.gb-reply-toggle-btn');
+        const replyForm = itemEl.querySelector('.gb-reply-form') as HTMLFormElement | null;
+
+        if (deleteBtn) {
+          deleteBtn.addEventListener('click', async () => {
+            if (!window.confirm(strings.deleteConfirm)) return;
+            try {
+              const res = await fetch(`${workerUrl}/api/comments/${id}`, {
+                method: 'DELETE',
+                headers: { 'X-Admin-Key': adminKey },
+              });
+              if (res.status === 401) {
+                window.alert(strings.adminRejected);
+                adminKey = '';
+                setAdminKey('');
+                renderItems();
+                return;
+              }
+              if (!res.ok) throw new Error('Delete failed');
+              items = items.filter((c) => String(c.id) !== String(id));
+              renderItems();
+            } catch {
+              window.alert(strings.deleteFailed);
+            }
+          });
+        }
+
+        if (replyToggle && replyForm) {
+          replyToggle.addEventListener('click', () => {
+            replyForm.setAttribute('data-open', replyForm.getAttribute('data-open') === 'true' ? 'false' : 'true');
+          });
+          (replyForm.querySelector('.gb-reply-cancel') as HTMLElement).addEventListener('click', () => {
+            replyForm.setAttribute('data-open', 'false');
+          });
+          replyForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const textarea = replyForm.querySelector('textarea') as HTMLTextAreaElement;
+            const reply = textarea.value.trim();
+            if (!reply) return;
+            try {
+              const res = await fetch(`${workerUrl}/api/comments/${id}/reply`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-Admin-Key': adminKey },
+                body: JSON.stringify({ reply }),
+              });
+              if (res.status === 401) {
+                window.alert(strings.adminRejected);
+                adminKey = '';
+                setAdminKey('');
+                renderItems();
+                return;
+              }
+              if (!res.ok) throw new Error('Reply failed');
+              const updated = await res.json();
+              items = items.map((c) =>
+                String(c.id) === String(id)
+                  ? { ...c, admin_reply: updated.admin_reply, admin_reply_at: updated.admin_reply_at }
+                  : c
+              );
+              renderItems();
+            } catch {
+              window.alert(strings.replyFailed);
+            }
+          });
+        }
+      });
+    }
+
+    async function loadPage(before?: string | null) {
+      const params = new URLSearchParams({ limit: String(PAGE_SIZE) });
+      if (before) params.set('before', before);
+
+      const res = await fetch(`${workerUrl}/api/comments/all?${params.toString()}`);
+      if (!res.ok) throw new Error('Failed to load');
+      const data = await res.json();
+      const newItems: PublicComment[] = Array.isArray(data.comments) ? data.comments : [];
+      nextCursor = data.nextCursor || null;
+      items = before ? [...items, ...newItems] : newItems;
+      renderItems();
+      loadMoreWrap.style.display = nextCursor ? 'block' : 'none';
+    }
+
+    loadMoreBtn.addEventListener('click', async () => {
+      loadMoreBtn.disabled = true;
+      loadMoreBtn.textContent = strings.loadingMore;
+      try {
+        await loadPage(nextCursor);
+      } catch {
+        // leave the button clickable to retry
+      } finally {
+        loadMoreBtn.disabled = false;
+        loadMoreBtn.textContent = strings.loadMore;
+      }
+    });
+
+    formEl.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      statusEl.textContent = '';
+      statusEl.removeAttribute('data-kind');
+
+      const nameEl = root.querySelector('#gb-name') as HTMLInputElement;
+      const websiteEl = root.querySelector('#gb-website') as HTMLInputElement;
+      const hpEl = root.querySelector('#gb-hp-field') as HTMLInputElement;
+
+      const name = nameEl.value.trim();
+      const website = websiteEl.value.trim();
+      const content = contentEl.value.trim();
+
+      if (!name || !content) {
+        statusEl.textContent = strings.nameRequired;
+        statusEl.setAttribute('data-kind', 'error');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = strings.posting;
+
+      try {
+        const res = await fetch(`${workerUrl}/api/comments`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'guestbook',
+            slug: 'guestbook',
+            name,
+            website,
+            content,
+            page_title: pageTitle,
+            hp: hpEl.value,
+            ts: loadedAt,
+          }),
+        });
+
+        if (res.status === 429) {
+          statusEl.textContent = strings.tooFast;
+          statusEl.setAttribute('data-kind', 'error');
+          return;
+        }
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          statusEl.textContent = body.error || strings.genericError;
+          statusEl.setAttribute('data-kind', 'error');
+          return;
+        }
+
+        const created = await res.json();
+        items = [created, ...items];
+        renderItems();
+
+        formEl.reset();
+        charcountEl.textContent = '0';
+        statusEl.textContent = strings.postedSuccess;
+        statusEl.setAttribute('data-kind', 'success');
+      } catch {
+        statusEl.textContent = strings.networkError;
+        statusEl.setAttribute('data-kind', 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = strings.submit;
+      }
+    });
+
+    loadPage().catch(() => {
+      listEl.innerHTML = `<p class="gb-empty">${escapeHtml(strings.networkError)}</p>`;
+    });
+  }
+
+  (window as any).initializeGuestbook = initializeGuestbook;
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeGuestbook);
+  } else {
+    initializeGuestbook();
+  }
+</script>

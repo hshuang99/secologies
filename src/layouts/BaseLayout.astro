@@ -1125,6 +1125,9 @@ for (const [path, mod] of Object.entries(customThemeModules)) {
         }
         if (typeof window.initializeComments === 'function') { window.initializeComments(); }
       }
+      if (document.querySelector('#guestbook-widget')) {
+        if (typeof window.initializeGuestbook === 'function') { window.initializeGuestbook(); }
+      }
       // Initialize base embeds on initial page load (before table wrappers)
       if (window.initializeBaseEmbeds) {
         window.initializeBaseEmbeds();
@@ -1239,6 +1242,9 @@ for (const [path, mod] of Object.entries(customThemeModules)) {
             if (document.querySelector('#comments-system')) {
               if (typeof window.initializeComments === 'function') { window.initializeComments(); }
             }
+            if (document.querySelector('#guestbook-widget')) {
+              if (typeof window.initializeGuestbook === 'function') { window.initializeGuestbook(); }
+            }
             // Initialize base embeds first, then wrap tables
             if (window.initializeBaseEmbeds) {
               window.initializeBaseEmbeds();
@@ -1279,6 +1285,9 @@ for (const [path, mod] of Object.entries(customThemeModules)) {
           setTimeout(() => {
             if (document.querySelector('#comments-system')) {
               if (typeof window.initializeComments === 'function') { window.initializeComments(); }
+            }
+            if (document.querySelector('#guestbook-widget')) {
+              if (typeof window.initializeGuestbook === 'function') { window.initializeGuestbook(); }
             }
             // Initialize with small delay to ensure DOM is ready
             setTimeout(() => {
@@ -1361,6 +1370,11 @@ for (const [path, mod] of Object.entries(customThemeModules)) {
                   if (typeof window.initializeComments === 'function') { window.initializeComments(); }
                 }, 200);
               }
+              if (element.id === 'guestbook-widget' || element.querySelector('#guestbook-widget')) {
+                setTimeout(() => {
+                  if (typeof window.initializeGuestbook === 'function') { window.initializeGuestbook(); }
+                }, 200);
+              }
             }
           });
           // Content was replaced (e.g. HMR); re-run gallery script so new markup is transformed
@@ -1403,6 +1417,9 @@ for (const [path, mod] of Object.entries(customThemeModules)) {
             if (isDev) {
             }
             if (typeof window.initializeComments === 'function') { window.initializeComments(); }
+          }
+          if (document.querySelector('#guestbook-widget')) {
+            if (typeof window.initializeGuestbook === 'function') { window.initializeGuestbook(); }
           }
         }, 500);
       }
