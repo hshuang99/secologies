@@ -10,7 +10,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import TableOfContents from '@/components/TableOfContents.astro';
 import LinkedMentions from '@/components/LinkedMentions.astro';
 import LocalGraph from '@/components/LocalGraph.astro';
-import GiscusComments from '@/components/GiscusComments.astro';
+import CommentsSystem from '@/components/CommentsSystem.astro';
 import Lightbox from '@/components/Lightbox.astro';
 import Icon from '@/components/Icon.astro';
 import ImageWrapper from '@/components/ImageWrapper.astro';
@@ -315,13 +315,14 @@ if (siteConfig.postOptions.graphView.enabled && siteConfig.postOptions.graphView
           </nav>
         )}
 
-        <!-- Giscus Comments -->
+        <!-- Comments -->
         {siteConfig.postOptions.comments.enabled && (
           <div class="mt-16">
-            <GiscusComments
-              postTitle={post.data.title}
-              postSlug={post.id}
-              postUrl={Astro.url.href}
+            <CommentsSystem
+              contentType="post"
+              slug={post.id}
+              title={post.data.title}
+              url={Astro.url.href}
             />
           </div>
         )}

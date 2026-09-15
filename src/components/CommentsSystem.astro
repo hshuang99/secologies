@@ -1,0 +1,822 @@
+---
+import { siteConfig } from '@/config';
+
+export interface Props {
+  contentType: 'post' | 'project' | 'podcast';
+  slug: string;
+  title: string;
+  url: string;
+}
+
+const { contentType, slug, title, url } = Astro.props;
+
+// Only render if comments are enabled
+if (!siteConfig.postOptions.comments.enabled) {
+  return null;
+}
+
+const { workerUrl, maxLength } = siteConfig.postOptions.comments;
+---
+
+<div class="comments-system-container">
+  <div
+    id="comments-system"
+    class="comments-system"
+    data-worker-url={workerUrl}
+    data-content-type={contentType}
+    data-slug={slug}
+    data-title={title}
+    data-url={url}
+    data-max-length={maxLength}
+  >
+    <!-- Populated client-side by initializeComments() -->
+  </div>
+</div>
+
+<style>
+  .comments-system-container {
+    margin-bottom: 2rem;
+    max-width: 100% !important;
+  }
+
+  .comments-system {
+    width: 100%;
+    max-width: 100% !important;
+  }
+
+  /* Heading */
+  .cs-heading {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-weight: 600;
+    font-size: 1.125rem;
+    margin-bottom: 1.25rem;
+    color: var(--color-primary-900);
+    user-select: none;
+  }
+  :global(.dark) .cs-heading {
+    color: var(--color-primary-50);
+  }
+  .cs-heading .cs-count {
+    font-weight: 400;
+    font-size: 0.875rem;
+    color: var(--color-primary-500);
+  }
+
+  /* Form */
+  .cs-form {
+    border: 1px solid var(--color-primary-200);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  :global(.dark) .cs-form {
+    border-color: var(--color-primary-700);
+  }
+  .cs-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+  @media (max-width: 480px) {
+    .cs-form-row {
+      grid-template-columns: 1fr;
+    }
+  }
+  .cs-input,
+  .cs-textarea {
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--color-primary-300);
+    border-radius: 0.375rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+    color: var(--color-primary-900);
+    font-family: inherit;
+  }
+  :global(.dark) .cs-input,
+  :global(.dark) .cs-textarea {
+    border-color: var(--color-primary-600);
+    color: var(--color-primary-50);
+  }
+  .cs-input:focus,
+  .cs-textarea:focus {
+    outline: none;
+    border-color: var(--color-highlight-400);
+  }
+  .cs-textarea {
+    resize: vertical;
+    min-height: 90px;
+    margin-bottom: 0.5rem;
+  }
+  .cs-md-hint {
+    font-size: 0.72rem;
+    color: var(--color-primary-400);
+    margin-bottom: 0.6rem;
+  }
+  .cs-form-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  .cs-counter {
+    font-size: 0.75rem;
+    color: var(--color-primary-400);
+  }
+  .cs-submit {
+    background: var(--color-highlight-500);
+    color: white;
+    font-weight: 500;
+    font-size: 0.875rem;
+    padding: 0.5rem 1.1rem;
+    border-radius: 0.375rem;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .cs-submit:hover:not(:disabled) {
+    background: var(--color-highlight-600);
+  }
+  .cs-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  .cs-status {
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+  }
+  .cs-status[data-kind='error'] {
+    color: #dc2626;
+  }
+  .cs-status[data-kind='success'] {
+    color: #16a34a;
+  }
+
+  /* Honeypot - hidden from real people, visible to bots that fill every field */
+  .cs-hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  /* Comment list */
+  .cs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .cs-empty {
+    color: var(--color-primary-500);
+    font-size: 0.9rem;
+    font-style: italic;
+    padding: 0.5rem 0;
+  }
+  .cs-loading {
+    color: var(--color-primary-500);
+    font-size: 0.9rem;
+    padding: 0.5rem 0;
+  }
+  .cs-comment {
+    border-bottom: 1px solid var(--color-primary-200);
+    padding-bottom: 1rem;
+  }
+  :global(.dark) .cs-comment {
+    border-color: var(--color-primary-700);
+  }
+  .cs-comment:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .cs-comment-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.35rem;
+    font-size: 0.85rem;
+  }
+  .cs-comment-author {
+    font-weight: 600;
+    color: var(--color-primary-900);
+  }
+  :global(.dark) .cs-comment-author {
+    color: var(--color-primary-50);
+  }
+  .cs-comment-author-link {
+    color: inherit;
+    text-decoration: none;
+  }
+  .cs-comment-author-link:hover {
+    text-decoration: underline;
+  }
+  .cs-comment-date {
+    color: var(--color-primary-400);
+    font-size: 0.78rem;
+  }
+  .cs-comment-body {
+    color: var(--color-primary-800);
+    font-size: 0.925rem;
+    line-height: 1.6;
+    word-break: break-word;
+  }
+  :global(.dark) .cs-comment-body {
+    color: var(--color-primary-200);
+  }
+  .cs-comment-body :global(p) {
+    margin: 0 0 0.6em 0;
+  }
+  .cs-comment-body :global(p:last-child) {
+    margin-bottom: 0;
+  }
+  .cs-comment-body :global(strong) {
+    font-weight: 600;
+  }
+  .cs-comment-body :global(code) {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.85em;
+    background: var(--color-primary-100);
+    padding: 0.1em 0.35em;
+    border-radius: 0.25em;
+  }
+  :global(.dark) .cs-comment-body :global(code) {
+    background: rgba(255, 255, 255, 0.08);
+  }
+  .cs-comment-body :global(a) {
+    color: var(--color-highlight-500);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .cs-comment-body :global(ul) {
+    margin: 0 0 0.6em 0;
+    padding-left: 1.25em;
+    list-style: disc;
+  }
+  .cs-comment-body :global(blockquote) {
+    margin: 0 0 0.6em 0;
+    padding-left: 0.75em;
+    border-left: 2px solid var(--color-primary-300);
+    color: var(--color-primary-600);
+  }
+  :global(.dark) .cs-comment-body :global(blockquote) {
+    border-color: var(--color-primary-600);
+    color: var(--color-primary-400);
+  }
+  .cs-comment-actions {
+    display: none;
+    gap: 0.75rem;
+    margin-top: 0.4rem;
+  }
+  .cs-comment-actions[data-admin='true'] {
+    display: flex;
+  }
+  .cs-comment-actions button {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 0.78rem;
+    cursor: pointer;
+    color: var(--color-primary-400);
+  }
+  .cs-comment-actions button:hover {
+    color: var(--color-highlight-500);
+  }
+  .cs-comment-actions button.cs-delete-btn:hover {
+    color: #dc2626;
+  }
+
+  .cs-admin-reply {
+    margin-top: 0.6rem;
+    margin-left: 1rem;
+    padding: 0.6rem 0.75rem;
+    border-left: 2px solid var(--color-highlight-400);
+    background: var(--color-primary-50);
+    border-radius: 0 0.375rem 0.375rem 0;
+  }
+  :global(.dark) .cs-admin-reply {
+    background: rgba(255, 255, 255, 0.03);
+  }
+  .cs-admin-reply-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--color-highlight-500);
+    margin-bottom: 0.2rem;
+  }
+  .cs-admin-reply-body {
+    font-size: 0.9rem;
+    color: var(--color-primary-800);
+    word-break: break-word;
+  }
+  .cs-admin-reply-body :global(p) {
+    margin: 0 0 0.5em 0;
+  }
+  .cs-admin-reply-body :global(p:last-child) {
+    margin-bottom: 0;
+  }
+  .cs-admin-reply-body :global(code) {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.85em;
+    background: var(--color-primary-100);
+    padding: 0.1em 0.35em;
+    border-radius: 0.25em;
+  }
+  :global(.dark) .cs-admin-reply-body :global(code) {
+    background: rgba(255, 255, 255, 0.08);
+  }
+  .cs-admin-reply-body :global(a) {
+    color: var(--color-highlight-500);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  :global(.dark) .cs-admin-reply-body {
+    color: var(--color-primary-200);
+  }
+
+  .cs-reply-form {
+    margin-top: 0.5rem;
+    margin-left: 1rem;
+    display: none;
+    gap: 0.5rem;
+  }
+  .cs-reply-form[data-open='true'] {
+    display: flex;
+    flex-direction: column;
+  }
+  .cs-reply-form textarea {
+    min-height: 60px;
+  }
+  .cs-reply-form .cs-reply-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .cs-reply-form .cs-reply-actions button {
+    font-size: 0.78rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 0.3rem;
+    border: 1px solid var(--color-primary-300);
+    background: transparent;
+    cursor: pointer;
+    color: var(--color-primary-700);
+  }
+  :global(.dark) .cs-reply-form .cs-reply-actions button {
+    border-color: var(--color-primary-600);
+    color: var(--color-primary-200);
+  }
+  .cs-reply-form .cs-reply-actions button.cs-reply-send {
+    background: var(--color-highlight-500);
+    border-color: var(--color-highlight-500);
+    color: white;
+  }
+</style>
+
+<script>
+  // Types kept loose on purpose - this file is loaded as a plain client script.
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str == null ? '' : String(str);
+    return div.innerHTML;
+  }
+
+  function formatRelativeDate(iso) {
+    try {
+      const then = new Date(iso).getTime();
+      const now = Date.now();
+      const diffSec = Math.max(1, Math.floor((now - then) / 1000));
+      const units = [
+        ['year', 31536000],
+        ['month', 2592000],
+        ['day', 86400],
+        ['hour', 3600],
+        ['minute', 60],
+      ];
+      for (const [name, secs] of units) {
+        const val = Math.floor(diffSec / secs);
+        if (val >= 1) {
+          return `${val} ${name}${val > 1 ? 's' : ''} ago`;
+        }
+      }
+      return 'just now';
+    } catch {
+      return '';
+    }
+  }
+
+  function normalizeWebsite(raw) {
+    if (!raw) return '';
+    const trimmed = raw.trim();
+    if (!trimmed) return '';
+    if (/^https?:\/\//i.test(trimmed)) return trimmed;
+    return `https://${trimmed}`;
+  }
+
+  // A small, safe Markdown subset - no library, no dependencies.
+  // Everything is HTML-escaped FIRST, so raw markup a commenter types
+  // (<script>, <img onerror>, etc.) can never survive into the DOM.
+  // Only the whitelisted patterns below are turned back into real tags.
+  function renderMarkdown(raw) {
+    let html = escapeHtml(raw);
+
+    // Inline code: `code`
+    html = html.replace(/`([^`\n]+)`/g, '<code>$1</code>');
+
+    // Links: [text](https://example.com) - http(s) only
+    html = html.replace(
+      /\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)/g,
+      (_m, text, url) =>
+        `<a href="${url}" target="_blank" rel="nofollow ugc noopener noreferrer">${text}</a>`
+    );
+
+    // Bold: **text** or __text__
+    html = html.replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/__([^_\n]+)__/g, '<strong>$1</strong>');
+
+    // Italic: *text* or _text_ (run after bold so ** isn't eaten by *)
+    html = html.replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
+    html = html.replace(/\b_([^_\n]+)_\b/g, '<em>$1</em>');
+
+    // Line-by-line block structure: lists (- / *) and blockquotes (>)
+    const lines = html.split('\n');
+    const out = [];
+    let inList = false;
+    let inQuote = false;
+
+    const closeList = () => {
+      if (inList) {
+        out.push('</ul>');
+        inList = false;
+      }
+    };
+    const closeQuote = () => {
+      if (inQuote) {
+        out.push('</blockquote>');
+        inQuote = false;
+      }
+    };
+
+    for (const line of lines) {
+      const listMatch = line.match(/^[-*]\s+(.*)/);
+      const quoteMatch = line.match(/^&gt;\s?(.*)/);
+
+      if (listMatch) {
+        closeQuote();
+        if (!inList) {
+          out.push('<ul>');
+          inList = true;
+        }
+        out.push(`<li>${listMatch[1]}</li>`);
+        continue;
+      }
+      closeList();
+
+      if (quoteMatch) {
+        if (!inQuote) {
+          out.push('<blockquote>');
+          inQuote = true;
+        }
+        out.push(quoteMatch[1]);
+        continue;
+      }
+      closeQuote();
+
+      out.push(line);
+    }
+    closeList();
+    closeQuote();
+    html = out.join('\n');
+
+    // Paragraphs: blank-line-separated blocks become <p>, single
+    // newlines inside a block become <br>. Already-block-level chunks
+    // (lists/blockquotes) pass through untouched.
+    return html
+      .split(/\n{2,}/)
+      .map((block) => {
+        const trimmed = block.trim();
+        if (!trimmed) return '';
+        if (/^<(ul|blockquote)>/.test(trimmed)) return trimmed;
+        return `<p>${block.replace(/\n/g, '<br>')}</p>`;
+      })
+      .filter(Boolean)
+      .join('');
+  }
+
+  function getAdminKey() {
+    try {
+      return localStorage.getItem('cs_admin_key') || '';
+    } catch {
+      return '';
+    }
+  }
+
+  function setAdminKey(key) {
+    try {
+      if (key) localStorage.setItem('cs_admin_key', key);
+      else localStorage.removeItem('cs_admin_key');
+    } catch {
+      // localStorage unavailable (private mode, etc.) - admin mode just won't persist
+    }
+  }
+
+  function initializeComments() {
+    const root = document.querySelector('#comments-system');
+    if (!root) return;
+
+    const workerUrl = (root.dataset.workerUrl || '').replace(/\/$/, '');
+    const contentType = root.dataset.contentType || 'post';
+    const slug = root.dataset.slug || '';
+    const pageTitle = root.dataset.title || '';
+    const maxLength = parseInt(root.dataset.maxLength || '2000', 10);
+    const loadedAt = Date.now();
+
+    if (!workerUrl) {
+      root.innerHTML = '<p class="cs-empty">Comments are not configured yet.</p>';
+      return;
+    }
+
+    // Avoid double-initializing the same instance (e.g. rapid Swup re-triggers)
+    if (root.dataset.csReady === 'true') {
+      loadComments();
+      return;
+    }
+    root.dataset.csReady = 'true';
+
+    let adminKey = getAdminKey();
+    let clickCount = 0;
+    let clickTimer = null;
+
+    root.innerHTML = `
+      <div class="cs-heading" id="cs-heading-${slugSafe(slug)}">
+        Comments <span class="cs-count" id="cs-count"></span>
+      </div>
+      <form class="cs-form" id="cs-form" autocomplete="off">
+        <div class="cs-form-row">
+          <input class="cs-input" type="text" id="cs-name" placeholder="Name" maxlength="60" required />
+          <input class="cs-input" type="text" id="cs-website" placeholder="Website (optional)" maxlength="200" />
+        </div>
+        <textarea class="cs-textarea" id="cs-content" placeholder="Write a comment..." maxlength="${maxLength}" required></textarea>
+        <div class="cs-md-hint">Markdown supported: **bold**, *italic*, \`code\`, [link](https://…), lines starting with - or &gt;</div>
+        <!-- Honeypot field: real visitors never see or fill this -->
+        <div class="cs-hp" aria-hidden="true">
+          <label for="cs-hp-field">Leave this field empty</label>
+          <input type="text" id="cs-hp-field" name="cs-hp-field" tabindex="-1" autocomplete="off" />
+        </div>
+        <div class="cs-form-footer">
+          <span class="cs-counter"><span id="cs-charcount">0</span>/${maxLength}</span>
+          <button type="submit" class="cs-submit" id="cs-submit">Post comment</button>
+        </div>
+        <div class="cs-status" id="cs-status"></div>
+      </form>
+      <div class="cs-list" id="cs-list">
+        <div class="cs-loading">Loading comments...</div>
+      </div>
+    `;
+
+    const heading = root.querySelector('.cs-heading');
+    const listEl = root.querySelector('#cs-list');
+    const countEl = root.querySelector('#cs-count');
+    const formEl = root.querySelector('#cs-form');
+    const statusEl = root.querySelector('#cs-status');
+    const submitBtn = root.querySelector('#cs-submit');
+    const contentEl = root.querySelector('#cs-content');
+    const charcountEl = root.querySelector('#cs-charcount');
+
+    contentEl.addEventListener('input', () => {
+      charcountEl.textContent = String(contentEl.value.length);
+    });
+
+    // Hidden admin activation: click the heading 5 times in quick succession
+    heading.addEventListener('click', () => {
+      clickCount += 1;
+      clearTimeout(clickTimer);
+      clickTimer = setTimeout(() => (clickCount = 0), 1500);
+      if (clickCount >= 5) {
+        clickCount = 0;
+        const entered = window.prompt(adminKey ? 'Update admin key (leave blank to sign out):' : 'Enter admin key:');
+        if (entered === null) return;
+        adminKey = entered.trim();
+        setAdminKey(adminKey);
+        renderComments(root._csComments || []);
+      }
+    });
+
+    function slugSafe(s) {
+      return String(s).replace(/[^a-zA-Z0-9_-]/g, '');
+    }
+
+    async function loadComments() {
+      try {
+        const res = await fetch(
+          `${workerUrl}/api/comments?type=${encodeURIComponent(contentType)}&slug=${encodeURIComponent(slug)}`
+        );
+        if (!res.ok) throw new Error('Failed to load comments');
+        const data = await res.json();
+        const comments = Array.isArray(data.comments) ? data.comments : [];
+        root._csComments = comments;
+        renderComments(comments);
+      } catch (err) {
+        listEl.innerHTML = '<p class="cs-empty">Could not load comments right now.</p>';
+      }
+    }
+
+    function renderComments(comments) {
+      countEl.textContent = comments.length ? `(${comments.length})` : '';
+
+      if (!comments.length) {
+        listEl.innerHTML = '<p class="cs-empty">No comments yet. Be the first to say something.</p>';
+        return;
+      }
+
+      listEl.innerHTML = comments
+        .map((c) => {
+          const website = normalizeWebsite(c.author_website);
+          const authorHtml = website
+            ? `<a class="cs-comment-author-link" href="${escapeHtml(website)}" target="_blank" rel="nofollow ugc noopener noreferrer">${escapeHtml(c.author_name)}</a>`
+            : escapeHtml(c.author_name);
+
+          const replyHtml = c.admin_reply
+            ? `<div class="cs-admin-reply">
+                 <div class="cs-admin-reply-label">Author replied</div>
+                 <div class="cs-admin-reply-body">${renderMarkdown(c.admin_reply)}</div>
+               </div>`
+            : '';
+
+          return `
+            <div class="cs-comment" data-id="${c.id}">
+              <div class="cs-comment-meta">
+                <span class="cs-comment-author">${authorHtml}</span>
+                <span class="cs-comment-date">${formatRelativeDate(c.created_at)}</span>
+              </div>
+              <div class="cs-comment-body">${renderMarkdown(c.content)}</div>
+              <div class="cs-comment-actions" data-admin="${adminKey ? 'true' : 'false'}">
+                ${c.admin_reply ? '' : '<button type="button" class="cs-reply-toggle-btn">Reply</button>'}
+                <button type="button" class="cs-delete-btn">Delete</button>
+              </div>
+              <form class="cs-reply-form" data-open="false">
+                <textarea class="cs-textarea" placeholder="Write a reply..." maxlength="${maxLength}"></textarea>
+                <div class="cs-reply-actions">
+                  <button type="submit" class="cs-reply-send">Send reply</button>
+                  <button type="button" class="cs-reply-cancel">Cancel</button>
+                </div>
+              </form>
+              ${replyHtml}
+            </div>
+          `;
+        })
+        .join('');
+
+      // Wire up admin controls per comment
+      listEl.querySelectorAll('.cs-comment').forEach((commentEl) => {
+        const id = commentEl.getAttribute('data-id');
+        const deleteBtn = commentEl.querySelector('.cs-delete-btn');
+        const replyToggle = commentEl.querySelector('.cs-reply-toggle-btn');
+        const replyForm = commentEl.querySelector('.cs-reply-form');
+
+        if (deleteBtn) {
+          deleteBtn.addEventListener('click', async () => {
+            if (!window.confirm('Delete this comment?')) return;
+            try {
+              const res = await fetch(`${workerUrl}/api/comments/${id}`, {
+                method: 'DELETE',
+                headers: { 'X-Admin-Key': adminKey },
+              });
+              if (res.status === 401) {
+                window.alert('Admin key rejected. Signing out of admin mode.');
+                adminKey = '';
+                setAdminKey('');
+                renderComments(root._csComments || []);
+                return;
+              }
+              if (!res.ok) throw new Error('Delete failed');
+              root._csComments = (root._csComments || []).filter((c) => String(c.id) !== String(id));
+              renderComments(root._csComments);
+            } catch {
+              window.alert('Could not delete that comment.');
+            }
+          });
+        }
+
+        if (replyToggle && replyForm) {
+          replyToggle.addEventListener('click', () => {
+            replyForm.setAttribute('data-open', replyForm.getAttribute('data-open') === 'true' ? 'false' : 'true');
+          });
+          replyForm.querySelector('.cs-reply-cancel').addEventListener('click', () => {
+            replyForm.setAttribute('data-open', 'false');
+          });
+          replyForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const textarea = replyForm.querySelector('textarea');
+            const reply = textarea.value.trim();
+            if (!reply) return;
+            try {
+              const res = await fetch(`${workerUrl}/api/comments/${id}/reply`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'X-Admin-Key': adminKey,
+                },
+                body: JSON.stringify({ reply }),
+              });
+              if (res.status === 401) {
+                window.alert('Admin key rejected. Signing out of admin mode.');
+                adminKey = '';
+                setAdminKey('');
+                renderComments(root._csComments || []);
+                return;
+              }
+              if (!res.ok) throw new Error('Reply failed');
+              const updated = await res.json();
+              root._csComments = (root._csComments || []).map((c) =>
+                String(c.id) === String(id) ? { ...c, admin_reply: updated.admin_reply, admin_reply_at: updated.admin_reply_at } : c
+              );
+              renderComments(root._csComments);
+            } catch {
+              window.alert('Could not post that reply.');
+            }
+          });
+        }
+      });
+    }
+
+    formEl.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      statusEl.textContent = '';
+      statusEl.removeAttribute('data-kind');
+
+      const nameEl = root.querySelector('#cs-name');
+      const websiteEl = root.querySelector('#cs-website');
+      const hpEl = root.querySelector('#cs-hp-field');
+
+      const name = nameEl.value.trim();
+      const website = websiteEl.value.trim();
+      const content = contentEl.value.trim();
+
+      if (!name || !content) {
+        statusEl.textContent = 'Please fill in your name and a comment.';
+        statusEl.setAttribute('data-kind', 'error');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Posting...';
+
+      try {
+        const res = await fetch(`${workerUrl}/api/comments`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: contentType,
+            slug,
+            name,
+            website,
+            content,
+            page_title: pageTitle,
+            hp: hpEl.value,
+            ts: loadedAt,
+          }),
+        });
+
+        if (res.status === 429) {
+          statusEl.textContent = "You're commenting a little too fast - please wait a moment and try again.";
+          statusEl.setAttribute('data-kind', 'error');
+          return;
+        }
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          statusEl.textContent = body.error || 'Could not post your comment.';
+          statusEl.setAttribute('data-kind', 'error');
+          return;
+        }
+
+        const created = await res.json();
+        root._csComments = [...(root._csComments || []), created];
+        renderComments(root._csComments);
+
+        formEl.reset();
+        charcountEl.textContent = '0';
+        statusEl.textContent = 'Comment posted!';
+        statusEl.setAttribute('data-kind', 'success');
+      } catch {
+        statusEl.textContent = 'Network error - please try again.';
+        statusEl.setAttribute('data-kind', 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Post comment';
+      }
+    });
+
+    loadComments();
+  }
+
+  // Expose globally so BaseLayout can re-trigger this on Swup page transitions,
+  // the same way it previously drove Giscus.
+  window.initializeComments = initializeComments;
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeComments);
+  } else {
+    initializeComments();
+  }
+</script>

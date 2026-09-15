@@ -100,11 +100,10 @@
       });
     }
 
-    // Giscus theme change handling
-    function handleGiscusThemeChange(isDark) {
-      // Giscus theme changes are handled by the Giscus client script
-      // This is just a placeholder to prevent the error
-    }
+    // No-op kept for backward compatibility with a couple of call sites below.
+    // CommentsSystem.astro follows the site's `dark` class purely via CSS,
+    // so it needs no JS-driven theme sync the way the old Giscus iframe did.
+    function handleGiscusThemeChange(isDark) {}
 
 
     // Reset theme to default and clear user preferences
@@ -664,133 +663,9 @@
     // Make restoreScroll globally accessible
     window.restoreScroll = restoreScroll;
 
-    // Global comments initialization function - Swup compatible
-    function initializeGiscusComments() {
-
-      // Check if comments are enabled in config
-      if (!window.commentsEnabled) {
-        return;
-      }
-
-      // Check if comments container exists
-      const commentsContainer = document.querySelector('#giscus-comments');
-      if (!commentsContainer) {
-        return;
-      }
-
-      // CRITICAL: Clear the entire container content first
-      commentsContainer.innerHTML = '';
-
-      // Remove any existing Giscus scripts from the entire document
-      const existingScripts = document.querySelectorAll('script[src*="giscus.app"]');
-      existingScripts.forEach(script => {
-        script.remove();
-      });
-
-      // Remove any existing Giscus iframes from the entire document
-      const existingIframes = document.querySelectorAll('iframe[src*="giscus"]');
-      existingIframes.forEach(iframe => {
-        iframe.remove();
-      });
-
-
-      // Clear any error state
-      commentsContainer.removeAttribute('data-error');
-
-      // Create a fresh Giscus script
-      const script = document.createElement('script');
-      script.src = 'https://giscus.app/client.js';
-      script.async = true;
-      script.crossOrigin = 'anonymous';
-
-      // Get configuration from data attributes
-      const containerElement = commentsContainer;
-      const repo = containerElement.dataset.repo || '';
-      const repoId = containerElement.dataset.repoId || '';
-      const category = containerElement.dataset.category || '';
-      const categoryId = containerElement.dataset.categoryId || '';
-      const mapping = containerElement.dataset.mapping || 'pathname';
-      const strict = containerElement.dataset.strict || '0';
-      const reactionsEnabled = containerElement.dataset.reactionsEnabled || '1';
-      const metadata = containerElement.dataset.metadata || '0';
-      const inputPosition = containerElement.dataset.inputPosition || 'bottom';
-      const lang = containerElement.dataset.lang || 'en';
-      const loading = containerElement.dataset.loading || 'lazy';
-
-      // Determine the actual theme to use - convert 'preferred_color_scheme' to 'dark' or 'light'
-      let theme = containerElement.dataset.theme || 'preferred_color_scheme';
-      if (theme === 'preferred_color_scheme') {
-        // Get current theme from document
-        const isDark = document.documentElement.classList.contains('dark');
-        theme = isDark ? 'dark' : 'light';
-      }
-
-      script.setAttribute('data-repo', repo);
-      script.setAttribute('data-repo-id', repoId);
-      script.setAttribute('data-category', category);
-      script.setAttribute('data-category-id', categoryId);
-      script.setAttribute('data-mapping', mapping);
-      script.setAttribute('data-strict', strict);
-      script.setAttribute('data-reactions-enabled', reactionsEnabled);
-      script.setAttribute('data-emit-metadata', metadata);
-      script.setAttribute('data-input-position', inputPosition);
-      script.setAttribute('data-theme', theme);
-      script.setAttribute('data-lang', lang);
-      script.setAttribute('data-loading', loading);
-
-      script.onload = function() {
-
-        // Auto-scroll to comments section after GitHub sign-in
-        // This helps users find the comments after authentication
-        setTimeout(() => {
-          const commentsContainer = document.querySelector('#giscus-comments');
-          if (commentsContainer) {
-            // Check if we're returning from GitHub OAuth (common pattern)
-            const urlParams = new URLSearchParams(window.location.search);
-            const isOAuthReturn = urlParams.has('code') || urlParams.has('state') ||
-                                 window.location.hash.includes('giscus') ||
-                                 document.referrer.includes('github.com') ||
-                                 document.referrer.includes('giscus.app');
-
-            if (isOAuthReturn) {
-              commentsContainer.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-              });
-            }
-          }
-        }, 1000); // Delay to allow Giscus to fully load
-
-        // Simple iframe load detection and theme initialization
-        const checkForGiscusIframe = () => {
-          const giscusIframe = document.querySelector('iframe[src*="giscus"]');
-          if (giscusIframe) {
-            giscusIframe.addEventListener('load', () => {
-              // Initialize theme after iframe loads
-              setTimeout(() => {
-                handleGiscusThemeChange();
-              }, 500);
-            });
-          } else {
-            // If iframe not ready yet, check again in a bit
-            setTimeout(checkForGiscusIframe, 500);
-          }
-        };
-
-        checkForGiscusIframe();
-      };
-
-      script.onerror = function() {
-        commentsContainer.setAttribute('data-error', 'true');
-      };
-
-      // Append to the container
-      commentsContainer.appendChild(script);
-    };
-
-    // Make the function globally accessible
-    window.initializeGiscusComments = initializeGiscusComments;
-
+    // Comments are now handled by CommentsSystem.astro, which defines
+    // window.initializeComments() itself and re-renders on Swup navigation
+    // via the call sites below (search for initializeComments).
     // Collapsible callouts functionality
     function initializeCollapsibleCallouts() {
       const collapsibleCallouts = document.querySelectorAll('.callout-collapsible');
@@ -902,7 +777,7 @@
   
 
   
-</div></main><!-- Footer --><footer class="bg-white dark:bg-primary-950 mt-auto"><div class="mx-auto px-4 sm:px-6 lg:px-8 py-8" style="max-width: 60rem"><!-- Profile picture above footer content when footer is enabled --><!-- Mobile: Social icons above footer content, centered --><!-- Footer content and social icons on same line --><div class="text-center "><p class="text-xs text-primary-500 dark:text-primary-400">© 2026 黃宏勝 | Hong-Sheng Huang.</p><!-- Desktop: Social icons on same line as footer content --></div><!-- When footer is disabled: Profile picture aligned with social icons OR just centered social icons --></div></footer><!-- Command Palette --><!-- Make site configuration available to client-side JavaScript --><script>(function(){const siteConfig = {"site":"https://secologies.com","title":"Secologies","homepageTitle":"","description":"探索資安的科學與實務","author":"黃宏勝 | Hong-Sheng Huang","language":"zh","faviconThemeAdaptive":false,"defaultOgImageAlt":"Secologies logo.","theme":"obsidian","customThemeFile":"custom","availableThemes":"default","fonts":{"source":"local","families":{"body":"Inter","heading":"Inter","mono":"JetBrains Mono"},"display":"swap"},"layout":{"contentWidth":"60rem"},"tableOfContents":{"enabled":true,"depth":4},"footer":{"enabled":true,"content":"© 2026 {author}.","showSocialIconsInFooter":true},"hideScrollBar":false,"scrollToTop":true,"featureButton":"mode","deployment":{"platform":"cloudflare-workers"},"commandPalette":{"enabled":true,"shortcut":"ctrl+K","placeholder":"Search posts","search":{"posts":true,"pages":false,"projects":false,"podcasts":false},"sections":{"quickActions":true,"pages":true,"social":true},"quickActions":{"enabled":true,"toggleMode":true,"graphView":true,"changeTheme":true}},"profilePicture":{"enabled":false,"image":"/profile.jpg","alt":"Profile picture","size":"md","url":"","placement":"footer","style":"circle"},"navigation":{"showNavigation":true,"style":"traditional","showMobileMenu":true,"pages":[{"title":"Posts","url":"/posts/"},{"title":"Projects","url":"/projects/"},{"title":"Podcasts","url":"/podcasts/"},{"title":"Newsletter","url":"/newsletter/"},{"title":"About","url":"/about/","children":[{"title":"Hong-Sheng Huang","url":"/hong-sheng-huang/"},{"title":"Privacy Policy","url":"/privacy-policy/"}]}],"social":[]},"optionalContentTypes":{"projects":true,"podcasts":true},"homeOptions":{"featuredPost":{"enabled":true,"type":"latest","slug":"getting-started"},"recentPosts":{"enabled":true,"count":7},"projects":{"enabled":true,"count":2},"podcasts":{"enabled":true,"count":3},"blurb":{"placement":"below"}},"postOptions":{"postsPerPage":6,"readingTime":true,"wordCount":true,"tags":true,"linkedMentions":{"enabled":true,"linkedMentionsCompact":false},"graphView":{"enabled":true,"showInSidebar":true,"maxNodes":100,"showOrphanedPosts":true},"postNavigation":true,"showPostCardCoverImages":"featured-and-posts","postCardAspectRatio":"og","customPostCardAspectRatio":"2.5/1","comments":{"enabled":false,"provider":"giscus","repo":"","repoId":"","category":"","categoryId":"","mapping":"","strict":"","reactions":"","metadata":"","inputPosition":"","theme":"","lang":"","loading":""}}};
+</div></main><!-- Footer --><footer class="bg-white dark:bg-primary-950 mt-auto"><div class="mx-auto px-4 sm:px-6 lg:px-8 py-8" style="max-width: 60rem"><!-- Profile picture above footer content when footer is enabled --><!-- Mobile: Social icons above footer content, centered --><!-- Footer content and social icons on same line --><div class="text-center "><p class="text-xs text-primary-500 dark:text-primary-400">© 2026 黃宏勝 | Hong-Sheng Huang.</p><!-- Desktop: Social icons on same line as footer content --></div><!-- When footer is disabled: Profile picture aligned with social icons OR just centered social icons --></div></footer><!-- Command Palette --><!-- Make site configuration available to client-side JavaScript --><script>(function(){const siteConfig = {"site":"https://secologies.com","title":"Secologies","homepageTitle":"","description":"探索資安的科學與實務","author":"黃宏勝 | Hong-Sheng Huang","language":"zh","faviconThemeAdaptive":false,"defaultOgImageAlt":"Secologies logo.","theme":"obsidian","customThemeFile":"custom","availableThemes":"default","fonts":{"source":"local","families":{"body":"Inter","heading":"Inter","mono":"JetBrains Mono"},"display":"swap"},"layout":{"contentWidth":"60rem"},"tableOfContents":{"enabled":true,"depth":4},"footer":{"enabled":true,"content":"© 2026 {author}.","showSocialIconsInFooter":true},"hideScrollBar":false,"scrollToTop":true,"featureButton":"mode","deployment":{"platform":"cloudflare-workers"},"commandPalette":{"enabled":true,"shortcut":"ctrl+K","placeholder":"Search posts","search":{"posts":true,"pages":false,"projects":false,"podcasts":false},"sections":{"quickActions":true,"pages":true,"social":true},"quickActions":{"enabled":true,"toggleMode":true,"graphView":true,"changeTheme":true}},"profilePicture":{"enabled":false,"image":"/profile.jpg","alt":"Profile picture","size":"md","url":"","placement":"footer","style":"circle"},"navigation":{"showNavigation":true,"style":"traditional","showMobileMenu":true,"pages":[{"title":"Posts","url":"/posts/"},{"title":"Projects","url":"/projects/"},{"title":"Podcasts","url":"/podcasts/"},{"title":"Newsletter","url":"/newsletter/"},{"title":"About","url":"/about/","children":[{"title":"Hong-Sheng Huang","url":"/hong-sheng-huang/"},{"title":"Privacy Policy","url":"/privacy-policy/"}]}],"social":[]},"optionalContentTypes":{"projects":true,"podcasts":true},"homeOptions":{"featuredPost":{"enabled":true,"type":"latest","slug":"getting-started"},"recentPosts":{"enabled":true,"count":7},"projects":{"enabled":true,"count":2},"podcasts":{"enabled":true,"count":3},"blurb":{"placement":"below"}},"postOptions":{"postsPerPage":6,"readingTime":true,"wordCount":true,"tags":true,"linkedMentions":{"enabled":true,"linkedMentionsCompact":false},"graphView":{"enabled":true,"showInSidebar":true,"maxNodes":100,"showOrphanedPosts":true},"postNavigation":true,"showPostCardCoverImages":"featured-and-posts","postCardAspectRatio":"og","customPostCardAspectRatio":"2.5/1","comments":{"enabled":true,"provider":"cloudflare","workerUrl":"https://secologies-comments.hshuang.workers.dev","maxLength":2000}}};
 const getThemeDisplayName = undefined;
 
   // Make siteConfig available globally for the command palette
@@ -920,7 +795,7 @@ const getThemeDisplayName = undefined;
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path>
             </svg>
-          `,o.appendChild(s),i.appendChild(a),i.appendChild(o),r.appendChild(i),e.appendChild(r)});let o=document.createElement(`div`);o.className=`image-container`,o.appendChild(e);let s=(e,t)=>{t.forEach(t=>{t.nodeType===Node.TEXT_NODE&&(!t.textContent||!t.textContent.trim())||t.nodeType===Node.ELEMENT_NODE&&t.tagName===`BR`||e.appendChild(t.cloneNode(!0))})};if(i.length>0){let e=document.createElement(`div`);e.className=`image-caption-container`,s(e,i),o.appendChild(e)}if(a){let e=document.createElement(`p`);s(e,Array.from(a.childNodes)),o.appendChild(e)}t.parentNode?.replaceChild(o,t),a?.parentNode&&a.parentNode.removeChild(a)}})}document.addEventListener(`DOMContentLoaded`,e),window.initializeImageGalleries=e;</script><!-- Category Filter --><!-- Category Filter Component --><!-- This component handles category filtering functionality for projects --><script type="module">function e(){let e=window.location.pathname,t=document.querySelector(`.categories-container`)!==null;if(e.startsWith(`/projects`)||e===`/projects`||e.match(/^\/projects\/?$/)!==null||t)return;let n=document.querySelectorAll(`.category-item`),r=document.querySelectorAll(`[data-project-categories]`),i=null;if(n.length===0)return;n.forEach(e=>{let t=e.cloneNode(!0);e.parentNode?.replaceChild(t,e)});let a=document.querySelectorAll(`.category-item`);a.forEach(e=>{e.addEventListener(`click`,t=>{t.preventDefault(),t.stopPropagation();let n=e.getAttribute(`data-category`);if(!n)return;let o=i===n;a.forEach(e=>{e.classList.remove(`bg-highlight-100`,`dark:bg-highlight-900/40`,`text-highlight-800`,`dark:text-highlight-200`,`ring-1`,`ring-highlight-300`,`dark:ring-highlight-700`),e.classList.add(`bg-primary-100`,`dark:bg-primary-800`,`text-primary-700`,`dark:text-primary-300`)}),o?(r.forEach(e=>{e.style.display=`block`}),i=null):(r.forEach(e=>{(e.getAttribute(`data-project-categories`)||``).includes(n)?e.style.display=`block`:e.style.display=`none`}),e.classList.remove(`bg-primary-100`,`dark:bg-primary-800`,`text-primary-700`,`dark:text-primary-300`),e.classList.add(`bg-highlight-100`,`dark:bg-highlight-900/40`,`text-highlight-800`,`dark:text-highlight-200`,`ring-1`,`ring-highlight-300`,`dark:ring-highlight-700`),i=n),window.dispatchEvent(new CustomEvent(`categoryClicked`,{detail:{category:n,isActive:i===n}}))})})}e(),document.addEventListener(`DOMContentLoaded`,e),window.initializeCategoryFiltering=e;</script><!-- Mermaid diagrams handled by client script --><script type="module" src="/_assets/BaseLayout.astro_astro_type_script_index_0_lang.C--HcRZH.js"></script><script type="module" src="/_assets/BaseLayout.astro_astro_type_script_index_1_lang.DRxhwE48.js"></script><script>(function(){const commentsEnabled = false;
+          `,o.appendChild(s),i.appendChild(a),i.appendChild(o),r.appendChild(i),e.appendChild(r)});let o=document.createElement(`div`);o.className=`image-container`,o.appendChild(e);let s=(e,t)=>{t.forEach(t=>{t.nodeType===Node.TEXT_NODE&&(!t.textContent||!t.textContent.trim())||t.nodeType===Node.ELEMENT_NODE&&t.tagName===`BR`||e.appendChild(t.cloneNode(!0))})};if(i.length>0){let e=document.createElement(`div`);e.className=`image-caption-container`,s(e,i),o.appendChild(e)}if(a){let e=document.createElement(`p`);s(e,Array.from(a.childNodes)),o.appendChild(e)}t.parentNode?.replaceChild(o,t),a?.parentNode&&a.parentNode.removeChild(a)}})}document.addEventListener(`DOMContentLoaded`,e),window.initializeImageGalleries=e;</script><!-- Category Filter --><!-- Category Filter Component --><!-- This component handles category filtering functionality for projects --><script type="module">function e(){let e=window.location.pathname,t=document.querySelector(`.categories-container`)!==null;if(e.startsWith(`/projects`)||e===`/projects`||e.match(/^\/projects\/?$/)!==null||t)return;let n=document.querySelectorAll(`.category-item`),r=document.querySelectorAll(`[data-project-categories]`),i=null;if(n.length===0)return;n.forEach(e=>{let t=e.cloneNode(!0);e.parentNode?.replaceChild(t,e)});let a=document.querySelectorAll(`.category-item`);a.forEach(e=>{e.addEventListener(`click`,t=>{t.preventDefault(),t.stopPropagation();let n=e.getAttribute(`data-category`);if(!n)return;let o=i===n;a.forEach(e=>{e.classList.remove(`bg-highlight-100`,`dark:bg-highlight-900/40`,`text-highlight-800`,`dark:text-highlight-200`,`ring-1`,`ring-highlight-300`,`dark:ring-highlight-700`),e.classList.add(`bg-primary-100`,`dark:bg-primary-800`,`text-primary-700`,`dark:text-primary-300`)}),o?(r.forEach(e=>{e.style.display=`block`}),i=null):(r.forEach(e=>{(e.getAttribute(`data-project-categories`)||``).includes(n)?e.style.display=`block`:e.style.display=`none`}),e.classList.remove(`bg-primary-100`,`dark:bg-primary-800`,`text-primary-700`,`dark:text-primary-300`),e.classList.add(`bg-highlight-100`,`dark:bg-highlight-900/40`,`text-highlight-800`,`dark:text-highlight-200`,`ring-1`,`ring-highlight-300`,`dark:ring-highlight-700`),i=n),window.dispatchEvent(new CustomEvent(`categoryClicked`,{detail:{category:n,isActive:i===n}}))})})}e(),document.addEventListener(`DOMContentLoaded`,e),window.initializeCategoryFiltering=e;</script><!-- Mermaid diagrams handled by client script --><script type="module" src="/_assets/BaseLayout.astro_astro_type_script_index_0_lang.C--HcRZH.js"></script><script type="module" src="/_assets/BaseLayout.astro_astro_type_script_index_1_lang.DRxhwE48.js"></script><script>(function(){const commentsEnabled = true;
 
     
     // Logger removed - no console output in production
@@ -1045,10 +920,10 @@ const getThemeDisplayName = undefined;
     document.addEventListener('DOMContentLoaded', () => {
       if (isDev) {
       }
-      if (document.querySelector('#giscus-comments')) {
+      if (document.querySelector('#comments-system')) {
         if (isDev) {
         }
-        window.initializeGiscusComments();
+        if (typeof window.initializeComments === 'function') { window.initializeComments(); }
       }
       // Initialize base embeds on initial page load (before table wrappers)
       if (window.initializeBaseEmbeds) {
@@ -1161,8 +1036,8 @@ const getThemeDisplayName = undefined;
           setFavicon();
           // Initialize after content replacement
           setTimeout(() => {
-            if (document.querySelector('#giscus-comments')) {
-              window.initializeGiscusComments();
+            if (document.querySelector('#comments-system')) {
+              if (typeof window.initializeComments === 'function') { window.initializeComments(); }
             }
             // Initialize base embeds first, then wrap tables
             if (window.initializeBaseEmbeds) {
@@ -1202,8 +1077,8 @@ const getThemeDisplayName = undefined;
           document.documentElement.setAttribute('data-theme', theme);
           updateThemeCSSVariables(theme).catch(console.error);
           setTimeout(() => {
-            if (document.querySelector('#giscus-comments')) {
-              window.initializeGiscusComments();
+            if (document.querySelector('#comments-system')) {
+              if (typeof window.initializeComments === 'function') { window.initializeComments(); }
             }
             // Initialize with small delay to ensure DOM is ready
             setTimeout(() => {
@@ -1279,11 +1154,11 @@ const getThemeDisplayName = undefined;
             if (node.nodeType === Node.ELEMENT_NODE) {
               const element = node;
               // Check if the added node or its children contain the comments container
-              if (element.id === 'giscus-comments' || element.querySelector('#giscus-comments')) {
+              if (element.id === 'comments-system' || element.querySelector('#comments-system')) {
                 if (isDev) {
                 }
                 setTimeout(() => {
-                  window.initializeGiscusComments();
+                  if (typeof window.initializeComments === 'function') { window.initializeComments(); }
                 }, 200);
               }
             }
@@ -1324,10 +1199,10 @@ const getThemeDisplayName = undefined;
         }
         // Delay to allow Swup to process the navigation
         setTimeout(() => {
-          if (document.querySelector('#giscus-comments')) {
+          if (document.querySelector('#comments-system')) {
             if (isDev) {
             }
-            window.initializeGiscusComments();
+            if (typeof window.initializeComments === 'function') { window.initializeComments(); }
           }
         }, 500);
       }
@@ -1665,15 +1540,11 @@ const getThemeDisplayName = undefined;
         initializeTwitterWidgets();
         // Also initialize theme again after widgets load (as backup)
         setTimeout(initializeTwitterTheme, 1000);
-        // Initialize Giscus theme after widgets load
-        setTimeout(initializeGiscusTheme, 1500);
       });
     } else {
       initializeTwitterWidgets();
       // Also initialize theme again after widgets load (as backup)
       setTimeout(initializeTwitterTheme, 1000);
-      // Initialize Giscus theme after widgets load
-      setTimeout(initializeGiscusTheme, 1500);
     }
 
     // Mermaid theme change handling
@@ -1685,53 +1556,10 @@ const getThemeDisplayName = undefined;
     }
 
 
-    // Giscus theme change handling - use postMessage API for dynamic theme switching
-    function handleGiscusThemeChange(isDarkParam) {
-      // Only change theme if comments are enabled and Giscus iframe exists
-      if (window.commentsEnabled) {
-        const giscusIframe = document.querySelector('iframe.giscus-frame');
-        if (giscusIframe) {
-          // Get current theme from document or use provided parameter
-          const isDark = isDarkParam !== undefined 
-            ? isDarkParam 
-            : document.documentElement.classList.contains('dark');
-          const newTheme = isDark ? 'dark' : 'light';
-
-          // Send message to Giscus iframe to change theme
-          giscusIframe.contentWindow.postMessage(
-            { giscus: { setConfig: { theme: newTheme } } },
-            'https://giscus.app'
-          );
-        }
-      }
-    }
-
     // Initialize Twitter theme on page load
     function initializeTwitterTheme() {
       const isDark = document.documentElement.classList.contains('dark');
       handleTwitterThemeChange(isDark);
-    }
-
-    // Initialize Giscus theme on page load
-    function initializeGiscusTheme() {
-      // Wait for Giscus iframe to load, then set initial theme
-      const checkForGiscusIframe = () => {
-        const giscusIframe = document.querySelector('iframe.giscus-frame');
-        if (giscusIframe) {
-          // Small delay to ensure iframe is fully loaded
-          setTimeout(() => {
-            handleGiscusThemeChange();
-          }, 500);
-        } else {
-          // If iframe not ready yet, check again in a bit
-          setTimeout(checkForGiscusIframe, 500);
-        }
-      };
-
-      // Only check if comments are enabled
-      if (window.commentsEnabled) {
-        checkForGiscusIframe();
-      }
     }
 
     // Listen for theme changes

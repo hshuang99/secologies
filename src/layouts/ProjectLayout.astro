@@ -12,7 +12,7 @@ import { normalizeStatus, getStatusDisplayText, hasStatusStyling, getStatusClass
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import TableOfContents from '@/components/TableOfContents.astro';
 import LinkedMentions from '@/components/LinkedMentions.astro';
-import GiscusComments from '@/components/GiscusComments.astro';
+import CommentsSystem from '@/components/CommentsSystem.astro';
 import Lightbox from '@/components/Lightbox.astro';
 import Icon from '@/components/Icon.astro';
 import { Image } from 'astro:assets';
@@ -341,13 +341,14 @@ const { prev: prevProject, next: nextProject } = getAdjacentPosts(visibleProject
             </nav>
           )}
 
-          <!-- Giscus Comments -->
+          <!-- Comments -->
           {siteConfig.postOptions.comments.enabled && (
             <div class="mt-16">
-              <GiscusComments
-                postTitle={project.data.title}
-                postSlug={project.id}
-                postUrl={Astro.url.href}
+              <CommentsSystem
+                contentType="project"
+                slug={project.id}
+                title={project.data.title}
+                url={Astro.url.href}
               />
             </div>
           )}

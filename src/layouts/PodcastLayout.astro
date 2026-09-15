@@ -11,6 +11,7 @@ import TableOfContents from '@/components/TableOfContents.astro';
 import Lightbox from '@/components/Lightbox.astro';
 import ImageWrapper from '@/components/ImageWrapper.astro';
 import PodcastsSidebar from '@/components/PodcastsSidebar.astro';
+import CommentsSystem from '@/components/CommentsSystem.astro';
 import Icon from '@/components/Icon.astro';
 import { shouldShowContent, getAdjacentDocs, formatDate } from '@/utils/markdown';
 import { getTranslationsFor, getEntryLang } from '@/utils/translations';
@@ -243,6 +244,18 @@ const structuredData = {
           <div class="prose dark:prose-dark max-w-none" id="podcast-content">
             <Content />
           </div>
+
+          <!-- Comments -->
+          {siteConfig.postOptions.comments.enabled && (
+            <div class="mt-16">
+              <CommentsSystem
+                contentType="podcast"
+                slug={podcast.id}
+                title={podcast.data.title}
+                url={Astro.url.href}
+              />
+            </div>
+          )}
         </div>
       </article>
 

@@ -146,19 +146,12 @@ export interface SiteConfig {
     customPostCardAspectRatio?: string;
     comments: {
       enabled: boolean;
-      provider: string;
-      repo: string;
-      repoId: string;
-      category: string;
-      categoryId: string;
-      mapping: string;
-      strict: string;
-      reactions: string;
-      metadata: string;
-      inputPosition: string;
-      theme: string;
-      lang: string;
-      loading: string;
+      provider: string; // "cloudflare"
+      // Base URL of the deployed Cloudflare Worker, no trailing slash
+      // e.g. "https://secologies-comments.your-subdomain.workers.dev"
+      workerUrl: string;
+      // Max characters allowed in a comment (mirrors the Worker's own limit)
+      maxLength: number;
     };
   };
   
@@ -408,33 +401,14 @@ export const siteConfig: SiteConfig = {
     customPostCardAspectRatio: "2.5/1", // Only used when postCardAspectRatio is "custom" (e.g., "2.5/1")
     comments: {
       // [CONFIG:POST_OPTIONS_COMMENTS_ENABLED]
-      enabled: false,
+      enabled: true,
       // [CONFIG:POST_OPTIONS_COMMENTS_PROVIDER]
-      provider: "giscus",
-      // [CONFIG:POST_OPTIONS_COMMENTS_REPO]
-      repo: "",
-      // [CONFIG:POST_OPTIONS_COMMENTS_REPO_ID]
-      repoId: "",
-      // [CONFIG:POST_OPTIONS_COMMENTS_CATEGORY]
-      category: "",
-      // [CONFIG:POST_OPTIONS_COMMENTS_CATEGORY_ID]
-      categoryId: "",
-      // [CONFIG:POST_OPTIONS_COMMENTS_MAPPING]
-      mapping: "",
-      // [CONFIG:POST_OPTIONS_COMMENTS_STRICT]
-      strict: "",
-      // [CONFIG:POST_OPTIONS_COMMENTS_REACTIONS]
-      reactions: "",
-      // [CONFIG:POST_OPTIONS_COMMENTS_METADATA]
-      metadata: "",
-      // [CONFIG:POST_OPTIONS_COMMENTS_INPUT_POSITION]
-      inputPosition: "",
-      // [CONFIG:POST_OPTIONS_COMMENTS_THEME]
-      theme: "",
-      // [CONFIG:POST_OPTIONS_COMMENTS_LANG]
-      lang: "",
-      // [CONFIG:POST_OPTIONS_COMMENTS_LOADING]
-      loading: "",
+      provider: "cloudflare",
+      // [CONFIG:POST_OPTIONS_COMMENTS_WORKER_URL]
+      // Set this after you deploy the Worker (see cf-comments/README.md)
+      workerUrl: "https://secologies-comments.hshuang.workers.dev",
+      // [CONFIG:POST_OPTIONS_COMMENTS_MAX_LENGTH]
+      maxLength: 2000,
     },
   },
 };

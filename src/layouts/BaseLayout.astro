@@ -288,11 +288,10 @@ for (const [path, mod] of Object.entries(customThemeModules)) {
       });
     }
 
-    // Giscus theme change handling
-    function handleGiscusThemeChange(isDark) {
-      // Giscus theme changes are handled by the Giscus client script
-      // This is just a placeholder to prevent the error
-    }
+    // No-op kept for backward compatibility with a couple of call sites below.
+    // CommentsSystem.astro follows the site's `dark` class purely via CSS,
+    // so it needs no JS-driven theme sync the way the old Giscus iframe did.
+    function handleGiscusThemeChange(isDark) {}
 
 
     // Reset theme to default and clear user preferences
@@ -852,133 +851,9 @@ for (const [path, mod] of Object.entries(customThemeModules)) {
     // Make restoreScroll globally accessible
     window.restoreScroll = restoreScroll;
 
-    // Global comments initialization function - Swup compatible
-    function initializeGiscusComments() {
-
-      // Check if comments are enabled in config
-      if (!window.commentsEnabled) {
-        return;
-      }
-
-      // Check if comments container exists
-      const commentsContainer = document.querySelector('#giscus-comments');
-      if (!commentsContainer) {
-        return;
-      }
-
-      // CRITICAL: Clear the entire container content first
-      commentsContainer.innerHTML = '';
-
-      // Remove any existing Giscus scripts from the entire document
-      const existingScripts = document.querySelectorAll('script[src*="giscus.app"]');
-      existingScripts.forEach(script => {
-        script.remove();
-      });
-
-      // Remove any existing Giscus iframes from the entire document
-      const existingIframes = document.querySelectorAll('iframe[src*="giscus"]');
-      existingIframes.forEach(iframe => {
-        iframe.remove();
-      });
-
-
-      // Clear any error state
-      commentsContainer.removeAttribute('data-error');
-
-      // Create a fresh Giscus script
-      const script = document.createElement('script');
-      script.src = 'https://giscus.app/client.js';
-      script.async = true;
-      script.crossOrigin = 'anonymous';
-
-      // Get configuration from data attributes
-      const containerElement = commentsContainer;
-      const repo = containerElement.dataset.repo || '';
-      const repoId = containerElement.dataset.repoId || '';
-      const category = containerElement.dataset.category || '';
-      const categoryId = containerElement.dataset.categoryId || '';
-      const mapping = containerElement.dataset.mapping || 'pathname';
-      const strict = containerElement.dataset.strict || '0';
-      const reactionsEnabled = containerElement.dataset.reactionsEnabled || '1';
-      const metadata = containerElement.dataset.metadata || '0';
-      const inputPosition = containerElement.dataset.inputPosition || 'bottom';
-      const lang = containerElement.dataset.lang || 'en';
-      const loading = containerElement.dataset.loading || 'lazy';
-
-      // Determine the actual theme to use - convert 'preferred_color_scheme' to 'dark' or 'light'
-      let theme = containerElement.dataset.theme || 'preferred_color_scheme';
-      if (theme === 'preferred_color_scheme') {
-        // Get current theme from document
-        const isDark = document.documentElement.classList.contains('dark');
-        theme = isDark ? 'dark' : 'light';
-      }
-
-      script.setAttribute('data-repo', repo);
-      script.setAttribute('data-repo-id', repoId);
-      script.setAttribute('data-category', category);
-      script.setAttribute('data-category-id', categoryId);
-      script.setAttribute('data-mapping', mapping);
-      script.setAttribute('data-strict', strict);
-      script.setAttribute('data-reactions-enabled', reactionsEnabled);
-      script.setAttribute('data-emit-metadata', metadata);
-      script.setAttribute('data-input-position', inputPosition);
-      script.setAttribute('data-theme', theme);
-      script.setAttribute('data-lang', lang);
-      script.setAttribute('data-loading', loading);
-
-      script.onload = function() {
-
-        // Auto-scroll to comments section after GitHub sign-in
-        // This helps users find the comments after authentication
-        setTimeout(() => {
-          const commentsContainer = document.querySelector('#giscus-comments');
-          if (commentsContainer) {
-            // Check if we're returning from GitHub OAuth (common pattern)
-            const urlParams = new URLSearchParams(window.location.search);
-            const isOAuthReturn = urlParams.has('code') || urlParams.has('state') ||
-                                 window.location.hash.includes('giscus') ||
-                                 document.referrer.includes('github.com') ||
-                                 document.referrer.includes('giscus.app');
-
-            if (isOAuthReturn) {
-              commentsContainer.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-              });
-            }
-          }
-        }, 1000); // Delay to allow Giscus to fully load
-
-        // Simple iframe load detection and theme initialization
-        const checkForGiscusIframe = () => {
-          const giscusIframe = document.querySelector('iframe[src*="giscus"]');
-          if (giscusIframe) {
-            giscusIframe.addEventListener('load', () => {
-              // Initialize theme after iframe loads
-              setTimeout(() => {
-                handleGiscusThemeChange();
-              }, 500);
-            });
-          } else {
-            // If iframe not ready yet, check again in a bit
-            setTimeout(checkForGiscusIframe, 500);
-          }
-        };
-
-        checkForGiscusIframe();
-      };
-
-      script.onerror = function() {
-        commentsContainer.setAttribute('data-error', 'true');
-      };
-
-      // Append to the container
-      commentsContainer.appendChild(script);
-    };
-
-    // Make the function globally accessible
-    window.initializeGiscusComments = initializeGiscusComments;
-
+    // Comments are now handled by CommentsSystem.astro, which defines
+    // window.initializeComments() itself and re-renders on Swup navigation
+    // via the call sites below (search for initializeComments).
     // Collapsible callouts functionality
     function initializeCollapsibleCallouts() {
       const collapsibleCallouts = document.querySelectorAll('.callout-collapsible');
@@ -1245,10 +1120,10 @@ for (const [path, mod] of Object.entries(customThemeModules)) {
     document.addEventListener('DOMContentLoaded', () => {
       if (isDev) {
       }
-      if (document.querySelector('#giscus-comments')) {
+      if (document.querySelector('#comments-system')) {
         if (isDev) {
         }
-        window.initializeGiscusComments();
+        if (typeof window.initializeComments === 'function') { window.initializeComments(); }
       }
       // Initialize base embeds on initial page load (before table wrappers)
       if (window.initializeBaseEmbeds) {
@@ -1361,8 +1236,8 @@ for (const [path, mod] of Object.entries(customThemeModules)) {
           setFavicon();
           // Initialize after content replacement
           setTimeout(() => {
-            if (document.querySelector('#giscus-comments')) {
-              window.initializeGiscusComments();
+            if (document.querySelector('#comments-system')) {
+              if (typeof window.initializeComments === 'function') { window.initializeComments(); }
             }
             // Initialize base embeds first, then wrap tables
             if (window.initializeBaseEmbeds) {
@@ -1402,8 +1277,8 @@ for (const [path, mod] of Object.entries(customThemeModules)) {
           document.documentElement.setAttribute('data-theme', theme);
           updateThemeCSSVariables(theme).catch(console.error);
           setTimeout(() => {
-            if (document.querySelector('#giscus-comments')) {
-              window.initializeGiscusComments();
+            if (document.querySelector('#comments-system')) {
+              if (typeof window.initializeComments === 'function') { window.initializeComments(); }
             }
             // Initialize with small delay to ensure DOM is ready
             setTimeout(() => {
@@ -1479,11 +1354,11 @@ for (const [path, mod] of Object.entries(customThemeModules)) {
             if (node.nodeType === Node.ELEMENT_NODE) {
               const element = node;
               // Check if the added node or its children contain the comments container
-              if (element.id === 'giscus-comments' || element.querySelector('#giscus-comments')) {
+              if (element.id === 'comments-system' || element.querySelector('#comments-system')) {
                 if (isDev) {
                 }
                 setTimeout(() => {
-                  window.initializeGiscusComments();
+                  if (typeof window.initializeComments === 'function') { window.initializeComments(); }
                 }, 200);
               }
             }
@@ -1524,10 +1399,10 @@ for (const [path, mod] of Object.entries(customThemeModules)) {
         }
         // Delay to allow Swup to process the navigation
         setTimeout(() => {
-          if (document.querySelector('#giscus-comments')) {
+          if (document.querySelector('#comments-system')) {
             if (isDev) {
             }
-            window.initializeGiscusComments();
+            if (typeof window.initializeComments === 'function') { window.initializeComments(); }
           }
         }, 500);
       }
@@ -1865,15 +1740,11 @@ for (const [path, mod] of Object.entries(customThemeModules)) {
         initializeTwitterWidgets();
         // Also initialize theme again after widgets load (as backup)
         setTimeout(initializeTwitterTheme, 1000);
-        // Initialize Giscus theme after widgets load
-        setTimeout(initializeGiscusTheme, 1500);
       });
     } else {
       initializeTwitterWidgets();
       // Also initialize theme again after widgets load (as backup)
       setTimeout(initializeTwitterTheme, 1000);
-      // Initialize Giscus theme after widgets load
-      setTimeout(initializeGiscusTheme, 1500);
     }
 
     // Mermaid theme change handling
@@ -1885,53 +1756,10 @@ for (const [path, mod] of Object.entries(customThemeModules)) {
     }
 
 
-    // Giscus theme change handling - use postMessage API for dynamic theme switching
-    function handleGiscusThemeChange(isDarkParam) {
-      // Only change theme if comments are enabled and Giscus iframe exists
-      if (window.commentsEnabled) {
-        const giscusIframe = document.querySelector('iframe.giscus-frame');
-        if (giscusIframe) {
-          // Get current theme from document or use provided parameter
-          const isDark = isDarkParam !== undefined 
-            ? isDarkParam 
-            : document.documentElement.classList.contains('dark');
-          const newTheme = isDark ? 'dark' : 'light';
-
-          // Send message to Giscus iframe to change theme
-          giscusIframe.contentWindow.postMessage(
-            { giscus: { setConfig: { theme: newTheme } } },
-            'https://giscus.app'
-          );
-        }
-      }
-    }
-
     // Initialize Twitter theme on page load
     function initializeTwitterTheme() {
       const isDark = document.documentElement.classList.contains('dark');
       handleTwitterThemeChange(isDark);
-    }
-
-    // Initialize Giscus theme on page load
-    function initializeGiscusTheme() {
-      // Wait for Giscus iframe to load, then set initial theme
-      const checkForGiscusIframe = () => {
-        const giscusIframe = document.querySelector('iframe.giscus-frame');
-        if (giscusIframe) {
-          // Small delay to ensure iframe is fully loaded
-          setTimeout(() => {
-            handleGiscusThemeChange();
-          }, 500);
-        } else {
-          // If iframe not ready yet, check again in a bit
-          setTimeout(checkForGiscusIframe, 500);
-        }
-      };
-
-      // Only check if comments are enabled
-      if (window.commentsEnabled) {
-        checkForGiscusIframe();
-      }
     }
 
     // Listen for theme changes
