@@ -6,9 +6,10 @@ export interface Props {
   slug: string;
   title: string;
   url: string;
+  lang?: string;
 }
 
-const { contentType, slug, title, url } = Astro.props;
+const { contentType, slug, title, url, lang = 'en' } = Astro.props;
 
 // Only render if comments are enabled
 if (!siteConfig.postOptions.comments.enabled) {
@@ -16,6 +17,71 @@ if (!siteConfig.postOptions.comments.enabled) {
 }
 
 const { workerUrl, maxLength } = siteConfig.postOptions.comments;
+
+const STRINGS = {
+  zh: {
+    notConfigured: '留言系統尚未設定。',
+    heading: '留言',
+    namePlaceholder: '您的稱呼',
+    websitePlaceholder: '網站（選填）',
+    contentPlaceholder: '寫下您的留言...',
+    mdHint: '支援 Markdown：**粗體**、*斜體*、`程式碼`、[連結](https://…)、以 - 或 &gt; 開頭的行',
+    submit: '送出留言',
+    posting: '送出中...',
+    loading: '載入留言中...',
+    loadFailed: '目前無法載入留言。',
+    empty: '目前還沒有留言，歡迎留下第一則留言！',
+    nameRequired: '請填寫姓名與留言內容。',
+    postedSuccess: '留言成功！',
+    tooFast: '留言速度過快，請稍後再試。',
+    networkError: '網路錯誤，請再試一次。',
+    genericError: '無法送出留言。',
+    deleteConfirm: '確定要刪除這則留言嗎？',
+    deleteFailed: '無法刪除這則留言。',
+    adminPromptEnter: '請輸入管理員金鑰：',
+    adminPromptUpdate: '更新管理員金鑰（留空以登出）：',
+    adminRejected: '管理員金鑰錯誤，已登出管理員模式。',
+    reply: '回覆',
+    replyPlaceholder: '回覆這則留言...',
+    replySend: '送出回覆',
+    replyCancel: '取消',
+    replyFailed: '無法送出回覆。',
+    authorReplied: '站長回覆',
+    delete: '刪除',
+  },
+  en: {
+    notConfigured: 'Comments are not configured yet.',
+    heading: 'Comments',
+    namePlaceholder: 'Name',
+    websitePlaceholder: 'Website (optional)',
+    contentPlaceholder: 'Write a comment...',
+    mdHint: 'Markdown supported: **bold**, *italic*, `code`, [link](https://…), lines starting with - or &gt;',
+    submit: 'Post comment',
+    posting: 'Posting...',
+    loading: 'Loading comments...',
+    loadFailed: 'Could not load comments right now.',
+    empty: 'No comments yet. Be the first to say something.',
+    nameRequired: 'Please fill in your name and a comment.',
+    postedSuccess: 'Comment posted!',
+    tooFast: "You're commenting a little too fast - please wait a moment and try again.",
+    networkError: 'Network error - please try again.',
+    genericError: 'Could not post your comment.',
+    deleteConfirm: 'Delete this comment?',
+    deleteFailed: 'Could not delete that comment.',
+    adminPromptEnter: 'Enter admin key:',
+    adminPromptUpdate: 'Update admin key (leave blank to sign out):',
+    adminRejected: 'Admin key rejected. Signing out of admin mode.',
+    reply: 'Reply',
+    replyPlaceholder: 'Write a reply...',
+    replySend: 'Send reply',
+    replyCancel: 'Cancel',
+    replyFailed: 'Could not post that reply.',
+    authorReplied: 'Author replied',
+    delete: 'Delete',
+  },
+} as const;
+
+const strings = STRINGS[lang as keyof typeof STRINGS] ?? STRINGS.en;
 ---
 
 <div class="comments-system-container">
@@ -28,6 +94,7 @@ const { workerUrl, maxLength } = siteConfig.postOptions.comments;
     data-title={title}
     data-url={url}
     data-max-length={maxLength}
+    data-strings={JSON.stringify(strings)}
   >
     <!-- Populated client-side by initializeComments() -->
   </div>
@@ -392,10 +459,11 @@ const { workerUrl, maxLength } = siteConfig.postOptions.comments;
     const slug = root.dataset.slug || '';
     const pageTitle = root.dataset.title || '';
     const maxLength = parseInt(root.dataset.maxLength || '2000', 10);
+    const strings = JSON.parse(root.dataset.strings || '{}');
     const loadedAt = Date.now();
 
     if (!workerUrl) {
-      root.innerHTML = '<p class="cs-empty">Comments are not configured yet.</p>';
+      root.innerHTML = `<p class="cs-empty">${escapeHtml(strings.notConfigured)}</p>`;
       return;
     }
 
@@ -412,15 +480,15 @@ const { workerUrl, maxLength } = siteConfig.postOptions.comments;
 
     root.innerHTML = `
       <div class="cs-heading" id="cs-heading-${slugSafe(slug)}">
-        Comments <span class="cs-count" id="cs-count"></span>
+        ${escapeHtml(strings.heading)} <span class="cs-count" id="cs-count"></span>
       </div>
       <form class="cs-form" id="cs-form" autocomplete="off">
         <div class="cs-form-row">
-          <input class="cs-input" type="text" id="cs-name" placeholder="Name" maxlength="60" required />
-          <input class="cs-input" type="text" id="cs-website" placeholder="Website (optional)" maxlength="200" />
+          <input class="cs-input" type="text" id="cs-name" placeholder="${escapeHtml(strings.namePlaceholder)}" maxlength="60" required />
+          <input class="cs-input" type="text" id="cs-website" placeholder="${escapeHtml(strings.websitePlaceholder)}" maxlength="200" />
         </div>
-        <textarea class="cs-textarea" id="cs-content" placeholder="Write a comment..." maxlength="${maxLength}" required></textarea>
-        <div class="cs-md-hint">Markdown supported: **bold**, *italic*, \`code\`, [link](https://…), lines starting with - or &gt;</div>
+        <textarea class="cs-textarea" id="cs-content" placeholder="${escapeHtml(strings.contentPlaceholder)}" maxlength="${maxLength}" required></textarea>
+        <div class="cs-md-hint">${strings.mdHint}</div>
         <!-- Honeypot field: real visitors never see or fill this -->
         <div class="cs-hp" aria-hidden="true">
           <label for="cs-hp-field">Leave this field empty</label>
@@ -428,12 +496,12 @@ const { workerUrl, maxLength } = siteConfig.postOptions.comments;
         </div>
         <div class="cs-form-footer">
           <span class="cs-counter"><span id="cs-charcount">0</span>/${maxLength}</span>
-          <button type="submit" class="cs-submit" id="cs-submit">Post comment</button>
+          <button type="submit" class="cs-submit" id="cs-submit">${escapeHtml(strings.submit)}</button>
         </div>
         <div class="cs-status" id="cs-status"></div>
       </form>
       <div class="cs-list" id="cs-list">
-        <div class="cs-loading">Loading comments...</div>
+        <div class="cs-loading">${escapeHtml(strings.loading)}</div>
       </div>
     `;
 
@@ -457,7 +525,7 @@ const { workerUrl, maxLength } = siteConfig.postOptions.comments;
       clickTimer = setTimeout(() => (clickCount = 0), 1500);
       if (clickCount >= 5) {
         clickCount = 0;
-        const entered = window.prompt(adminKey ? 'Update admin key (leave blank to sign out):' : 'Enter admin key:');
+        const entered = window.prompt(adminKey ? strings.adminPromptUpdate : strings.adminPromptEnter);
         if (entered === null) return;
         adminKey = entered.trim();
         setAdminKey(adminKey);
@@ -480,7 +548,7 @@ const { workerUrl, maxLength } = siteConfig.postOptions.comments;
         root._csComments = comments;
         renderComments(comments);
       } catch (err) {
-        listEl.innerHTML = '<p class="cs-empty">Could not load comments right now.</p>';
+        listEl.innerHTML = `<p class="cs-empty">${escapeHtml(strings.loadFailed)}</p>`;
       }
     }
 
@@ -488,7 +556,7 @@ const { workerUrl, maxLength } = siteConfig.postOptions.comments;
       countEl.textContent = comments.length ? `(${comments.length})` : '';
 
       if (!comments.length) {
-        listEl.innerHTML = '<p class="cs-empty">No comments yet. Be the first to say something.</p>';
+        listEl.innerHTML = `<p class="cs-empty">${escapeHtml(strings.empty)}</p>`;
         return;
       }
 
@@ -501,7 +569,7 @@ const { workerUrl, maxLength } = siteConfig.postOptions.comments;
 
           const replyHtml = c.admin_reply
             ? `<div class="cs-admin-reply">
-                 <div class="cs-admin-reply-label">Author replied</div>
+                 <div class="cs-admin-reply-label">${escapeHtml(strings.authorReplied)}</div>
                  <div class="cs-admin-reply-body">${renderMarkdown(c.admin_reply)}</div>
                </div>`
             : '';
@@ -514,14 +582,14 @@ const { workerUrl, maxLength } = siteConfig.postOptions.comments;
               </div>
               <div class="cs-comment-body">${renderMarkdown(c.content)}</div>
               <div class="cs-comment-actions" data-admin="${adminKey ? 'true' : 'false'}">
-                ${c.admin_reply ? '' : '<button type="button" class="cs-reply-toggle-btn">Reply</button>'}
-                <button type="button" class="cs-delete-btn">Delete</button>
+                ${c.admin_reply ? '' : `<button type="button" class="cs-reply-toggle-btn">${escapeHtml(strings.reply)}</button>`}
+                <button type="button" class="cs-delete-btn">${escapeHtml(strings.delete)}</button>
               </div>
               <form class="cs-reply-form" data-open="false">
-                <textarea class="cs-textarea" placeholder="Write a reply..." maxlength="${maxLength}"></textarea>
+                <textarea class="cs-textarea" placeholder="${escapeHtml(strings.replyPlaceholder)}" maxlength="${maxLength}"></textarea>
                 <div class="cs-reply-actions">
-                  <button type="submit" class="cs-reply-send">Send reply</button>
-                  <button type="button" class="cs-reply-cancel">Cancel</button>
+                  <button type="submit" class="cs-reply-send">${escapeHtml(strings.replySend)}</button>
+                  <button type="button" class="cs-reply-cancel">${escapeHtml(strings.replyCancel)}</button>
                 </div>
               </form>
               ${replyHtml}
@@ -539,14 +607,14 @@ const { workerUrl, maxLength } = siteConfig.postOptions.comments;
 
         if (deleteBtn) {
           deleteBtn.addEventListener('click', async () => {
-            if (!window.confirm('Delete this comment?')) return;
+            if (!window.confirm(strings.deleteConfirm)) return;
             try {
               const res = await fetch(`${workerUrl}/api/comments/${id}`, {
                 method: 'DELETE',
                 headers: { 'X-Admin-Key': adminKey },
               });
               if (res.status === 401) {
-                window.alert('Admin key rejected. Signing out of admin mode.');
+                window.alert(strings.adminRejected);
                 adminKey = '';
                 setAdminKey('');
                 renderComments(root._csComments || []);
@@ -556,7 +624,7 @@ const { workerUrl, maxLength } = siteConfig.postOptions.comments;
               root._csComments = (root._csComments || []).filter((c) => String(c.id) !== String(id));
               renderComments(root._csComments);
             } catch {
-              window.alert('Could not delete that comment.');
+              window.alert(strings.deleteFailed);
             }
           });
         }
@@ -583,7 +651,7 @@ const { workerUrl, maxLength } = siteConfig.postOptions.comments;
                 body: JSON.stringify({ reply }),
               });
               if (res.status === 401) {
-                window.alert('Admin key rejected. Signing out of admin mode.');
+                window.alert(strings.adminRejected);
                 adminKey = '';
                 setAdminKey('');
                 renderComments(root._csComments || []);
@@ -596,7 +664,7 @@ const { workerUrl, maxLength } = siteConfig.postOptions.comments;
               );
               renderComments(root._csComments);
             } catch {
-              window.alert('Could not post that reply.');
+              window.alert(strings.replyFailed);
             }
           });
         }
@@ -617,13 +685,13 @@ const { workerUrl, maxLength } = siteConfig.postOptions.comments;
       const content = contentEl.value.trim();
 
       if (!name || !content) {
-        statusEl.textContent = 'Please fill in your name and a comment.';
+        statusEl.textContent = strings.nameRequired;
         statusEl.setAttribute('data-kind', 'error');
         return;
       }
 
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Posting...';
+      submitBtn.textContent = strings.posting;
 
       try {
         const res = await fetch(`${workerUrl}/api/comments`, {
@@ -642,13 +710,13 @@ const { workerUrl, maxLength } = siteConfig.postOptions.comments;
         });
 
         if (res.status === 429) {
-          statusEl.textContent = "You're commenting a little too fast - please wait a moment and try again.";
+          statusEl.textContent = strings.tooFast;
           statusEl.setAttribute('data-kind', 'error');
           return;
         }
         if (!res.ok) {
           const body = await res.json().catch(() => ({}));
-          statusEl.textContent = body.error || 'Could not post your comment.';
+          statusEl.textContent = body.error || strings.genericError;
           statusEl.setAttribute('data-kind', 'error');
           return;
         }
@@ -659,14 +727,14 @@ const { workerUrl, maxLength } = siteConfig.postOptions.comments;
 
         formEl.reset();
         charcountEl.textContent = '0';
-        statusEl.textContent = 'Comment posted!';
+        statusEl.textContent = strings.postedSuccess;
         statusEl.setAttribute('data-kind', 'success');
       } catch {
-        statusEl.textContent = 'Network error - please try again.';
+        statusEl.textContent = strings.networkError;
         statusEl.setAttribute('data-kind', 'error');
       } finally {
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Post comment';
+        submitBtn.textContent = strings.submit;
       }
     });
 

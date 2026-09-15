@@ -18,7 +18,7 @@
       ]
     },
     "date": {
-      "default": "2026-09-15T08:12:18.321Z",
+      "default": "2026-09-15T08:34:25.620Z",
       "type": "string",
       "format": "date-time"
     },
