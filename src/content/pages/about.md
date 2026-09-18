@@ -28,6 +28,6 @@ lang: zh
 
 任何問題請寄到信箱內：hshuang at secologies dot com
 
-歡迎逛逛我的社群部落格：[https://hshuang.com/](https://hshuang.com/)
+歡迎逛逛我的部落格：[https://hshuang.com/](https://hshuang.com/)
 
 另外本站不經營任何社群媒體，如果在社群平台上發現本站皆是假冒的，理由可以參考我的《[再見祖克柏](https://hshuang.com/posts/sayonara-zuckerberg/)》一文
