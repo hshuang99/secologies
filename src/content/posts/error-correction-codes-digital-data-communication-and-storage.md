@@ -27,25 +27,17 @@ lang: zh
 
 ```mermaid
 flowchart TD
-    %% Define Node Placement in a grid structure
-    Source[Source]      --> SrcEnc[Source encoder]
-    SrcEnc              --> ChEnc[Channel encoder]
-    ChEnc               --> Mod[Modulator]
+    subgraph Col1 [Sender]
+        A[Source] --> B[Source Encoder] --> C[Channel Encoder] --> D[Modulator]
+    end
     
-    %% Middle step down connection
-    Mod                 --> Channel[Channel]
-    Channel             --> Demod[Demodulator]
+    subgraph Col2 [Transmit]
+        D --> E[Channel]
+    end
 
-    %% Bottom Row (Connected backward to keep elements on the left side)
-    ChDec[Channel decoder] --> Demod
-    SrcDec[Source decoder] --> ChDec
-    User[User]             --> SrcDec
-
-    %% Forces elements to align vertically into two clean, flat rows
-    Source  --- User
-    SrcEnc  --- SrcDec
-    ChEnc   --- ChDec
-    Mod     --- Demod
+    subgraph Col3 [Receiver]
+        E --> F[Demodulator] --> G[Channel Decoder] --> H[Source Decoder] --> I[User]
+    end
 ```
 
 ## Source and User(or Sink)
