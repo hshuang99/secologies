@@ -25,7 +25,28 @@ lang: zh
 
 其中最主要的貢獻之一就是提出下面這張圖，用不同的區塊表示基礎的數位通訊或儲存系統應該要具備的能力
 
-![Basic-digital-communication-or-storage-system-block-diagram-due-to-Shannon](https://media.secologies.com/Basic-digital-communication-or-storage-system-block-diagram-due-to-Shannon.webp)
+```mermaid
+flowchart TD
+    %% Define Node Placement in a grid structure
+    Source[Source]      --> SrcEnc[Source encoder]
+    SrcEnc              --> ChEnc[Channel encoder]
+    ChEnc               --> Mod[Modulator]
+    
+    %% Middle step down connection
+    Mod                 --> Channel[Channel]
+    Channel             --> Demod[Demodulator]
+
+    %% Bottom Row (Connected backward to keep elements on the left side)
+    ChDec[Channel decoder] --> Demod
+    SrcDec[Source decoder] --> ChDec
+    User[User]             --> SrcDec
+
+    %% Forces elements to align vertically into two clean, flat rows
+    Source  --- User
+    SrcEnc  --- SrcDec
+    ChEnc   --- ChDec
+    Mod     --- Demod
+```
 
 ## Source and User(or Sink)
 
@@ -67,6 +88,6 @@ modulator把channel encoder過的位元資訊再轉成適合通道傳輸的格�
 
 雖然通道模型$C$可以用數種方法來測量單位，但我們目前的情境就限縮在測量code rate $R$，其單位為每通道位元中的資訊位元
 
-Shannon在他的研究\[1\]中證明了滿足code rate $R < C$則存在一組隨意輸入的可信賴通道，就像傳輸的水量比水管的管徑還小所以任何時間點都能夠成功輸出，另外Shannon也證明反方向，如果$R > C$的話則不存在任何Codes可以進行可信賴的通訊傳輸
+Shannon在他的研究[^1]中證明了滿足code rate $R < C$則存在一組隨意輸入的可信賴通道，就像傳輸的水量比水管的管徑還小所以任何時間點都能夠成功輸出，另外Shannon也證明反方向，如果$R > C$的話則不存在任何Codes可以進行可信賴的通訊傳輸
 
 [^1]: C. E. Shannon, "A mathematical theory of communication," in The Bell System Technical Journal, vol. 27, no. 3, pp. 379-423, July 1948, doi: 10.1002/j.1538-7305.1948.tb01338.x.

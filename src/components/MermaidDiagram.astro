@@ -11,9 +11,11 @@ export interface Props {
 const { id, source, class: className = '' } = Astro.props;
 ---
 
-<div class={`mermaid-diagram ${className}`} data-mermaid-id={id} data-mermaid-source={source}>
+<div class={`mermaid-diagram ${className}`} data-mermaid-id={id}>
   <div class="mermaid-diagram-content">
-    <pre class="mermaid-diagram-source"><code>{source}</code></pre>
+    <!-- CRITICAL: Using a simple template tag forces browsers to keep text strings raw -->
+    <template class="mermaid-raw-source">{source}</template>
+    <div class="mermaid-target-render"></div>
   </div>
 </div>
 
@@ -115,3 +117,45 @@ const { id, source, class: className = '' } = Astro.props;
     }
   }
 </style>
+
+<script>
+  import mermaid from 'mermaid';
+
+  function initializeMermaid() {
+    const isDark = document.documentElement.classList.contains('dark');
+    
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: isDark ? 'dark' : 'default',
+      securityLevel: 'loose',
+    });
+
+    const diagrams = document.querySelectorAll('.mermaid-diagram');
+    
+    diagrams.forEach(async (container, index) => {
+      const rawTemplate = container.querySelector('.mermaid-raw-source') as HTMLTemplateElement;
+      const renderTarget = container.querySelector('.mermaid-target-render');
+      
+      if (rawTemplate && renderTarget && !container.hasAttribute('data-processed')) {
+        try {
+          // FIX: Changed from .innerHTML to .textContent to preserve arrows (<--)
+          const rawCode = (rawTemplate.content?.textContent || rawTemplate.textContent || '').trim();
+          
+          if (!rawCode) return;
+
+          const uniqueId = `mermaid-svg-${index}-${Date.now()}`;
+          const { svg } = await mermaid.render(uniqueId, rawCode);
+          renderTarget.innerHTML = svg;
+          
+          container.setAttribute('data-processed', 'true');
+        } catch (error) {
+          console.error("Mermaid parsing crash:", error);
+          container.classList.add('error');
+        }
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', initializeMermaid);
+  document.addEventListener('astro:page-load', initializeMermaid);
+</script>
