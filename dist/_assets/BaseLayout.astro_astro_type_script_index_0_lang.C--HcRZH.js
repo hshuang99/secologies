@@ -1,1 +1,0 @@
-import{t as e}from"./preload-helper.2rxlSZO5.js";try{await e(()=>import(`./base-embeds-client.Dwbg1uQg.js`),[])}catch{}
