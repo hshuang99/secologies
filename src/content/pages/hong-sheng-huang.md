@@ -12,7 +12,7 @@ aliases: author
 
 Hong-Sheng Huang was born in Taitung, Taiwan. He received his MS degree from the [National Tsing Hua University](https://www.nthu.edu.tw/)'s [Institute of Information Security](https://iis.site.nthu.edu.tw/index.php) at [College of Electrical Engineering and Computer Science](https://eecs.site.nthu.edu.tw/?Lang=zh-tw). And he has joined the [Information Security Laboratory](http://is.cs.nthu.edu.tw/), where Professor [Hung-Min Sun](https://scholars.nthu.edu.tw/esploro/profile/hungmin_sun/overview?institution=886UST_NTHU) is his advisor.
 
-Before that, he received his BS from the [Department of Computer Science and Engineering](https://cse.ntou.edu.tw/?Lang=zh-tw) at [National Taiwan Ocean University](https://www.ntou.edu.tw/). During that time, he joined the Cryptography & Information Security (CIS) Laboratory, where his advisor was Professor [Han-Yu Lin](https://cse.ntou.edu.tw/p/412-1063-7776.php?Lang=zh-tw).
+Before that, he received his BS from the [Department of Computer Science and Engineering](https://cse.ntou.edu.tw/?Lang=zh-tw) at [National Taiwan Ocean University](https://www.ntou.edu.tw/). During that time, he joined the Cryptography Laboratory, where his advisor was Professor [Han-Yu Lin](https://cse.ntou.edu.tw/p/412-1063-7776.php?Lang=zh-tw).
 
 Hong-Sheng's research interests lie in the field of **Computer Security**, with a focus on ***cryptology*** and ***applied cryptography***. His work spans constructing robust frameworks for diverse application domains through cryptographic mechanisms and deriving novel theoretical insights from previously unexplored application areas.
 

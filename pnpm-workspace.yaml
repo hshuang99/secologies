@@ -1,6 +1,9 @@
 allowBuilds:
+  bufferutil: false
   esbuild: true
+  keccak: false
   sharp: true
+  utf-8-validate: false
   workerd: true
 minimumReleaseAgeExclude:
   # Name-only patterns: an exact name@version misses astro's peer-suffixed
