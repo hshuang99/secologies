@@ -73,6 +73,7 @@ const project = defineCollection({
 		timestamp: z.date(), // Publication date (required)
 		description: z.string().optional(), // Short summary shown in lists
 		tags: z.array(z.string()).optional(), // Array of topic tags
+		series: z.string().optional(), // Series name for grouped entries
 		toc: z.boolean().default(false), // Whether to show table of contents
 		draft: z.boolean().default(false) // Draft status (excludes from public listing)
 	})
@@ -90,6 +91,7 @@ const podcast = defineCollection({
 		timestamp: z.date(), // Publication date (required)
 		description: z.string().optional(), // Short summary shown in lists
 		tags: z.array(z.string()).optional(), // Array of topic tags
+		series: z.string().optional(), // Series name for grouped entries
 		episode: z.number().int().positive().optional(), // Episode number
 		audio: z.string().optional(), // Audio file URL (e.g. an .mp3); shows a player when set
 		duration: z.string().optional(), // Display duration, e.g. "42:10"

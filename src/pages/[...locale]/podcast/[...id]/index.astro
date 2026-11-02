@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
 import config, { monolocale } from "$config";
 import Time from "$lib/time";
 import Base from "$layouts/Base.astro";
@@ -38,15 +39,39 @@ const { entry } = Astro.props;
 // Render markdown content and extract headings for TOC
 const { Content, headings, remarkPluginFrontmatter: frontmatter } = await render(entry);
 
+// Other entries of the same series, in publication order, for the series navigation
+const series = entry.data.series
+	? (
+			await getCollection(
+				"podcast",
+				item => !item.data.draft && item.data.series === entry.data.series && (monolocale || item.id.startsWith(`${locale}/`))
+			)
+		)
+			.sort((a, b) => a.data.timestamp.getTime() - b.data.timestamp.getTime())
+			.map(item => ({
+				title: item.data.title,
+				url: getRelativeLocaleUrl(locale, `/podcast/${monolocale ? item.id : item.id.split("/").slice(1).join("/")}`),
+				current: item.id === entry.id
+			}))
+	: undefined;
+
 const t = i18nit(locale);
 ---
 
-<Base title={entry.data.title} {locale} description={entry.data.description} article={{ timestamp: entry.data.timestamp, tags: entry.data.tags }}>
+<Base title={entry.data.title} {locale} description={entry.data.description} article={{ timestamp: entry.data.timestamp, section: entry.data.series, tags: entry.data.tags }}>
 	<main class="flex flex-col gap-6">
 		<header class="flex flex-col gap-4">
 			<h1 class="select-text">{entry.data.title}</h1>
 			<div class="flex flex-col gap-3 sm:flex-row *:flex *:items-center *:gap-1 *:text-[0.875rem] *:text-secondary">
 				<time datetime={entry.data.timestamp.toISOString()}><Icon name="lucide--calendar" />{Time.toString(entry.data.timestamp)}</time>
+				{
+					entry.data.series && (
+						<span>
+							<Icon name="lucide--layers" />
+							{entry.data.series}
+						</span>
+					)
+				}
 				{
 					entry.data.episode && (
 						<span>
@@ -80,9 +105,9 @@ const t = i18nit(locale);
 
 		<div class="flex gap-5">
 			<section id="markdown-content" class="markdown"><Content /></section>
-			{entry.data.toc && <TOC headings={headings} {locale} />}
+			{(entry.data.toc || !!entry.data.series) && <TOC headings={entry.data.toc ? headings : undefined} {locale} {series} />}
 		</div>
 
-		<Position {locale} toc={entry.data.toc} />
+		<Position {locale} toc={entry.data.toc} series={!!entry.data.series} />
 	</main>
 </Base>

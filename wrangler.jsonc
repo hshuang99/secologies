@@ -1,5 +1,15 @@
 {
-  "name": "secologies",
-  "compatibility_date": "2026-11-01",
-  "assets": { "directory": "./dist" }
+	"name": "secologies",
+	"compatibility_date": "2026-11-01",
+	"assets": {
+		"directory": "./dist"
+	},
+	"d1_databases": [
+		{
+			"binding": "secologies_comments",
+			"database_name": "secologies-comments",
+			"database_id": "1b46d0be-85c9-48ff-a173-13e9d6bd9520",
+			"remote": true
+		}
+	]
 }

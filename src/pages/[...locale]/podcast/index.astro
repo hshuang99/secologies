@@ -3,7 +3,7 @@ import { getCollection } from "astro:content";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import config, { monolocale } from "$config";
 import Base from "$layouts/Base.astro";
-import Entries from "$components/Entries.astro";
+import Collection from "$components/Collection.svelte";
 import i18nit from "$i18n";
 
 export async function getStaticPaths() {
@@ -15,22 +15,29 @@ const { locale = config.i18n.defaultLocale } = Astro.params;
 
 const t = i18nit(locale);
 
-const entries = (await getCollection("podcast", entry => !entry.data.draft && (monolocale || entry.id.split("/")[0] === locale))).sort(
-	(a, b) => b.data.timestamp.getTime() - a.data.timestamp.getTime()
-);
+const entries = await getCollection("podcast", entry => !entry.data.draft && (monolocale || entry.id.split("/")[0] === locale));
 
-const items = entries.map(entry => ({
-	title: entry.data.title,
+// Standardize entry structure
+const list = entries.map(entry => ({
+	id: entry.id,
 	url: getRelativeLocaleUrl(locale, `/podcast/${monolocale ? entry.id : entry.id.split("/").slice(1).join("/")}`),
-	timestamp: entry.data.timestamp,
-	description: entry.data.description,
-	meta: entry.data.episode ? t("podcast.episode", { count: entry.data.episode }) : undefined
+	data: {
+		title: entry.data.title,
+		timestamp: entry.data.timestamp,
+		description: entry.data.description,
+		series: entry.data.series,
+		tags: entry.data.tags,
+		episode: entry.data.episode
+	}
 }));
+
+// Extract all unique series and tags from the filtered entries
+const series = Array.from(new Set(entries.map(entry => entry.data.series).filter((series): series is string => Boolean(series)))).sort();
+const tags = Array.from(new Set(entries.flatMap(entry => entry.data.tags).filter((tag): tag is string => Boolean(tag)))).sort();
 ---
 
 <Base title={t("navigation.podcast")} {locale}>
-	<main class="flex flex-col gap-6 grow">
-		<h1>{t("navigation.podcast")}</h1>
-		{items.length > 0 ? <Entries {items} /> : <p class="text-secondary">{t("podcast.empty")}</p>}
+	<main class="flex flex-col grow">
+		<Collection client:load {locale} section="podcast" entries={list} {series} {tags} />
 	</main>
 </Base>
