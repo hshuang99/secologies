@@ -25,7 +25,7 @@ const route = Astro.url.pathname.slice(`/${locale === config.i18n.defaultLocale 
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<link rel="alternate" type="application/atom+xml" {title} href={getRelativeLocaleUrl(locale, "/feed.xml")} />
+		<link rel="alternate" type="application/atom+xml" {title} href={getRelativeLocaleUrl(locale, "/feed.xml").replace(/\/$/, "")} />
 
 		<meta property="og:title" content={`${subtitle && `${subtitle} | `}${title}`} />
 		<meta property="og:type" content={(article && "article") || "website"} />
