@@ -1,0 +1,88 @@
+---
+import { getCollection, render } from "astro:content";
+import config, { monolocale } from "$config";
+import Time from "$lib/time";
+import Base from "$layouts/Base.astro";
+import TOC from "$components/TOC.astro";
+import Position from "$components/Position.astro";
+import Icon from "$components/Icon.svelte";
+import i18nit from "$i18n";
+
+export async function getStaticPaths() {
+	// Get all published entries
+	const entries = await getCollection("podcast", entry => !entry.data.draft);
+
+	return entries.map(entry => {
+		let locale: string | undefined;
+		let id: string;
+
+		if (monolocale) {
+			locale = undefined;
+			id = entry.id;
+		} else {
+			// Extract language and entry ID from file path structure
+			const [language, ...ids] = entry.id.split("/");
+
+			locale = config.i18n.defaultLocale === language ? undefined : language;
+			id = ids.join("/");
+		}
+
+		// Generate path params with optional locale (omit for default locale)
+		return { params: { locale, id }, props: { entry } };
+	});
+}
+
+const { locale = config.i18n.defaultLocale } = Astro.params;
+const { entry } = Astro.props;
+
+// Render markdown content and extract headings for TOC
+const { Content, headings, remarkPluginFrontmatter: frontmatter } = await render(entry);
+
+const t = i18nit(locale);
+---
+
+<Base title={entry.data.title} {locale} description={entry.data.description} article={{ timestamp: entry.data.timestamp, tags: entry.data.tags }}>
+	<main class="flex flex-col gap-6">
+		<header class="flex flex-col gap-4">
+			<h1 class="select-text">{entry.data.title}</h1>
+			<div class="flex flex-col gap-3 sm:flex-row *:flex *:items-center *:gap-1 *:text-[0.875rem] *:text-secondary">
+				<time datetime={entry.data.timestamp.toISOString()}><Icon name="lucide--calendar" />{Time.toString(entry.data.timestamp)}</time>
+				{
+					entry.data.episode && (
+						<span>
+							<Icon name="lucide--mic" />
+							{t("podcast.episode", { count: entry.data.episode })}
+						</span>
+					)
+				}
+				{
+					entry.data.duration && (
+						<span>
+							<Icon name="lucide--clock" />
+							{entry.data.duration}
+						</span>
+					)
+				}
+				{
+					!!entry.data.tags?.length && (
+						<span>
+							<Icon name="lucide--hash" />
+							{entry.data.tags?.join("; ")}
+						</span>
+					)
+				}
+				<span><Icon name="lucide--pilcrow" />{t("read.words", { count: frontmatter.words })}</span>
+			</div>
+			<hr class="border-b border-weak" />
+		</header>
+
+		{entry.data.audio && <audio controls preload="none" src={entry.data.audio} class="w-full"></audio>}
+
+		<div class="flex gap-5">
+			<section id="markdown-content" class="markdown"><Content /></section>
+			{entry.data.toc && <TOC headings={headings} {locale} />}
+		</div>
+
+		<Position {locale} toc={entry.data.toc} />
+	</main>
+</Base>

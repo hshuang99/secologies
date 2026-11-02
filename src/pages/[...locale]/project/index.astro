@@ -1,0 +1,35 @@
+---
+import { getCollection } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import config, { monolocale } from "$config";
+import Base from "$layouts/Base.astro";
+import Entries from "$components/Entries.astro";
+import i18nit from "$i18n";
+
+export async function getStaticPaths() {
+	// Create path for each locale, omitting default locale from URL
+	return config.i18n.locales.map(locale => ({ params: { locale: config.i18n.defaultLocale === locale ? undefined : locale } }));
+}
+
+const { locale = config.i18n.defaultLocale } = Astro.params;
+
+const t = i18nit(locale);
+
+const entries = (await getCollection("project", entry => !entry.data.draft && (monolocale || entry.id.split("/")[0] === locale))).sort(
+	(a, b) => b.data.timestamp.getTime() - a.data.timestamp.getTime()
+);
+
+const items = entries.map(entry => ({
+	title: entry.data.title,
+	url: getRelativeLocaleUrl(locale, `/project/${monolocale ? entry.id : entry.id.split("/").slice(1).join("/")}`),
+	timestamp: entry.data.timestamp,
+	description: entry.data.description
+}));
+---
+
+<Base title={t("navigation.project")} {locale}>
+	<main class="flex flex-col gap-6 grow">
+		<h1>{t("navigation.project")}</h1>
+		{items.length > 0 ? <Entries {items} /> : <p class="text-secondary">{t("project.empty")}</p>}
+	</main>
+</Base>

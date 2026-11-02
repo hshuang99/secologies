@@ -5,6 +5,9 @@ import config, { monolocale } from "$config";
 import Time from "$lib/time";
 import Base from "$layouts/Base.astro";
 import Heatmap from "$components/Heatmap.astro";
+import Entries from "$components/Entries.astro";
+import Icon from "$components/Icon.svelte";
+import Newsletter from "$components/Newsletter.astro";
 import Logo from "$icons/site-logo.svg";
 import i18nit from "$i18n";
 
@@ -68,7 +71,29 @@ if (sections === "*" || sections.includes("note")) items = items.concat(notes);
 if (sections === "*" || sections.includes("jotting")) items = items.concat(jottings);
 
 // Get the latest content for display
-const latest = items.sort((a, b) => b.data.timestamp.getTime() - a.data.timestamp.getTime())[0];
+const sorted = items.sort((a, b) => b.data.timestamp.getTime() - a.data.timestamp.getTime());
+const latest = sorted[0];
+const recent = sorted.slice(0, 5);
+
+const urlOf = (item: { id: string; type?: string }) => getRelativeLocaleUrl(locale, `/${item.type}/${monolocale ? item.id : item.id.split("/").slice(1).join("/")}`);
+
+// Latest projects and podcast episodes, shown as sections (hidden while a collection is empty)
+const latestOf = async (name: "project" | "podcast") =>
+	(await getCollection(name, entry => !entry.data.draft && (monolocale || entry.id.split("/")[0] === locale)))
+		.sort((a, b) => b.data.timestamp.getTime() - a.data.timestamp.getTime())
+		.slice(0, 3)
+		.map(entry => ({
+			title: entry.data.title,
+			url: getRelativeLocaleUrl(locale, `/${name}/${monolocale ? entry.id : entry.id.split("/").slice(1).join("/")}`),
+			timestamp: entry.data.timestamp,
+			description: entry.data.description,
+			meta: "episode" in entry.data && entry.data.episode ? t("podcast.episode", { count: entry.data.episode }) : undefined
+		}));
+
+const showcase = [
+	{ key: "project", items: await latestOf("project") },
+	{ key: "podcast", items: await latestOf("podcast") }
+].filter(section => section.items.length > 0);
 
 // Get the latest preface for display
 const preface = prefaces[0];
@@ -80,7 +105,6 @@ const { Content } = preface ? await render(preface) : ({} as any);
 	<main class="flex flex-col gap-5 sm:gap-20 grow">
 		<header class="flex items-center justify-center flex-wrap-reverse grow-[0.6]">
 			{config.prologue && <article class="me-auto font-cursive font-thin text-xl sm:text-2xl leading-loose whitespace-pre-line">{config.prologue}</article>}
-			<Logo width={100} />
 		</header>
 
 		{
@@ -98,30 +122,45 @@ const { Content } = preface ? await render(preface) : ({} as any);
 
 		{
 			latest && (
-				<footer class="flex items-center justify-center flex-wrap-reverse gap-10">
+				<footer class="flex items-start justify-center flex-wrap-reverse gap-10">
 					<Heatmap {locale} {notes} {jottings} />
 
-					<blockquote class="grow flex flex-col">
+					<div class="grow flex flex-col gap-2">
 						<h4>{t("home.latest")}</h4>
-						<div class="flex flex-col sm:flex-row justify-between gap-1 mt-1">
-							<a href={getRelativeLocaleUrl(locale, `/${latest.type}/${monolocale ? latest.id : latest.id.split("/").slice(1).join("/")}`)} class="link">
-								{latest.data.series && `${latest.data.series} | `}
-								{latest.data.title}
-							</a>
-							<div class="flex gap-1">
-								{latest.data.tags?.map(tag => (
-									<a href={`${getRelativeLocaleUrl(locale, `/${latest.type}`)}?tag=${encodeURIComponent(tag)}`} class="text-secondary text-sm link">
-										#{tag}
+						<ul class="flex flex-col gap-2 list-none">
+							{recent.map(item => (
+								<li class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-x-4">
+									<a href={urlOf(item)} class="link">
+										{item.data.series && `${item.data.series} | `}
+										{item.data.title}
 									</a>
-								))}
-							</div>
-						</div>
-						<time datetime={latest.data.timestamp.toISOString()} class="text-secondary font-mono text-xs">
-							{Time.toString(latest.data.timestamp)}
-						</time>
-					</blockquote>
+									<time datetime={item.data.timestamp.toISOString()} class="shrink-0 text-secondary font-mono text-xs">
+										{Time.toString(item.data.timestamp)}
+									</time>
+								</li>
+							))}
+						</ul>
+					</div>
 				</footer>
 			)
 		}
+
+		{
+			showcase.length > 0 && (
+				<div class="grid items-start gap-10 sm:grid-cols-2">
+					{showcase.map(section => (
+						<section class="flex flex-col gap-4">
+							<a href={getRelativeLocaleUrl(locale, `/${section.key}`)} class="inline-flex items-center gap-2 self-start">
+								<h2>{t(`navigation.${section.key}`)}</h2>
+								<Icon name="lucide--arrow-right" />
+							</a>
+							<Entries items={section.items} />
+						</section>
+					))}
+				</div>
+			)
+		}
+
+		<Newsletter {locale} />
 	</main>
 </Base>

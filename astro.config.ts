@@ -37,8 +37,8 @@ import ZeoSevenFonts from "./src/fonts/zeo-seven-fonts";
 
 // https://astro.build/config
 export default defineConfig({
-	site: "https://thought-lite.vercel.app",
-	trailingSlash: "never",
+	site: "https://secologies.com",
+	trailingSlash: "ignore",
 	i18n: {
 		...siteConfig.i18n,
 		routing: {
@@ -158,6 +158,14 @@ export default defineConfig({
 			],
 			cssVariable: "--font-maple-mono-nf-cn"
 		},
+		{
+		        name: "Noto Sans TC",
+		        provider: fontProviders.google(),
+		        weights: [400, 700],
+		        optimizedFallbacks: false,
+                        fallbacks: ["Noto Sans CJK TC", "Microsoft JhengHei", "PingFang TC", "Hiragino Sans TC", "Heiti TC", "Apple LiGothic Medium"], // Ensures Traditional Chinese characters are fetched
+                        cssVariable: "--font-zh-tw" // Creates a custom CSS variable
+                },
 		{
 			name: "The Peak Font Plus",
 			provider: ZeoSevenFonts(),

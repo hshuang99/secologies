@@ -1,0 +1,33 @@
+---
+import { getEntry, render } from "astro:content";
+import config, { monolocale } from "$config";
+import Base from "$layouts/Base.astro";
+import i18nit from "$i18n";
+
+export async function getStaticPaths() {
+	// Create path for each locale, omitting default locale from URL
+	return config.i18n.locales.map(locale => ({ params: { locale: config.i18n.defaultLocale === locale ? undefined : locale } }));
+}
+
+const { locale = config.i18n.defaultLocale } = Astro.params;
+
+const t = i18nit(locale);
+
+const localePrefix = monolocale ? "" : `${locale}/`;
+
+// Loads src/content/information/<locale>/hong-sheng-huang.md
+const author = await getEntry("information", `${localePrefix}hong-sheng-huang`);
+const { Content } = author ? await render(author) : ({} as any);
+---
+
+<Base title={t("navigation.author")} {locale}>
+	<main>
+		{
+			author && (
+				<div class="markdown">
+					<Content />
+				</div>
+			)
+		}
+	</main>
+</Base>

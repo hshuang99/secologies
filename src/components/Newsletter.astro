@@ -1,0 +1,92 @@
+---
+import { getEntry } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { monolocale } from "$config";
+import { newsletterAction } from "$lib/newsletter";
+import i18nit from "$i18n";
+
+interface Props {
+	locale: string;
+}
+
+const { locale } = Astro.props;
+
+const t = i18nit(locale);
+
+const action = newsletterAction(locale);
+
+// Link the privacy notice to the policy page when this locale has one
+const policy = await getEntry("information", `${monolocale ? "" : `${locale}/`}policy`);
+
+// The translation contains a `{link}` placeholder for the policy link
+const [before, after = ""] = t("newsletter.privacy").split("{link}");
+
+const field = "w-full px-3 py-2 border-2 border-primary bg-background text-primary select-text placeholder:text-weak focus-visible:outline-offset-2";
+---
+
+{
+	action && (
+		<section data-newsletter class="w-full max-w-100 mx-auto p-5 border-2 border-primary bg-block">
+			<form data-newsletter-form action={action} method="post" target="_blank" class="flex flex-col gap-4">
+				<h2 class="text-2xl text-center">{t("newsletter.title")}</h2>
+
+				<label class="flex flex-col gap-1">
+					<span class="font-bold text-sm">{t("newsletter.name")}</span>
+					<input type="text" name="fields[name]" required autocomplete="given-name" class={field} />
+				</label>
+
+				<label class="flex flex-col gap-1">
+					<span class="font-bold text-sm">{t("newsletter.email")}</span>
+					<input type="email" name="fields[email]" required autocomplete="email" class={field} />
+				</label>
+
+				<p class="text-sm text-secondary">
+					{before}
+					{policy ? <a href={getRelativeLocaleUrl(locale, "/policy")} class="underline">{t("navigation.policy")}</a> : t("navigation.policy")}
+					{after}
+				</p>
+
+				<input type="hidden" name="ml-submit" value="1" />
+				<input type="hidden" name="anticsrf" value="true" />
+
+				<button type="submit" class="justify-center px-3 py-2 font-bold text-background bg-primary transition-opacity hover:opacity-80 disabled:opacity-60">{t("newsletter.submit")}</button>
+
+				<p data-newsletter-error role="alert" hidden class="text-sm font-bold">{t("newsletter.error")}</p>
+			</form>
+
+			<div data-newsletter-success role="status" hidden class="flex flex-col gap-2 text-center">
+				<h2 class="text-2xl">{t("newsletter.success.title")}</h2>
+				<p>{t("newsletter.success.description")}</p>
+			</div>
+		</section>
+	)
+}
+
+<script>
+	// Delegated on `document` so it keeps working after swup swaps the page content
+	document.addEventListener("submit", async event => {
+		const form = event.target;
+		if (!(form instanceof HTMLFormElement) || !form.hasAttribute("data-newsletter-form")) return;
+
+		// Submit in the background instead of opening the raw MailerLite response in a new tab
+		event.preventDefault();
+
+		const section = form.closest<HTMLElement>("[data-newsletter]")!;
+		const error = section.querySelector<HTMLElement>("[data-newsletter-error]")!;
+		const button = form.querySelector<HTMLButtonElement>("button[type=submit]")!;
+
+		error.hidden = true;
+		button.disabled = true;
+
+		try {
+			// MailerLite sends no CORS headers, so the response is opaque. A resolved request means it was delivered.
+			await fetch(form.action, { method: "POST", mode: "no-cors", body: new URLSearchParams(new FormData(form) as any) });
+
+			form.hidden = true;
+			section.querySelector<HTMLElement>("[data-newsletter-success]")!.hidden = false;
+		} catch {
+			error.hidden = false;
+			button.disabled = false;
+		}
+	});
+</script>

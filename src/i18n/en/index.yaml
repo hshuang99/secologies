@@ -12,27 +12,58 @@ home:
       one: '{count} note'
       other: '{count} notes'
   latest: Latest
+  paths: Reading paths
+  posts:
+    one: '{count} note'
+    other: '{count} notes'
   prefaces: Prefaces
+  topics: Topics
 jotting:
   empty: No jottings available
   tag: Tag
 language: English
 navigation:
   about: About
+  author: Author
   home: Home
   jotting: Jotting
+  newsletter: Newsletter
   note: Note
+  podcast: Podcasts
+  project: Projects
   policy: Policy
   preface: Preface
+newsletter:
+  email: Your Email
+  error: Subscription failed. Please try again later.
+  name: Your Name
+  privacy: You can unsubscribe anytime. For more details, review our {link}.
+  submit: Subscribe
+  success:
+    description: Welcome to our newsletter!
+    title: Thank You!
+  title: Subscribe to Our Newsletter
 note:
   empty: No notes available
   series: Series
   tag: Tag
   top: To Top
+podcast:
+  empty: No episodes yet
+  episode:
+    other: 'Episode {count}'
+project:
+  empty: No projects yet
 read:
   words:
     one: '{count} word'
     other: '{count} words'
+search:
+  close: Close
+  empty: No results found
+  error: Failed to load the search index. Please try again later.
+  label: Search
+  placeholder: Search notes, jottings, projects and podcasts…
 sensitive:
   back: Return to list
   continue: I understand, continue reading

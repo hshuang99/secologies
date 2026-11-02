@@ -1,0 +1,39 @@
+---
+import { getEntry, render } from "astro:content";
+import config, { monolocale } from "$config";
+import Newsletter from "$components/Newsletter.astro";
+import Base from "$layouts/Base.astro";
+import { newsletterAction } from "$lib/newsletter";
+import i18nit from "$i18n";
+
+export async function getStaticPaths() {
+	// Create path for each locale that has a newsletter form, omitting default locale from URL
+	return config.i18n.locales
+		.filter(locale => newsletterAction(locale))
+		.map(locale => ({ params: { locale: config.i18n.defaultLocale === locale ? undefined : locale } }));
+}
+
+const { locale = config.i18n.defaultLocale } = Astro.params;
+
+const t = i18nit(locale);
+
+const localePrefix = monolocale ? "" : `${locale}/`;
+
+// Optional intro text from src/content/information/<locale>/newsletter.md
+const intro = await getEntry("information", `${localePrefix}newsletter`);
+const { Content } = intro ? await render(intro) : ({} as any);
+---
+
+<Base title={t("navigation.newsletter")} {locale}>
+	<main class="flex flex-col gap-6">
+		{
+			intro && (
+				<div class="markdown">
+					<Content />
+				</div>
+			)
+		}
+
+		<Newsletter {locale} />
+	</main>
+</Base>

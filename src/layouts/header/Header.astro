@@ -5,6 +5,7 @@ import { monolocale } from "$config";
 import i18nit from "$i18n";
 import Navigator from "./Navigator.svelte";
 import ThemeSwitcher from "./ThemeSwitcher.astro";
+import Search from "./Search.astro";
 import LanguagePicker from "./LanguagePicker.svelte";
 import Menu from "./Menu.astro";
 
@@ -54,12 +55,14 @@ const route = Astro.url.pathname;
 	<div id="sidebar-overlay" aria-hidden="true" class="sm:hidden fixed top-0 inset-s-0 w-screen h-screen transition-[background-color]"></div>
 
 	<nav id="sidebar" class="fixed top-0 inset-e-0 flex flex-col justify-between items-start gap-5 p-5 bg-background h-full sm:contents overflow-hidden transition-transform">
-		<header class="grid gap-5 sm:text-secondary grid-rows-[repeat(5,1fr)] sm:grid-rows-none sm:grid-cols-[repeat(4,1fr)]">
+		<header style={`--nav-rows: ${routes.length + 1}`} class="grid gap-5 sm:text-secondary grid-rows-[repeat(var(--nav-rows),1fr)] sm:grid-rows-none sm:grid-flow-col sm:auto-cols-fr">
 			<button id="sidebar-close" class="sm:hidden"><Icon name="lucide--x" /></button>
 			<Navigator {route} {routes} client:load />
 		</header>
 
 		<footer class="flex flex-col items-start gap-2 sm:flex-row sm:gap-7">
+			<Search {locale} />
+
 			<ThemeSwitcher />
 
 			<a href={getRelativeLocaleUrl(locale, "/feed.xml")} target="_blank" rel="noopener noreferrer" aria-label="Subscription" class="inline-flex"><Icon name="lucide--rss" /></a>

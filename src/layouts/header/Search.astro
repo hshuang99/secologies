@@ -1,0 +1,241 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Icon from "$components/Icon.svelte";
+import i18nit from "$i18n";
+
+interface Props {
+	locale: string;
+}
+
+const { locale } = Astro.props;
+
+const t = i18nit(locale);
+
+// Texts needed by the script, passed through data attributes
+const labels = {
+	note: t("navigation.note"),
+	jotting: t("navigation.jotting"),
+	project: t("navigation.project"),
+	podcast: t("navigation.podcast"),
+	empty: t("search.empty"),
+	error: t("search.error")
+};
+---
+
+<style is:global>
+	#search-dialog mark {
+		color: inherit;
+		background-color: var(--selection-color);
+	}
+
+	#search-results [aria-selected="true"] {
+		background-color: var(--block-color);
+	}
+</style>
+
+<button data-search-open aria-label={t("search.label")} aria-haspopup="dialog" class="inline-flex"><Icon name="lucide--search" /></button>
+
+<dialog
+	id="search-dialog"
+	aria-label={t("search.label")}
+	data-index={getRelativeLocaleUrl(locale, "/search.json")}
+	data-labels={JSON.stringify(labels)}
+	class="mx-auto mt-[10vh] w-[min(92vw,640px)] p-0 border-2 border-primary text-primary bg-background backdrop:bg-black/40"
+>
+	<div class="flex flex-col max-h-[75vh]">
+		<form method="dialog" class="flex items-center gap-3 p-3 border-b-2 border-primary">
+			<Icon name="lucide--search" />
+			<input
+				id="search-input"
+				type="search"
+				autocomplete="off"
+				spellcheck="false"
+				placeholder={t("search.placeholder")}
+				aria-label={t("search.label")}
+				class="grow min-w-0 bg-transparent select-text outline-none placeholder:text-weak"
+			/>
+			<button aria-label={t("search.close")} class="shrink-0"><Icon name="lucide--x" /></button>
+		</form>
+
+		<p id="search-status" role="status" class="px-3 py-2 text-sm text-secondary empty:hidden"></p>
+		<ul id="search-results" class="overflow-y-auto list-none"></ul>
+	</div>
+</dialog>
+
+<script>
+	type Doc = { t: string; u: string; k: string; d: string; g: string[]; s: string; b: string };
+
+	const dialog = () => document.getElementById("search-dialog") as HTMLDialogElement;
+	const input = () => document.getElementById("search-input") as HTMLInputElement;
+	const list = () => document.getElementById("search-results") as HTMLUListElement;
+	const status = () => document.getElementById("search-status") as HTMLElement;
+	const labels = () => JSON.parse(dialog().dataset.labels!) as Record<string, string>;
+
+	let docs: Doc[] | undefined;
+	let loading: Promise<void> | undefined;
+	let active = -1;
+
+	/** Fetch the index the first time search is opened */
+	function load() {
+		loading ??= fetch(dialog().dataset.index!)
+			.then(response => response.json())
+			.then(data => void (docs = data))
+			.catch(() => void (loading = undefined));
+		return loading;
+	}
+
+	const escape = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+	/** Build a text fragment with every query token wrapped in <mark> */
+	function highlight(text: string, tokens: string[]) {
+		const fragment = document.createDocumentFragment();
+		if (!tokens.length) return fragment.append(text), fragment;
+
+		const pattern = new RegExp(`(${tokens.map(escape).join("|")})`, "gi");
+		text.split(pattern).forEach((part, index) => {
+			if (index % 2) {
+				const mark = document.createElement("mark");
+				mark.textContent = part;
+				fragment.append(mark);
+			} else if (part) fragment.append(part);
+		});
+		return fragment;
+	}
+
+	/** Score a document; every token must match somewhere, otherwise it is excluded */
+	function score(doc: Doc, tokens: string[]) {
+		const title = doc.t.toLowerCase();
+		const tags = doc.g.join(" ").toLowerCase();
+		const description = doc.s.toLowerCase();
+		const body = doc.b.toLowerCase();
+
+		let total = 0;
+		for (const token of tokens) {
+			let s = 0;
+			if (title.includes(token)) s += title.startsWith(token) ? 8 : 5;
+			if (tags.includes(token)) s += 3;
+			if (description.includes(token)) s += 2;
+			if (body.includes(token)) s += 1;
+			if (!s) return 0;
+			total += s;
+		}
+		return total;
+	}
+
+	/** A short excerpt around the first body match, falling back to the description */
+	function excerpt(doc: Doc, tokens: string[]) {
+		const body = doc.b.toLowerCase();
+		const hit = tokens.map(token => body.indexOf(token)).filter(index => index >= 0).sort((a, b) => a - b)[0];
+		if (hit === undefined || tokens.some(token => doc.s.toLowerCase().includes(token))) return doc.s;
+
+		const start = Math.max(0, hit - 30);
+		return `${start ? "…" : ""}${doc.b.slice(start, start + 100)}…`;
+	}
+
+	function setActive(index: number) {
+		const items = [...list().children];
+		active = items.length ? (index + items.length) % items.length : -1;
+		items.forEach((item, i) => item.setAttribute("aria-selected", String(i === active)));
+		items[active]?.scrollIntoView({ block: "nearest" });
+	}
+
+	async function search() {
+		const query = input().value.trim().toLowerCase();
+		const tokens = [...new Set(query.split(/\s+/).filter(Boolean))];
+
+		list().replaceChildren();
+		status().textContent = "";
+		active = -1;
+		if (!tokens.length) return;
+
+		await load();
+		if (!docs) return void (status().textContent = labels().error);
+
+		// Ignore results that arrive after the query changed
+		if (input().value.trim().toLowerCase() !== query) return;
+
+		const results = docs
+			.map(doc => ({ doc, score: score(doc, tokens) }))
+			.filter(result => result.score > 0)
+			.sort((a, b) => b.score - a.score) // stable sort keeps newest first among equal scores
+			.slice(0, 20);
+
+		if (!results.length) return void (status().textContent = labels().empty);
+
+		list().append(
+			...results.map(({ doc }) => {
+				const item = document.createElement("li");
+				item.setAttribute("role", "option");
+
+				const link = document.createElement("a");
+				link.href = doc.u;
+				link.className = "flex flex-col gap-1 px-3 py-2";
+
+				const heading = document.createElement("span");
+				heading.className = "font-bold";
+				heading.append(highlight(doc.t, tokens));
+
+				const meta = document.createElement("span");
+				meta.className = "font-mono text-xs text-secondary";
+				meta.textContent = `${labels()[doc.k]} · ${doc.d}`;
+
+				link.append(heading, meta);
+
+				const text = excerpt(doc, tokens);
+				if (text) {
+					const summary = document.createElement("span");
+					summary.className = "text-sm text-secondary line-clamp-2";
+					summary.append(highlight(text, tokens));
+					link.append(summary);
+				}
+
+				item.append(link);
+				return item;
+			})
+		);
+		setActive(0);
+	}
+
+	function open() {
+		// Close the mobile sidebar so it is not left open behind the dialog
+		document.getElementById("sidebar")?.classList.remove("active");
+		document.getElementById("sidebar-overlay")?.classList.remove("active");
+
+		const element = dialog();
+		if (!element.open) element.showModal();
+		input().select();
+		load();
+	}
+
+	// Delegated listeners keep working when the page content is swapped without a reload
+	document.addEventListener("click", event => {
+		const target = event.target as Element;
+
+		if (target.closest("[data-search-open]")) return open();
+
+		// Click on the backdrop closes the dialog; click on a result closes it before navigating
+		if (target === dialog() || target.closest("#search-results a")) dialog().close();
+	});
+
+	document.addEventListener("input", event => {
+		if ((event.target as Element).id === "search-input") search();
+	});
+
+	document.addEventListener("keydown", event => {
+		// Ctrl/Cmd + K toggles search from anywhere
+		if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
+			event.preventDefault();
+			return dialog().open ? dialog().close() : open();
+		}
+
+		if (!dialog().open) return;
+
+		if (event.key === "ArrowDown") (event.preventDefault(), setActive(active + 1));
+		else if (event.key === "ArrowUp") (event.preventDefault(), setActive(active - 1));
+		else if (event.key === "Enter") {
+			// Enter would otherwise submit the dialog form and close it
+			event.preventDefault();
+			if (active >= 0) (list().children[active].querySelector("a") as HTMLAnchorElement).click();
+		}
+	});
+</script>

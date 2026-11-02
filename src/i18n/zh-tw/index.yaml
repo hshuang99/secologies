@@ -1,0 +1,75 @@
+about:
+  introduction: 關於本站
+  linkroll: 連結清單
+contents: 目錄
+home:
+  heatmap:
+    empty: 無文章
+    jotting:
+      other: 隨筆 {count} 則
+    note:
+      other: 文章 {count} 篇
+  latest: 最新內容
+  paths: 閱讀路線
+  posts:
+    other: '{count} 篇'
+  prefaces: 前言預覽
+  topics: 主題導覽
+jotting:
+  empty: 暫無隨筆
+  tag: 標籤
+language: 繁體中文
+navigation:
+  about: 關於
+  author: 作者
+  home: 首頁
+  jotting: 隨筆
+  newsletter: 電子報
+  note: 文章
+  podcast: Podcast
+  project: 專案
+  policy: 隱私權政策
+  preface: 前言
+newsletter:
+  email: 你的 Email
+  error: 訂閱失敗，請稍後再試。
+  name: 希望我怎麼稱呼你
+  privacy: 根據我們的{link}，你不滿意我們的內容可以隨時解除訂閱。
+  submit: 訂閱
+  success:
+    description: 您已經成功訂閱！
+    title: 感謝您！
+  title: 免費訂閱電子報
+note:
+  empty: 暫無文章
+  series: 系列
+  tag: 標籤
+  top: 回到頂部
+podcast:
+  empty: 暫無節目
+  episode:
+    other: '第 {count} 集'
+project:
+  empty: 暫無專案紀錄
+read:
+  words:
+    other: '{count} 字'
+search:
+  close: 關閉
+  empty: 找不到相關內容
+  error: 無法載入搜尋索引，請稍後再試。
+  label: 搜尋
+  placeholder: 搜尋文章、隨筆、專案與 Podcast…
+sensitive:
+  back: 返回列表
+  continue: 我已知曉，繼續閱讀
+  description: 本文可能包含色情、暴力、血腥或觸發情緒内容。
+  feed: |
+    <p>本文可能包含色情、暴力、血腥或觸發情緒内容。</p>
+    <p>如需閱讀，請參閱<a href="{link}">原文連結</a>。</p>
+  icon: 包含敏感内容
+  title: 内容警告
+  warning: 若這些内容可能影響您的心理健康，請立刻離開！
+statistics:
+  other: 寫下 {count} 字
+theme: ''

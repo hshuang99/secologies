@@ -100,6 +100,9 @@ const totalWords = noteWords + jottingWords;
 // Check if policy file exists for current locale
 const localePrefix = monolocale ? "" : `${locale}/`;
 const policy = await getEntry("information", `${localePrefix}policy`);
+
+// Check if author file exists for current locale
+const author_page = await getEntry("information", `${localePrefix}hong-sheng-huang`);
 ---
 
 <footer class="flex flex-col sm:flex-row items-center justify-between gap-2 mt-8 mb-5 sm:mb-3 text-sm font-mono">
@@ -129,11 +132,15 @@ const policy = await getEntry("information", `${localePrefix}policy`);
 				</>
 			)
 		}
+		{
+			author_page && (
+				<>
+					<span>·</span>
+					<a href={getRelativeLocaleUrl(locale, "/hong-sheng-huang")} aria-label="Author" class="inline-flex">
+						<Icon name="lucide--user-round" title={t("navigation.author")} />
+					</a>
+				</>
+			)
+		}
 	</div>
-	<code class="flex items-center gap-2.5">
-		<p>Powered by</p>
-		<a href="https://astro.build/" aria-label="Astro" target="_blank" class="inline-flex"><Icon name="simple-icons--astro" /></a>
-		<span>·</span>
-		<a href="https://github.com/tuyuritio/astro-theme-thought-lite" aria-label="Theme" target="_blank" class="inline-flex"><Icon name="simple-icons--github" title={t("theme")} /></a>
-	</code>
 </footer>

@@ -12,6 +12,16 @@ export async function getStaticPaths() {
 }
 
 /**
+ * Remove characters that are illegal in XML 1.0 (control characters and lone surrogates),
+ * which make feed readers reject the whole feed, and keep "]]>" from ending a CDATA section early.
+ */
+function clean(text?: string) {
+	return text
+		?.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\uFFFE\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g, "")
+		.replaceAll("]]>", "]]]]><![CDATA[>");
+}
+
+/**
  * GET endpoint for generating feeds
  * Supports filtering by language, series, and tags
  */
@@ -102,11 +112,11 @@ export const GET: APIRoute = async ({ site, params }) => {
 	items.forEach(item => {
 		feed.addItem({
 			id: item.id, // Unique item identifier
-			title: item.data.title, // Post title
+			title: clean(item.data.title)!, // Post title
 			link: (<any>item).link, // URL to the post
 			date: item.data.timestamp, // Publication date
-			content: item.data.sensitive ? t("sensitive.feed", { link: (<any>item).link }) : item.rendered?.html, // Rendered content
-			description: item.data.description, // Summary of the post
+			content: clean(item.data.sensitive ? t("sensitive.feed", { link: (<any>item).link }) : item.rendered?.html), // Rendered content
+			description: clean(item.data.description), // Summary of the post
 			category: item.data.tags?.map((tag: any) => ({ term: tag })) // Tags as categories
 		});
 	});

@@ -1,0 +1,28 @@
+---
+import Time from "$lib/time";
+
+interface Props {
+	items: { title: string; url: string; timestamp: Date; description?: string; meta?: string }[];
+}
+
+const { items } = Astro.props;
+---
+
+<ul class="flex flex-col gap-4 list-none">
+	{
+		items.map(item => (
+			<li class="flex flex-col gap-1">
+				<div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-x-4">
+					<a href={item.url} class="link font-bold">
+						{item.title}
+					</a>
+					<time datetime={item.timestamp.toISOString()} class="shrink-0 text-secondary font-mono text-xs">
+						{item.meta && `${item.meta} · `}
+						{Time.toString(item.timestamp)}
+					</time>
+				</div>
+				{item.description && <p class="text-sm text-secondary line-clamp-2">{item.description}</p>}
+			</li>
+		))
+	}
+</ul>
