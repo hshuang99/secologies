@@ -6,6 +6,7 @@ import Time from "$lib/time";
 import Base from "$layouts/Base.astro";
 import TOC from "$components/TOC.astro";
 import Position from "$components/Position.astro";
+import Comments from "$components/Comments.svelte";
 import Icon from "$components/Icon.svelte";
 import Sensitive from "$components/Sensitive.svelte";
 import i18nit from "$i18n";
@@ -93,6 +94,8 @@ const t = i18nit(locale);
 				</div>
 			</div>
 		</Sensitive>
+
+		{!note.data.sensitive && <Comments {locale} slug={`note/${note.id}`} client:visible />}
 
 		<Position {locale} toc={note.data.toc} series={!!note.data.series} />
 	</main>

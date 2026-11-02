@@ -1,6 +1,19 @@
 about:
   introduction: 關於本站
   linkroll: 連結清單
+comments:
+  content: 寫下你的留言…
+  empty: 還沒有留言，來當第一位留言的人吧！
+  error:
+    duplicate: 你已經送出過相同的留言。
+    load: 無法載入留言，請稍後再試。
+    rate: 留言過於頻繁，請稍候再試。
+    submit: 留言送出失敗，請稍後再試。
+  loading: 正在載入留言…
+  name: 你的暱稱
+  submit: 送出留言
+  submitting: 送出中…
+  title: 留言
 contents: 目錄
 home:
   heatmap:

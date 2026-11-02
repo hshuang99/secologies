@@ -1,6 +1,19 @@
 about:
   introduction: Introduction
   linkroll: Linkroll
+comments:
+  content: Write your comment…
+  empty: No comments yet. Be the first to comment!
+  error:
+    duplicate: You have already posted this comment.
+    load: Failed to load comments. Please try again later.
+    rate: Too many comments. Please wait a moment.
+    submit: Failed to post your comment. Please try again later.
+  loading: Loading comments…
+  name: Your name
+  submit: Post comment
+  submitting: Posting…
+  title: Comments
 contents: Contents
 home:
   heatmap:

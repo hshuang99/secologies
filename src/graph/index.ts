@@ -51,7 +51,8 @@ export async function loadFont(locale: string) {
 	if (!response.ok) throw new Error(`Failed to load font from ${url}: ${response.status} ${response.statusText}`);
 
 	const buffer = await response.arrayBuffer();
-	if (!isFont(new Uint8Array(buffer))) throw new Error(`The response from ${url} is not an OpenType font (check that the URL points to the raw file)`);
+	if (!isFont(new Uint8Array(buffer)))
+		throw new Error(`The response from ${url} is not an OpenType font (check that the URL points to the raw file)`);
 
 	await fs.promises.writeFile(filePath, new Uint8Array(buffer));
 

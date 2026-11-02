@@ -75,7 +75,8 @@ const sorted = items.sort((a, b) => b.data.timestamp.getTime() - a.data.timestam
 const latest = sorted[0];
 const recent = sorted.slice(0, 5);
 
-const urlOf = (item: { id: string; type?: string }) => getRelativeLocaleUrl(locale, `/${item.type}/${monolocale ? item.id : item.id.split("/").slice(1).join("/")}`);
+const urlOf = (item: { id: string; type?: string }) =>
+	getRelativeLocaleUrl(locale, `/${item.type}/${monolocale ? item.id : item.id.split("/").slice(1).join("/")}`);
 
 // Latest projects and podcast episodes, shown as sections (hidden while a collection is empty)
 const latestOf = async (name: "project" | "podcast") =>

@@ -1,0 +1,423 @@
+diff --git a/astro.config.ts b/astro.config.ts
+index 75221cf..4acfe49 100644
+--- a/astro.config.ts
++++ b/astro.config.ts
+@@ -1,5 +1,6 @@
+ // @ts-check
+ import { defineConfig, fontProviders } from "astro/config";
++import cloudflare from "@astrojs/cloudflare";
+ import yaml from "@rollup/plugin-yaml";
+ import mdx from "@astrojs/mdx";
+ import sitemap from "@astrojs/sitemap";
+@@ -39,6 +40,8 @@ import ZeoSevenFonts from "./src/fonts/zeo-seven-fonts";
+ export default defineConfig({
+ 	site: "https://secologies.com",
+ 	trailingSlash: "ignore",
++	// Pages stay static; only `src/pages/api/*` runs on demand. `node` keeps node:fs / sharp working for the OG images.
++	adapter: cloudflare({ prerenderEnvironment: "node" }),
+ 	i18n: {
+ 		...siteConfig.i18n,
+ 		routing: {
+@@ -137,7 +140,7 @@ export default defineConfig({
+ 			provider: fontProviders.google(),
+ 			weights: [100],
+ 			display: "block",
+-			subsets: ["fallback"],
++			subsets: ["menu"],
+ 			fallbacks: ["Apple Chancery", "Segoe Script", "cursive"],
+ 			cssVariable: "--font-playwrite-mx"
+ 		},
+diff --git b/src/components/Comments.svelte b/src/components/Comments.svelte
+new file mode 100644
+index 0000000..26b6ec4
+--- /dev/null
++++ b/src/components/Comments.svelte
+@@ -0,0 +1,142 @@
++<script lang="ts">
++import { onMount } from "svelte";
++import Time from "$lib/time";
++import i18nit from "$i18n";
++
++interface Comment {
++	id: number;
++	author: string;
++	content: string;
++	created_at: string;
++}
++
++const MAX_AUTHOR = 40;
++const MAX_CONTENT = 2000;
++const AUTHOR_KEY = "comment-author";
++
++let { locale, slug }: { locale: string; slug: string } = $props();
++
++const t = i18nit(locale);
++
++let comments = $state<Comment[]>([]);
++let loading = $state(true);
++let loadFailed = $state(false);
++
++let author = $state("");
++let content = $state("");
++let website = $state(""); // honeypot, real visitors never see or fill it
++let submitting = $state(false);
++let message = $state("");
++
++async function load() {
++	try {
++		const response = await fetch(`/api/comments?slug=${encodeURIComponent(slug)}`);
++		if (!response.ok) throw new Error(String(response.status));
++
++		comments = (await response.json()).comments ?? [];
++	} catch {
++		loadFailed = true;
++	} finally {
++		loading = false;
++	}
++}
++
++async function submit(event: SubmitEvent) {
++	event.preventDefault();
++	if (submitting) return;
++
++	submitting = true;
++	message = "";
++
++	try {
++		const response = await fetch("/api/comments", {
++			method: "POST",
++			headers: { "Content-Type": "application/json" },
++			body: JSON.stringify({ slug, author, content, website })
++		});
++
++		if (!response.ok) {
++			message = response.status === 429 ? t("comments.error.rate") : response.status === 409 ? t("comments.error.duplicate") : t("comments.error.submit");
++			return;
++		}
++
++		const { comment } = await response.json();
++		if (comment) comments = [...comments, comment];
++		content = "";
++
++		try {
++			localStorage.setItem(AUTHOR_KEY, author);
++		} catch {}
++	} catch {
++		message = t("comments.error.submit");
++	} finally {
++		submitting = false;
++	}
++}
++
++onMount(() => {
++	try {
++		author = localStorage.getItem(AUTHOR_KEY) ?? "";
++	} catch {}
++
++	load();
++});
++</script>
++
++<section id="comments" class="flex flex-col gap-5">
++	<h2 class="text-xl font-bold">
++		{t("comments.title")}{#if comments.length} <span class="text-secondary text-base font-normal">({comments.length})</span>{/if}
++	</h2>
++
++	{#if loading}
++		<p class="text-secondary">{t("comments.loading")}</p>
++	{:else if loadFailed}
++		<p class="text-secondary">{t("comments.error.load")}</p>
++	{:else if !comments.length}
++		<p class="text-secondary">{t("comments.empty")}</p>
++	{:else}
++		<ol class="flex flex-col gap-4">
++			{#each comments as comment (comment.id)}
++				<li class="flex flex-col gap-1 border-b border-weak pb-4">
++					<div class="flex items-baseline gap-2">
++						<span class="font-bold">{comment.author}</span>
++						<time class="text-[0.875rem] text-secondary" datetime={comment.created_at} title={Time.toLocaleString(comment.created_at, navigator.language, true)}>
++							{Time.toString(comment.created_at)}
++						</time>
++					</div>
++					<p class="whitespace-pre-wrap wrap-anywhere select-text">{comment.content}</p>
++				</li>
++			{/each}
++		</ol>
++	{/if}
++
++	<form class="flex flex-col gap-3" onsubmit={submit}>
++		<input
++			class="bg-block rounded-md px-3 py-2 outline-none"
++			type="text"
++			name="author"
++			required
++			maxlength={MAX_AUTHOR}
++			autocomplete="nickname"
++			placeholder={t("comments.name")}
++			aria-label={t("comments.name")}
++			bind:value={author}
++		/>
++		<textarea
++			class="bg-block rounded-md px-3 py-2 outline-none min-h-28 resize-y"
++			name="content"
++			required
++			maxlength={MAX_CONTENT}
++			placeholder={t("comments.content")}
++			aria-label={t("comments.content")}
++			bind:value={content}
++		></textarea>
++		<input class="hidden" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" bind:value={website} />
++		<div class="flex items-center gap-3">
++			<button class="font-bold text-background bg-secondary py-1 px-3 rounded-md disabled:opacity-50" type="submit" disabled={submitting}>
++				{submitting ? t("comments.submitting") : t("comments.submit")}
++			</button>
++			{#if message}<span class="text-red-500 text-[0.875rem]" role="alert">{message}</span>{/if}
++		</div>
++	</form>
++</section>
+diff --git a/src/i18n/en/index.yaml b/src/i18n/en/index.yaml
+index 127d064..94aa2dd 100644
+--- a/src/i18n/en/index.yaml
++++ b/src/i18n/en/index.yaml
+@@ -1,6 +1,19 @@
+ about:
+   introduction: Introduction
+   linkroll: Linkroll
++comments:
++  content: Write your comment…
++  empty: No comments yet. Be the first to comment!
++  error:
++    duplicate: You have already posted this comment.
++    load: Failed to load comments. Please try again later.
++    rate: Too many comments. Please wait a moment.
++    submit: Failed to post your comment. Please try again later.
++  loading: Loading comments…
++  name: Your name
++  submit: Post comment
++  submitting: Posting…
++  title: Comments
+ contents: Contents
+ home:
+   heatmap:
+diff --git a/src/i18n/zh-tw/index.yaml b/src/i18n/zh-tw/index.yaml
+index 4b17c41..0581ee9 100644
+--- a/src/i18n/zh-tw/index.yaml
++++ b/src/i18n/zh-tw/index.yaml
+@@ -1,6 +1,19 @@
+ about:
+   introduction: 關於本站
+   linkroll: 連結清單
++comments:
++  content: 寫下你的留言…
++  empty: 還沒有留言，來當第一位留言的人吧！
++  error:
++    duplicate: 你已經送出過相同的留言。
++    load: 無法載入留言，請稍後再試。
++    rate: 留言過於頻繁，請稍候再試。
++    submit: 留言送出失敗，請稍後再試。
++  loading: 正在載入留言…
++  name: 你的暱稱
++  submit: 送出留言
++  submitting: 送出中…
++  title: 留言
+ contents: 目錄
+ home:
+   heatmap:
+diff --git a/src/pages/[...locale]/jotting/[...id]/index.astro b/src/pages/[...locale]/jotting/[...id]/index.astro
+index 55872e3..1128868 100644
+--- a/src/pages/[...locale]/jotting/[...id]/index.astro
++++ b/src/pages/[...locale]/jotting/[...id]/index.astro
+@@ -4,6 +4,7 @@ import config, { monolocale } from "$config";
+ import Time from "$lib/time";
+ import Base from "$layouts/Base.astro";
+ import Position from "$components/Position.astro";
++import Comments from "$components/Comments.svelte";
+ import Icon from "$components/Icon.svelte";
+ import Sensitive from "$components/Sensitive.svelte";
+ import i18nit from "$i18n";
+@@ -63,6 +64,8 @@ const t = i18nit(locale);
+ 			<section id="markdown-content" class="markdown"><Content /></section>
+ 		</Sensitive>
+ 
++		{!jotting.data.sensitive && <Comments {locale} slug={`jotting/${jotting.id}`} client:visible />}
++
+ 		<Position {locale} />
+ 	</main>
+ </Base>
+diff --git a/src/pages/[...locale]/note/[...id]/index.astro b/src/pages/[...locale]/note/[...id]/index.astro
+index 85bbedf..639e1c6 100644
+--- a/src/pages/[...locale]/note/[...id]/index.astro
++++ b/src/pages/[...locale]/note/[...id]/index.astro
+@@ -6,6 +6,7 @@ import Time from "$lib/time";
+ import Base from "$layouts/Base.astro";
+ import TOC from "$components/TOC.astro";
+ import Position from "$components/Position.astro";
++import Comments from "$components/Comments.svelte";
+ import Icon from "$components/Icon.svelte";
+ import Sensitive from "$components/Sensitive.svelte";
+ import i18nit from "$i18n";
+@@ -94,6 +95,8 @@ const t = i18nit(locale);
+ 			</div>
+ 		</Sensitive>
+ 
++		{!note.data.sensitive && <Comments {locale} slug={`note/${note.id}`} client:visible />}
++
+ 		<Position {locale} toc={note.data.toc} series={!!note.data.series} />
+ 	</main>
+ </Base>
+diff --git a/src/pages/[...locale]/podcast/[...id]/index.astro b/src/pages/[...locale]/podcast/[...id]/index.astro
+index 77ffffb..89b79d4 100644
+--- a/src/pages/[...locale]/podcast/[...id]/index.astro
++++ b/src/pages/[...locale]/podcast/[...id]/index.astro
+@@ -6,6 +6,7 @@ import Time from "$lib/time";
+ import Base from "$layouts/Base.astro";
+ import TOC from "$components/TOC.astro";
+ import Position from "$components/Position.astro";
++import Comments from "$components/Comments.svelte";
+ import Icon from "$components/Icon.svelte";
+ import i18nit from "$i18n";
+ 
+@@ -108,6 +109,8 @@ const t = i18nit(locale);
+ 			{(entry.data.toc || !!entry.data.series) && <TOC headings={entry.data.toc ? headings : undefined} {locale} {series} />}
+ 		</div>
+ 
++		<Comments {locale} slug={`podcast/${entry.id}`} client:visible />
++
+ 		<Position {locale} toc={entry.data.toc} series={!!entry.data.series} />
+ 	</main>
+ </Base>
+diff --git a/src/pages/[...locale]/project/[...id]/index.astro b/src/pages/[...locale]/project/[...id]/index.astro
+index 7b40925..95ccea2 100644
+--- a/src/pages/[...locale]/project/[...id]/index.astro
++++ b/src/pages/[...locale]/project/[...id]/index.astro
+@@ -6,6 +6,7 @@ import Time from "$lib/time";
+ import Base from "$layouts/Base.astro";
+ import TOC from "$components/TOC.astro";
+ import Position from "$components/Position.astro";
++import Comments from "$components/Comments.svelte";
+ import Icon from "$components/Icon.svelte";
+ import i18nit from "$i18n";
+ 
+@@ -90,6 +91,8 @@ const t = i18nit(locale);
+ 			{(entry.data.toc || !!entry.data.series) && <TOC headings={entry.data.toc ? headings : undefined} {locale} {series} />}
+ 		</div>
+ 
++		<Comments {locale} slug={`project/${entry.id}`} client:visible />
++
+ 		<Position {locale} toc={entry.data.toc} series={!!entry.data.series} />
+ 	</main>
+ </Base>
+diff --git b/src/pages/api/comments.ts b/src/pages/api/comments.ts
+new file mode 100644
+index 0000000..b6ce9cc
+--- /dev/null
++++ b/src/pages/api/comments.ts
+@@ -0,0 +1,108 @@
++import type { APIRoute } from "astro";
++import { env } from "cloudflare:workers";
++
++// This endpoint runs on demand (Cloudflare Worker); every other page stays static.
++export const prerender = false;
++
++interface Comment {
++	id: number;
++	author: string;
++	content: string;
++	created_at: string;
++}
++
++// Minimal D1 typing, so no extra type package is required
++interface Statement {
++	bind(...values: unknown[]): Statement;
++	all<T>(): Promise<{ results: T[] }>;
++	first<T>(): Promise<T | null>;
++}
++interface Database {
++	prepare(sql: string): Statement;
++}
++
++const MAX_AUTHOR = 40;
++const MAX_CONTENT = 2000;
++const FLOOD_LIMIT = 5; // max comments per post per minute
++
++// Slug format: `<collection>/<content id>`, e.g. `note/en/my-post`
++const SLUG = /^(note|jotting|project|podcast)\/[^\s\u0000-\u001f]{1,180}$/u;
++
++// Return created_at as an ISO 8601 UTC string
++const COLUMNS = "id, author, content, strftime('%Y-%m-%dT%H:%M:%SZ', created_at) AS created_at";
++
++const json = (data: unknown, status = 200) =>
++	new Response(JSON.stringify(data), { status, headers: { "Content-Type": "application/json", "Cache-Control": "no-store" } });
++
++const length = (text: string) => [...text].length;
++
++/**
++ * GET /api/comments?slug=note/en/my-post
++ */
++export const GET: APIRoute = async ({ url }) => {
++	const slug = url.searchParams.get("slug") ?? "";
++	if (!SLUG.test(slug)) return json({ error: "invalid_slug" }, 400);
++
++	try {
++		const db = (env as unknown as { DB: Database }).DB;
++		const { results } = await db.prepare(`SELECT ${COLUMNS} FROM comments WHERE post_slug = ? ORDER BY id ASC LIMIT 500`).bind(slug).all<Comment>();
++
++		return json({ comments: results });
++	} catch (error) {
++		console.error("Failed to load comments:", error);
++		return json({ error: "server_error" }, 500);
++	}
++};
++
++/**
++ * POST /api/comments
++ * Body: { slug, author, content, website } (`website` is a honeypot field and must stay empty)
++ */
++export const POST: APIRoute = async ({ request, url }) => {
++	// Only accept submissions coming from this site
++	const origin = request.headers.get("origin");
++	if (origin) {
++		try {
++			if (new URL(origin).origin !== url.origin) return json({ error: "forbidden" }, 403);
++		} catch {
++			return json({ error: "forbidden" }, 403);
++		}
++	}
++
++	let body: Record<string, unknown>;
++	try {
++		body = await request.json();
++	} catch {
++		return json({ error: "invalid_body" }, 400);
++	}
++
++	const slug = typeof body.slug === "string" ? body.slug : "";
++	const author = typeof body.author === "string" ? body.author.replace(/\s+/g, " ").trim() : "";
++	const content = typeof body.content === "string" ? body.content.replace(/\r\n?/g, "\n").replace(/\n{3,}/g, "\n\n").trim() : "";
++
++	// Bots tend to fill every field: pretend success, store nothing
++	if (typeof body.website === "string" && body.website.trim()) return json({ comment: null });
++
++	if (!SLUG.test(slug)) return json({ error: "invalid_slug" }, 400);
++	if (!author || length(author) > MAX_AUTHOR) return json({ error: "invalid_author" }, 400);
++	if (!content || length(content) > MAX_CONTENT) return json({ error: "invalid_content" }, 400);
++
++	try {
++		const db = (env as unknown as { DB: Database }).DB;
++
++		// Simple flood protection per post
++		const recent = await db.prepare("SELECT COUNT(*) AS n FROM comments WHERE post_slug = ? AND created_at >= datetime('now', '-60 seconds')").bind(slug).first<{ n: number }>();
++		if ((recent?.n ?? 0) >= FLOOD_LIMIT) return json({ error: "rate_limited" }, 429);
++
++		// Reject exact duplicates (double clicks, replays)
++		const duplicate = await db.prepare("SELECT 1 AS found FROM comments WHERE post_slug = ? AND author = ? AND content = ? LIMIT 1").bind(slug, author, content).first();
++		if (duplicate) return json({ error: "duplicate" }, 409);
++
++		const comment = await db.prepare(`INSERT INTO comments (post_slug, author, content) VALUES (?, ?, ?) RETURNING ${COLUMNS}`).bind(slug, author, content).first<Comment>();
++
++		return json({ comment }, 201);
++	} catch (error) {
++		console.error("Failed to save comment:", error);
++		return json({ error: "server_error" }, 500);
++	}
++};

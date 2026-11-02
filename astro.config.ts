@@ -7,6 +7,8 @@ import svelte from "@astrojs/svelte";
 import tailwindcss from "@tailwindcss/vite";
 import swup from "@swup/astro";
 
+import cloudflare from "@astrojs/cloudflare";
+
 import GFM from "remark-gfm";
 import ins from "remark-ins";
 import mark from "remark-flexible-markers";
@@ -39,6 +41,7 @@ import ZeoSevenFonts from "./src/fonts/zeo-seven-fonts";
 export default defineConfig({
 	site: "https://secologies.com",
 	trailingSlash: "ignore",
+	adapter: cloudflare({ prerenderEnvironment: "node" }),
 	i18n: {
 		...siteConfig.i18n,
 		routing: {
@@ -135,9 +138,8 @@ export default defineConfig({
 		{
 			name: "Playwrite MX",
 			provider: fontProviders.google(),
-			weights: [100],
+			weights: ["100 400"],
 			display: "block",
-			subsets: ["fallback"],
 			fallbacks: ["Apple Chancery", "Segoe Script", "cursive"],
 			cssVariable: "--font-playwrite-mx"
 		},
@@ -159,13 +161,13 @@ export default defineConfig({
 			cssVariable: "--font-maple-mono-nf-cn"
 		},
 		{
-		        name: "Noto Sans TC",
-		        provider: fontProviders.google(),
-		        weights: [400, 700],
-		        optimizedFallbacks: false,
-                        fallbacks: ["Noto Sans CJK TC", "Microsoft JhengHei", "PingFang TC", "Hiragino Sans TC", "Heiti TC", "Apple LiGothic Medium"], // Ensures Traditional Chinese characters are fetched
-                        cssVariable: "--font-zh-tw" // Creates a custom CSS variable
-                },
+			name: "Noto Sans TC",
+			provider: fontProviders.google(),
+			weights: [400, 700],
+			optimizedFallbacks: false,
+			fallbacks: ["Noto Sans CJK TC", "Microsoft JhengHei", "PingFang TC", "Hiragino Sans TC", "Heiti TC", "Apple LiGothic Medium"], // Ensures Traditional Chinese characters are fetched
+			cssVariable: "--font-zh-tw" // Creates a custom CSS variable
+		},
 		{
 			name: "The Peak Font Plus",
 			provider: ZeoSevenFonts(),

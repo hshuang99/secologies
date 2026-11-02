@@ -6,6 +6,7 @@ import Time from "$lib/time";
 import Base from "$layouts/Base.astro";
 import TOC from "$components/TOC.astro";
 import Position from "$components/Position.astro";
+import Comments from "$components/Comments.svelte";
 import Icon from "$components/Icon.svelte";
 import i18nit from "$i18n";
 
@@ -107,6 +108,8 @@ const t = i18nit(locale);
 			<section id="markdown-content" class="markdown"><Content /></section>
 			{(entry.data.toc || !!entry.data.series) && <TOC headings={entry.data.toc ? headings : undefined} {locale} {series} />}
 		</div>
+
+		<Comments {locale} slug={`podcast/${entry.id}`} client:visible />
 
 		<Position {locale} toc={entry.data.toc} series={!!entry.data.series} />
 	</main>
