@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import config from "$config";
+import localize from "$lib/localize";
 import graph from "$graph/default";
 
 /**
@@ -8,9 +9,9 @@ import graph from "$graph/default";
 export const GET: APIRoute = async () => {
 	const image = await graph({
 		locale: config.i18n.defaultLocale,
-		title: config.title,
-		author: config.author.name,
-		description: config.description
+		title: localize(config.title, config.i18n.defaultLocale),
+		author: localize(config.author.name, config.i18n.defaultLocale),
+		description: localize(config.description, config.i18n.defaultLocale)
 	});
 
 	return new Response(new Uint8Array(image), { headers: { "Content-Type": "image/png" } });

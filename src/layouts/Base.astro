@@ -1,5 +1,6 @@
 ---
 import config from "$config";
+import localize from "$lib/localize";
 import App from "$layouts/App.astro";
 import Header from "$layouts/header/Header.astro";
 import Footer from "$layouts/Footer.astro";
@@ -8,8 +9,10 @@ import "$styles/markdown.css";
 import "medium-zoom/dist/style.css";
 import "katex/dist/katex.min.css";
 
-const { locale = config.i18n.defaultLocale, title: subtitle, description = config.description, article } = Astro.props;
-const title = config.title;
+const { locale = config.i18n.defaultLocale, title: subtitle, description: pageDescription, article } = Astro.props;
+const title = localize(config.title, locale);
+const description = pageDescription ?? localize(config.description, locale);
+const author = { ...config.author, name: localize(config.author.name, locale), link: localize(config.author.link, locale) };
 ---
 
 <script>
@@ -39,7 +42,7 @@ const title = config.title;
 	document.addEventListener("astro:page-load", initialize);
 </script>
 
-<App {locale} {title} {subtitle} {description} {article} author={config.author.name}>
+<App {locale} {title} {subtitle} {description} {article} author={author.name}>
 	<div class="flex flex-col mx-auto *:*:px-3 w-[min(100%,1000px)]">
 		<!-- Stretch body to full viewport height to prevent layout jumps from toggleable scrollbars. -->
 		<div id="body" class="flex flex-col min-h-screen">
@@ -48,6 +51,6 @@ const title = config.title;
 			<slot />
 		</div>
 
-		<Footer {locale} author={config.author} copyright={config.copyright} />
+		<Footer {locale} {author} copyright={config.copyright} />
 	</div>
 </App>

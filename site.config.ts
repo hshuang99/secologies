@@ -1,14 +1,17 @@
 import siteConfig from "./src/lib/config";
 
 const config = siteConfig({
-	title: "Secologies",
+	title: { "zh-tw": "Secologies", en: "Secologies" },
 	prologue: "",
 	author: {
-		name: "黃宏勝",
+		name: { "zh-tw": "黃宏勝", en: "Hong-Sheng Huang" },
 		email: "hshuang@secologies.com",
-		link: "https://secologies.com/hong-sheng-huang"
+		link: { "zh-tw": "https://secologies.com/hong-sheng-huang", en: "https://secologies.com/en/hong-sheng-huang" }
 	},
-	description: "Secologies 是一個以研究為導向的獨立資安平台，致力於系統性地理解與分析資訊安全。",
+	description: {
+		"zh-tw": "Secologies 是一個以研究為導向的獨立資安平台，致力於系統性地理解與分析資訊安全。",
+		en: "Secologies is an independent, research-oriented security platform dedicated to systematically understanding and analyzing information security."
+	},
 	copyright: {
 		type: "CC BY-NC-ND 4.0",
 		year: "2026"

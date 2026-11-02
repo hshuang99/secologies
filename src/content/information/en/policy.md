@@ -1,104 +1,57 @@
 ## Privacy Policy
 
-> **Last Updated**: Sep 20, 2025
+Welcome to 'Secologies' 「Exploring the science and practice of security」( hereinafter referred to as 'this website'). In order to provide you with a secure experience while using the various services and information on this website, we hereby explain the privacy protection policy of this website to safeguard your rights and interests. Please read the following content carefully:
 
-We highly value your privacy and only collect the minimal data necessary to provide basic services. This policy explains how we collect, use, and protect your data.
+### Scope of Privacy Protection Policy
 
-### Types of Data Collection
+The content of the privacy protection policy includes how this website handles personal identification information collected when you use the website's services. The privacy protection policy does not apply to related websites outside of this website, nor does it apply to personnel not commissioned or involved in the management of this website.
 
-1. Automatically collected data
-    - Theme preferences: site light or dark mode preference settings.
+### Collection, Processing, and Utilization of Personal Data
 
-The following table provides an overview of the types of data collected, collection purposes, and storage locations:
+When you visit this website or use the functional services provided by this website, we will collect the necessary personal data based on the nature of the service. We will process and utilize your personal data within the scope of that specific purpose. Without your written consent, this website will not use personal data for other purposes.
 
-| Data Type | Collection Method | Collection Purpose | Storage Location | Notes |
-| - | - | - | - | - |
-| Theme preferences | User settings | Save interface display mode | localStorage | |
+When you use interactive features such as the service mailbox and surveys on this website, we may retain the information you provide, including your name, email address, contact information, and usage time.
 
-### Data Usage Purposes
+During general browsing, the server automatically records relevant paths, including your device's IP address, usage time, the browser you used, and browsing and click data records. This information is for internal use only and will not be disclosed to external parties.
 
-- Enhance user experience: Save user theme preference settings (light/dark mode) in localStorage to ensure users maintain their personalized interface settings on their next visit.
+To provide accurate services, we will analyze and statistically process the content of surveys collected. The statistical data or explanatory text resulting from the analysis may be published as needed, but it will not involve specific personal information.
 
-### Data Storage and Protection
+You can request at any time to correct or delete any incorrect or incomplete personal data collected by this website. Please see the contact information at the bottom for details.
 
-- localStorage: User custom nicknames and theme preference settings are stored in the browser's localStorage. This data is only stored on the user's local device and is not transmitted to the server. Users can clear this local data at any time through browser settings.
-- HTTPS encryption: The entire site uses HTTPS encrypted transmission. All data transmitted between the client and server is protected by TLS/SSL encryption, preventing data from being stolen or tampered with during transmission.
+### Data Protection
 
-### Data Sharing and Disclosure
+The host of this website is equipped with various information security devices and necessary security protection measures such as firewalls and antivirus systems to protect the website and your personal data. Only authorized personnel can access your personal data, and these relevant personnel have signed confidentiality agreements. Violations of confidentiality obligations will result in legal consequences.
 
-We are committed to protecting your privacy and may share or disclose your data in the following circumstances:
+If it is necessary to entrust other units to provide services due to business needs, this website will also strictly require them to comply with confidentiality obligations and conduct necessary inspection procedures to ensure their compliance.
 
-- Legal requirements: When required by laws and regulations or lawfully requested by judicial authorities, this site may need to disclose relevant data. However, within the scope permitted by law, this site will do its best to protect user privacy and notify affected users.
-- Data anonymization: This site may use anonymized or de-identified data for statistical analysis. This data will not contain any personally identifiable information.
+### Related External Links
 
-Except for the above circumstances, this site will not sell, lease, or otherwise share your personal data with any third parties.
+The web pages of this website provide links to other websites. You can also enter other websites through the links provided by this website. However, the privacy protection policy of this website does not apply to these linked websites. You must refer to the privacy protection policy of the linked websites.
 
-### User Rights
+### Policy on Sharing Personal Data with Third Parties
 
-As a data subject, you have the following rights regarding your personal data:
+This website will never provide, exchange, rent, or sell any of your personal data to other individuals, groups, private enterprises, or public agencies, except where there are legal grounds or contractual obligations.
 
-- You have the right to know what personal data this site has collected about you.
-- You can clear local data stored in your browser at any time.
+The preceding paragraph does not include your written consent.
 
-## Terms of Service
+It is necessary to provide it to prevent danger to your life, body, freedom, or property.
 
-> **Last Updated**: Sep 20, 2025
+Cooperating with public authorities or academic research institutions for statistical or academic research based on public interest, and the data is processed or collected by the provider in a way that cannot identify specific individuals.
 
-### Service Content
+When your behavior on the website violates the terms of service or may harm or obstruct the rights of this website or other users or cause harm to anyone.
 
-This site is a personal content creation platform based on open-source technology, primarily providing:
+To benefit your rights.
 
-- Article reading and browsing functionality.
-- Feed subscription service.
+When this website entrusts others to assist in collecting, processing, or using your personal data, it will have strict supervision and management responsibilities for the outsourced vendors or individuals.
 
-### User Permission Description
+### Use of Cookies
 
-- Browse all public content on the site.
-- Subscribe to feed.
+To provide you with the best service, this website will place and access our cookies on your computer. If you do not wish to accept the writing of cookies, you can set the privacy level to high in your browser's function options to reject the writing of cookies. However, this may result in certain functions of the website not working properly.
 
-### User Conduct Guidelines
+### Amendment to the Privacy Protection Policy
 
-When using this site's services, you need to comply with:
+The privacy protection policy of this website may be amended at any time in response to needs, and the amended terms will be posted on the website.
 
-- Respect the legitimate rights and interests of other users and content creators.
-- Do not abuse or attempt to damage this site's technical architecture.
+### Contact Information
 
-### Intellectual Property
-
-- This site's theme is released under the [GPLv3 open-source license](https://www.gnu.org/licenses/gpl-3.0.html).
-- Original content on the site is licensed under Creative Commons license, please refer to the footer for specific license type.
-- Third-party resources follow their respective licensing agreements.
-
-### Service Changes and Termination
-
-- This site reserves the right to modify, suspend, or terminate part or all services at any time.
-- Major changes will be notified to users through site's announcements or other appropriate means.
-
-## Disclaimer
-
-> **Last Updated**: July 27, 2025
-
-### Content Disclaimer
-
-- Content on this site only represents the author's personal views and does not constitute any form of advice or guidance.
-- This site is not responsible for the accuracy, completeness, or timeliness of content.
-- Users are responsible for any consequences arising from using this site's content.
-
-### Technical Disclaimer
-
-- This site is built on open-source technology. This site strives to ensure service stability but does not guarantee no interruptions.
-- This site is not responsible for service interruptions caused by network failures, server maintenance, force majeure, and other factors.
-- Third-party service failures or policy changes may affect this site's functionality.
-
-### Link Disclaimer
-
-- This site may contain links to third-party sites. This site is not responsible for the content or privacy policies of these sites.
-- Users are responsible for their actions and consequences when clicking external links.
-
-### Loss Disclaimer
-
-To the maximum extent permitted by law, this site is not responsible for the following situations:
-
-- Direct or indirect losses caused by using or being unable to use this site's services.
-- Data loss, business interruption, or other economic losses.
-- Infringement or breach of contract by third parties.
+If you have any questions about the privacy policy of this website or wish to request changes or removal of personal data, please email to: hshuang at secologies dot com

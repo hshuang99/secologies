@@ -40,7 +40,7 @@ import ZeoSevenFonts from "./src/fonts/zeo-seven-fonts";
 // https://astro.build/config
 export default defineConfig({
 	site: "https://secologies.com",
-	trailingSlash: "ignore",
+	trailingSlash: "never",
 	adapter: cloudflare({ prerenderEnvironment: "node" }),
 	i18n: {
 		...siteConfig.i18n,

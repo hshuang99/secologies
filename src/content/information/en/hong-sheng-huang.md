@@ -62,7 +62,6 @@ Advisor: [Dr. Chun-Yu Lin](https://sites.google.com/site/lincytw/)
 
 ## Talks
 
-\[1\] "你生活中那些苗頭不對的資訊科技," 生活資安主題課程 資訊科技領域, 國立清華大學苗栗縣 STEAM 教育中心, 台達館102教室, 國立清華大學校本部, 新竹市光復路二段101號, 臺灣, 114 年 1 月 23 日.
 
 ## Honors and Awards
 

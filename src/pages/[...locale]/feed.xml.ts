@@ -4,6 +4,7 @@ import { getCollection, render } from "astro:content";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { Feed } from "feed";
 import config, { monolocale } from "$config";
+import localize from "$lib/localize";
 import i18nit from "$i18n";
 
 export async function getStaticPaths() {
@@ -11,13 +12,21 @@ export async function getStaticPaths() {
 	return config.i18n.locales.map(locale => ({ params: { locale: config.i18n.defaultLocale === locale ? undefined : locale } }));
 }
 
+// Characters that are not allowed in XML 1.0: control characters (except tab, line feed, carriage return and the C1 range), lone surrogates, U+FFFE and U+FFFF
+const ILLEGAL_XML_CHARACTERS = /[\p{Cc}\p{Cs}\uFFFE\uFFFF]/gu;
+
 /**
  * Remove characters that are illegal in XML 1.0 (control characters and lone surrogates),
  * which make feed readers reject the whole feed, and keep "]]>" from ending a CDATA section early.
  */
 function clean(text?: string) {
 	return text
-		?.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\uFFFE\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g, "")
+		?.replace(ILLEGAL_XML_CHARACTERS, character => {
+			const code = character.charCodeAt(0);
+
+			// Tab, line feed, carriage return and the C1 range are legal in XML 1.0
+			return code === 0x9 || code === 0xa || code === 0xd || (code >= 0x7f && code <= 0x9f) ? character : "";
+		})
 		.replaceAll("]]>", "]]]]><![CDATA[>");
 }
 
@@ -28,17 +37,18 @@ function clean(text?: string) {
 export const GET: APIRoute = async ({ site, params }) => {
 	const { locale: language = config.i18n.defaultLocale } = params;
 	const t = i18nit(language);
+	const author = { ...config.author, name: localize(config.author.name, language), link: localize(config.author.link, language) };
 
 	// Initialize feed with site metadata and configuration
 	const feed = new Feed({
-		title: config.title,
-		description: config.description,
-		author: config.author,
+		title: localize(config.title, language),
+		description: localize(config.description, language),
+		author,
 		// Handle copyright based on license type - CC0 has special formatting
 		copyright:
 			config.copyright.type === "CC0 1.0"
 				? "CC0 1.0 – No Rights Reserved"
-				: `${config.copyright.type} © ${config.copyright.year} ${config.author.name}`,
+				: `${config.copyright.type} © ${config.copyright.year} ${author.name}`,
 		image: new URL("favicon-96x96.png", site).toString(), // Feed image/logo
 		favicon: new URL("favicon.ico", site).toString(), // Feed favicon
 		id: site!.toString(), // Unique feed identifier

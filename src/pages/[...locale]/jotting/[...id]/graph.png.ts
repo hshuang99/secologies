@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { getCollection } from "astro:content";
 import config, { monolocale } from "$config";
+import localize from "$lib/localize";
 import graph from "$graph/content";
 import i18nit from "$i18n";
 
@@ -36,11 +37,12 @@ export async function getStaticPaths() {
  * GET handler that generates and returns the Open Graph image for a jotting.
  */
 export const GET: APIRoute = async ({ params, props }) => {
+	const locale = params.locale || config.i18n.defaultLocale;
 	const image = await graph({
-		locale: params.locale || config.i18n.defaultLocale,
+		locale,
 		type: props.type,
-		site: config.title,
-		author: config.author.name,
+		site: localize(config.title, locale),
+		author: localize(config.author.name, locale),
 		title: props.title,
 		time: props.time,
 		tags: props.tags

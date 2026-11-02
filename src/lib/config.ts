@@ -4,31 +4,36 @@
 type CCLicenseType = "CC0 1.0" | "CC BY 4.0" | "CC BY-SA 4.0" | "CC BY-NC 4.0" | "CC BY-NC-SA 4.0" | "CC BY-ND 4.0" | "CC BY-NC-ND 4.0";
 
 /**
+ * A text that is either the same for every locale, or given per locale, e.g. `{ "zh-tw": "…", en: "…" }`
+ */
+export type Localized = string | { [locale: string]: string };
+
+/**
  * Content Section Type
  */
 export type Section = "note" | "jotting";
 
 interface SiteConfigOptions<Locales extends readonly string[] = readonly string[]> {
 	/** Site Title */
-	title: string;
+	title: Localized;
 
 	/** Site Prologue */
-	prologue?: string;
+	prologue?: Localized;
 
 	/** Author Information */
 	author: {
 		/** Author Name */
-		name: string;
+		name: Localized;
 
 		/** Author Email */
 		email?: string;
 
 		/** Author Homepage Link */
-		link?: string;
+		link?: Localized;
 	};
 
 	/** Site Description */
-	description: string;
+	description: Localized;
 
 	/** Creative Commons License Configuration */
 	copyright: {

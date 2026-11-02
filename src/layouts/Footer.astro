@@ -115,7 +115,13 @@ const authorPage = await getEntry("information", `${localePrefix}hong-sheng-huan
 				</>
 			)
 		}
-		<a href={author.link} target="_blank" rel="noopener noreferrer">{author.name}</a>
+		{
+			authorPage ? (
+				<a href={getRelativeLocaleUrl(locale, "/hong-sheng-huang")}>{author.name}</a>
+			) : (
+				<a href={author.link} target="_blank" rel="noopener noreferrer">{author.name}</a>
+			)
+		}
 		<span>|</span>
 		<a target="_blank" href={ccURL} aria-label={ccLabel} class="flex items-center gap-1">
 			{ccIcons.map(icon => <Icon name={icon} />)}
