@@ -102,7 +102,17 @@ export default defineConfig({
 	integrations: [
 		svelte(),
 		mdx(),
-		sitemap(),
+		sitemap({
+			i18n: {
+				defaultLocale: siteConfig.i18n.defaultLocale,
+				locales: Object.fromEntries(
+					siteConfig.i18n.locales.map((locale: string) => [
+						locale,
+						locale.replace(/-(\w+)/, (_: string, region: string) => `-${region.toUpperCase()}`)
+					])
+				)
+			}
+		}),
 		swup({
 			globalInstance: true,
 			preload: false,

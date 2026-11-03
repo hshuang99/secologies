@@ -2,6 +2,8 @@
 import { Font, type CssVariable } from "astro:assets";
 import { getRelativeLocaleUrl, getAbsoluteLocaleUrl } from "astro:i18n";
 import config from "$config";
+import Analytics from "$components/Analytics.astro";
+import alternates from "$lib/alternates";
 
 const { locale, title, subtitle, description, author, article } = Astro.props;
 
@@ -15,16 +17,46 @@ const mainFonts: Record<string, CssVariable> = {
 const localedMainFont = mainFonts[locale];
 
 const route = Astro.url.pathname.slice(`/${locale === config.i18n.defaultLocale ? "" : locale}`.length);
+
+// Only declare the languages this page really exists in
+const available = await alternates(route);
+const fallback = available.includes(config.i18n.defaultLocale) ? config.i18n.defaultLocale : available[0];
+const hreflang = (code: string) => code.replace(/-(\w+)/, (_: any, region: string) => `-${region.toUpperCase()}`);
+
+// Structured data (JSON-LD)
+const url = new URL(Astro.url.pathname, Astro.site).toString();
+const structured = article
+	? {
+			"@context": "https://schema.org",
+			"@type": "BlogPosting",
+			headline: subtitle,
+			description,
+			datePublished: article.timestamp.toISOString(),
+			inLanguage: locale,
+			mainEntityOfPage: url,
+			image: new URL(`${Astro.url.pathname}/graph.png`, Astro.site).toString(),
+			author: { "@type": "Person", name: author },
+			keywords: article.tags?.join(", ")
+		}
+	: {
+			"@context": "https://schema.org",
+			"@type": "WebSite",
+			name: title,
+			description,
+			url: new URL(getRelativeLocaleUrl(locale), Astro.site).toString(),
+			inLanguage: locale
+		};
 ---
 
 <html lang={locale} dir={["ar", "he", "fa", "ur"].includes(locale) ? "rtl" : "ltr"}>
 	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="generator" content={Astro.generator} />
+
 		<title>{subtitle && `${subtitle} |`} {title}</title>
 		<meta name="description" content={description} />
 
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
 		<link rel="alternate" type="application/atom+xml" {title} href={getRelativeLocaleUrl(locale, "/feed.xml").replace(/\/$/, "")} />
 
 		<meta property="og:title" content={`${subtitle && `${subtitle} | `}${title}`} />
@@ -66,7 +98,12 @@ const route = Astro.url.pathname.slice(`/${locale === config.i18n.defaultLocale 
 
 		<style set:html={`[lang="${locale}"]{--font-serif:var(${localedMainFont})}`}></style>
 
-		{config.i18n.locales.map(locale => <link rel="alternate" hreflang={locale} href={getAbsoluteLocaleUrl(locale, route)} />)}
+		{available.map(code => <link rel="alternate" hreflang={hreflang(code)} href={getAbsoluteLocaleUrl(code, route)} />)}
+		<link rel="alternate" hreflang="x-default" href={getAbsoluteLocaleUrl(fallback, route)} />
+
+		<script is:inline type="application/ld+json" set:html={JSON.stringify(structured).replace(/</g, "\\u003c")}></script>
+
+		<Analytics />
 
 		<script is:inline>
 			var theme = localStorage.getItem("theme");

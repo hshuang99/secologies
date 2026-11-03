@@ -1,0 +1,31 @@
+---
+// Google Analytics 4. Set PUBLIC_GA_ID (e.g. "G-XXXXXXXXXX") in `.env` or in your build environment.
+// Only runs in production builds, so local development does not pollute your data.
+const id = import.meta.env.PUBLIC_GA_ID;
+---
+
+{
+	import.meta.env.PROD && id && (
+		<>
+			<script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${id}`}></script>
+			<script is:inline define:vars={{ id }}>
+				window.dataLayer = window.dataLayer || [];
+				function gtag() {
+					window.dataLayer.push(arguments);
+				}
+				window.gtag = gtag;
+
+				gtag("js", new Date());
+				// Page views are sent manually below, because swup navigates without reloading the page
+				gtag("config", id, { send_page_view: false });
+
+				const view = () => gtag("event", "page_view", { page_title: document.title, page_location: location.href, page_path: location.pathname });
+
+				view();
+
+				const register = () => window.swup?.hooks.on("page:view", view);
+				window.swup ? register() : document.addEventListener("swup:enable", register, { once: true });
+			</script>
+		</>
+	)
+}
