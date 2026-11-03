@@ -102,7 +102,7 @@ interface SiteConfigOptions<Locales extends readonly string[] = readonly string[
 	};
 
 	/** Latest Content Display */
-	latest?: "*" | Section[];
+	latest?: "*" | (Section | "project" | "podcast")[];
 }
 
 /**

@@ -62,6 +62,22 @@ const jottings = await getCollection("jotting", jotting => {
 	return !jotting.data.draft && localed;
 });
 
+// Get published projects for current locale
+const projects = await getCollection("project", project => {
+	// Assign type property
+	Reflect.set(project, "type", "project");
+
+	return !project.data.draft && (monolocale || project.id.split("/")[0] === locale);
+});
+
+// Get published podcast episodes for current locale
+const podcasts = await getCollection("podcast", podcast => {
+	// Assign type property
+	Reflect.set(podcast, "type", "podcast");
+
+	return !podcast.data.draft && (monolocale || podcast.id.split("/")[0] === locale);
+});
+
 // Combine contents
 let items: { id: string; type?: string; data: { timestamp: Date; tags?: string[]; [key: string]: any } }[] = [];
 
@@ -71,6 +87,8 @@ const sections = config.latest || "*";
 // Add contents based on config
 if (sections === "*" || sections.includes("note")) items = items.concat(notes);
 if (sections === "*" || sections.includes("jotting")) items = items.concat(jottings);
+if (sections === "*" || sections.includes("project")) items = items.concat(projects);
+if (sections === "*" || sections.includes("podcast")) items = items.concat(podcasts);
 
 // Get the latest content for display
 const sorted = items.sort((a, b) => b.data.timestamp.getTime() - a.data.timestamp.getTime());
