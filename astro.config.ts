@@ -132,22 +132,6 @@ export default defineConfig({
 			cssVariable: "--font-noto-serif"
 		},
 		{
-			name: "Noto Serif SC",
-			provider: fontProviders.google(),
-			weights: [400, 700],
-			optimizedFallbacks: false,
-			fallbacks: ["Noto Serif SC", "Source Han Serif SC", "STSong", "Songti SC", "SimSun", "serif"],
-			cssVariable: "--font-noto-serif-sc"
-		},
-		{
-			name: "Noto Serif JP",
-			provider: fontProviders.google(),
-			weights: [400, 700],
-			optimizedFallbacks: false,
-			fallbacks: ["Noto Serif JP", "Source Han Serif JP", "Hiragino Mincho ProN", "MS Mincho", "serif"],
-			cssVariable: "--font-noto-serif-jp"
-		},
-		{
 			name: "Playwrite MX",
 			provider: fontProviders.google(),
 			weights: ["100 400"],
