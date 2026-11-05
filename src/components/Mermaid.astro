@@ -1,0 +1,54 @@
+---
+// Renders `<pre class="mermaid">` blocks (created by `src/lib/mermaid.ts`) into diagrams in the browser.
+// The Mermaid library is only downloaded on pages that actually contain a diagram.
+---
+
+<script>
+	let counter = 0;
+
+	async function render() {
+		const blocks = document.querySelectorAll<HTMLElement>("pre.mermaid");
+		if (!blocks.length) return;
+
+		const theme = document.documentElement.dataset.theme === "dark" ? "dark" : "default";
+
+		const { default: mermaid } = await import("mermaid");
+		mermaid.initialize({ startOnLoad: false, theme, securityLevel: "strict", suppressErrorRendering: true });
+
+		for (const block of blocks) {
+			// Already rendered with the current theme
+			if (block.dataset.rendered === theme) continue;
+
+			// Keep the original diagram text so it can be drawn again after a theme change
+			const source = block.dataset.source ?? block.textContent ?? "";
+			block.dataset.source = source;
+
+			try {
+				const { svg } = await mermaid.render(`mermaid-${counter++}`, source);
+				block.innerHTML = svg;
+				block.dataset.rendered = theme;
+			} catch (error) {
+				console.error("Failed to render Mermaid diagram:", error);
+			}
+		}
+	}
+
+	render();
+
+	// Page transitions (swup) replace the page content, so render again after each one
+	document.addEventListener("astro:page-load", render);
+
+	// Draw the diagrams again when the visitor switches between light and dark mode
+	new MutationObserver(render).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+</script>
+
+<style is:global>
+	.markdown pre.mermaid {
+		display: flex;
+		justify-content: center;
+		overflow-x: auto;
+		padding: 0;
+		background: transparent;
+		font-family: inherit;
+	}
+</style>

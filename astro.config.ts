@@ -33,6 +33,7 @@ import sectionize from "@hbsnow/rehype-sectionize";
 import copy from "@tuyuritio/shiki-code-copy";
 
 import reading from "./src/lib/reading";
+import mermaid from "./src/lib/mermaid";
 
 import siteConfig from "./site.config";
 import ZeoSevenFonts from "./src/fonts/zeo-seven-fonts";
@@ -65,6 +66,7 @@ export default defineConfig({
 			abbr,
 			[table, { colspanWithEmpty: true }],
 			[alerts, { typeFormat: "capitalize" }],
+			mermaid,
 			reading
 		],
 		remarkRehype: {

@@ -8,6 +8,7 @@ import "$styles/global.css";
 import "$styles/markdown.css";
 import "medium-zoom/dist/style.css";
 import "katex/dist/katex.min.css";
+import Mermaid from "$components/Mermaid.astro";
 
 const { locale = config.i18n.defaultLocale, title: subtitle, description: pageDescription, article } = Astro.props;
 const title = localize(config.title, locale);
@@ -41,6 +42,8 @@ const author = { ...config.author, name: localize(config.author.name, locale), l
 	// Listen for page load event and re-initialize on page transitions
 	document.addEventListener("astro:page-load", initialize);
 </script>
+
+<Mermaid />
 
 <App {locale} {title} {subtitle} {description} {article} author={author.name}>
 	<div class="flex flex-col mx-auto *:*:px-3 w-[min(100%,1000px)]">
