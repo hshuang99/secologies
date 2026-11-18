@@ -1,0 +1,12 @@
+# Secologies
+
+> An independent, research-oriented security platform.
+
+## Full-text access for AI agents (pay per request, x402)
+
+GET https://secologies.com/api/content?path=<page path>
+
+- Example: https://secologies.com/api/content?path=/en/note/example-post
+- Returns the article as Markdown.
+- Payment: x402 protocol, USDC on Solana. The first response is HTTP 402 with the payment requirements.
+- Page paths are listed in https://secologies.com/sitemap-index.xml and the RSS feeds.

@@ -8,6 +8,7 @@ import tailwindcss from "@tailwindcss/vite";
 import swup from "@swup/astro";
 
 import cloudflare from "@astrojs/cloudflare";
+import x402 from "astro-x402";
 
 import GFM from "remark-gfm";
 import ins from "remark-ins";
@@ -120,6 +121,20 @@ export default defineConfig({
 			preload: false,
 			smoothScrolling: false,
 			progress: true
+		}),
+		x402({
+			routes: {
+				"/api/content": {
+					accepts: {
+						scheme: "exact",
+						price: "$0.01",
+						network: "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1", // Solana devnet (test)
+						payTo: "GmmLvA4qvktKCa8SjUmckY6ZPCmgZMvz9hmcb8GUoFLF"
+					},
+					description: "Full-text Markdown of a Secologies article"
+				}
+			},
+			facilitator: { url: "https://x402.org/facilitator" }
 		})
 	],
 	fonts: [
