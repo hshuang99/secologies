@@ -1,5 +1,6 @@
 # build output
 dist/
+.wrangler/
 
 # generated types / cache
 .astro/
@@ -29,3 +30,5 @@ pnpm-debug.log*
 # Claude Code
 .claude/
 CLAUDE.local.md
+.wrangler/
+dist/
