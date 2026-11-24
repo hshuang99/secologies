@@ -1,0 +1,133 @@
+---
+import { render } from 'astro:content';
+import { Image } from 'astro:assets';
+import Layout from '../../../layouts/Layout.astro';
+import Frame from '../../../components/Frame.astro';
+import Comments from '../../../components/Comments.astro';
+import { DEFAULT_LOCALE, LOCALE_CODES } from '../../../i18n/config';
+import { SECTIONS } from '../../../sections';
+import type { UiKey } from '../../../i18n/ui';
+import {
+  getEntries,
+  localePath,
+  postSlug,
+  postUrl,
+  useTranslations,
+} from '../../../i18n/utils';
+
+export async function getStaticPaths() {
+  const paths = [];
+  for (const section of SECTIONS) {
+    const byLang = Object.fromEntries(
+      await Promise.all(LOCALE_CODES.map(async (l) => [l, await getEntries(section, l)] as const)),
+    );
+    for (const lang of LOCALE_CODES) {
+      for (const entry of byLang[lang]) {
+        const slug = postSlug(entry);
+        // Translations share the slug. Only real translations are listed;
+        // for the others the switcher falls back to that language's home page.
+        const alternates = Object.fromEntries(
+          LOCALE_CODES.flatMap((code) => {
+            const twin = byLang[code].find((e) => postSlug(e) === slug);
+            return twin ? [[code, postUrl(twin)]] : [];
+          }),
+        );
+        paths.push({
+          params: { lang: lang === DEFAULT_LOCALE ? undefined : lang, section, slug },
+          props: { entry, lang, section, alternates },
+        });
+      }
+    }
+  }
+  return paths;
+}
+
+const { entry, lang, section, alternates } = Astro.props;
+const t = useTranslations(lang);
+const { Content } = await render(entry);
+const { title, description, pubDate, updatedDate, heroImage, tags } = entry.data;
+const date = pubDate.toISOString().slice(0, 10);
+const updated = updatedDate?.toISOString().slice(0, 10);
+const sectionLabel = t(`nav.${section}` as UiKey);
+
+// Section-specific fields, as [label, value] rows.
+const rows: [string, any][] = [];
+const links: { label: string; url: string }[] = [];
+let audio: string | undefined;
+if (entry.collection === 'project') {
+  const d = entry.data;
+  rows.push([t('field.status'), t(`status.${d.status}` as UiKey)]);
+  if (d.stack.length) rows.push([t('field.stack'), d.stack.join(', ')]);
+  if (d.url) links.push({ label: t('field.link'), url: d.url });
+  if (d.repo) links.push({ label: t('field.repo'), url: d.repo });
+}
+if (entry.collection === 'podcast') {
+  const d = entry.data;
+  if (d.episode !== undefined) rows.push([t('field.episode'), `#${d.episode}`]);
+  if (d.duration) rows.push([t('field.duration'), d.duration]);
+  audio = d.audio;
+  links.push(...d.links);
+}
+---
+
+<Layout title={title} description={description || undefined} alternates={alternates}>
+  <article>
+    <Frame title={sectionLabel}>
+      <h1 class="post-title">{title}</h1>
+      <p class="post-meta">
+        {t('post.date')}: <time datetime={date}>{date}</time>
+        {updated && <> // {t('post.updated')}: <time datetime={updated}>{updated}</time></>}
+        {tags.length > 0 && (
+          <>
+            {` // ${t('post.tags')}: `}
+            {tags.map((tag) => (
+              <a href={localePath(lang, `/${section}/tag/${tag}/`)}>[{tag}]</a>
+            ))}
+          </>
+        )}
+      </p>
+      {
+        rows.length > 0 && (
+          <dl class="records entry-fields">
+            {rows.map(([label, value]) => (
+              <>
+                <dt>{label}</dt>
+                <dd>{value}</dd>
+              </>
+            ))}
+          </dl>
+        )
+      }
+      {audio && <audio class="entry-audio" controls preload="none" src={audio} />}
+      {
+        links.length > 0 && (
+          <p class="entry-links">
+            {links.map((l, i) => (
+              <>
+                {i > 0 && ' // '}
+                <a href={l.url} rel="noopener">[{l.label}]</a>
+              </>
+            ))}
+          </p>
+        )
+      }
+      {
+        heroImage && (
+          <Image class="post-hero" src={heroImage} alt="" width={1280} loading="eager" />
+        )
+      }
+      <div class="prose">
+        <Content />
+      </div>
+    </Frame>
+
+    <Comments lang={lang} slug={postUrl(entry)} />
+
+    <nav class="post-nav">
+      <a class="menu-item" href={localePath(lang, `/${section}/`)}>
+        <span class="mi-marker" aria-hidden="true">▪ ‹</span>
+        <span class="mi-title">{t('post.backTo', { section: sectionLabel })}</span>
+      </a>
+    </nav>
+  </article>
+</Layout>

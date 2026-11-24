@@ -1,0 +1,98 @@
+---
+// MailerLite embedded form, restyled for the terminal theme. The form and its
+// submit script are MailerLite's; the markup keeps their class names because
+// webforms.min.js finds fields by them. The IDs for each language are in
+// NEWSLETTER (src/consts.ts).
+import { NEWSLETTER } from '../consts';
+import type { Locale } from '../i18n/config';
+import { localePath, useTranslations } from '../i18n/utils';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const { account, formId, uid } = NEWSLETTER[lang];
+const [privacyBefore, privacyAfter] = t('newsletter.privacy', { link: '{link}' }).split('{link}');
+---
+
+<div id={`mlb2-${uid}`} class={`newsletter ml-form-embedContainer ml-subscribe-form ml-subscribe-form-${uid}`}>
+  <div class="row-form">
+    <h3 class="newsletter-title">{t('newsletter.heading')}</h3>
+
+    <form
+      class="ml-block-form"
+      action={`https://assets.mailerlite.com/jsonp/${account}/forms/${formId}/subscribe`}
+      data-code=""
+      method="post"
+      target="_blank"
+    >
+      <div class="ml-form-fieldRow">
+        <div class="ml-field-group ml-field-name ml-validate-required">
+          <label for={`ml-name-${uid}`}>{t('newsletter.name')}</label>
+          <input
+            id={`ml-name-${uid}`}
+            aria-label="name"
+            aria-required="true"
+            type="text"
+            class="form-control"
+            data-inputmask=""
+            name="fields[name]"
+            placeholder=""
+            autocomplete="given-name"
+          />
+        </div>
+      </div>
+      <div class="ml-form-fieldRow ml-last-item">
+        <div class="ml-field-group ml-field-email ml-validate-email ml-validate-required">
+          <label for={`ml-email-${uid}`}>{t('newsletter.email')}</label>
+          <input
+            id={`ml-email-${uid}`}
+            aria-label="email"
+            aria-required="true"
+            type="email"
+            class="form-control"
+            data-inputmask=""
+            name="fields[email]"
+            placeholder=""
+            autocomplete="email"
+          />
+        </div>
+      </div>
+
+      <p class="newsletter-note">
+        {privacyBefore}<a href={localePath(lang, '/privacy/')}>{t('newsletter.privacyLink')}</a>{privacyAfter}
+      </p>
+
+      <input type="hidden" name="ml-submit" value="1" />
+
+      <div class="ml-form-embedSubmit">
+        <button type="submit" class="primary">{t('newsletter.submit')}</button>
+        <button disabled="disabled" style="display: none;" type="button" class="loading">
+          {t('newsletter.sending')}
+        </button>
+      </div>
+
+      <input type="hidden" name="anticsrf" value="true" />
+    </form>
+  </div>
+
+  <div class="ml-form-successBody row-success newsletter-success" style="display: none">
+    <h3 class="newsletter-title">{t('newsletter.thanks')}</h3>
+    <p>{t('newsletter.welcome')}</p>
+  </div>
+</div>
+
+<script is:inline define:vars={{ uid, account, formId }}>
+  // Called by MailerLite's script after a successful subscription.
+  window['ml_webform_success_' + uid] = function () {
+    var $ = window.ml_jQuery || window.jQuery;
+    $('.ml-subscribe-form-' + uid + ' .row-success').show();
+    $('.ml-subscribe-form-' + uid + ' .row-form').hide();
+  };
+</script>
+<script is:inline src="https://groot.mailerlite.com/js/w/webforms.min.js?v83147fa8ce2d95cb73ece7f28b469519"></script>
+<script is:inline define:vars={{ account, formId }}>
+  fetch('https://assets.mailerlite.com/jsonp/' + account + '/forms/' + formId + '/takel');
+</script>

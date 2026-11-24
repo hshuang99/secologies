@@ -1,0 +1,60 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Frame from '../../components/Frame.astro';
+import { SITE_VENDOR, SITE_SYSTEM } from '../../consts';
+import { localePath, localeParams, useTranslations } from '../../i18n/utils';
+
+export const getStaticPaths = () => localeParams();
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const home = localePath(lang, '/');
+---
+
+<Layout title={t('e404.title')}>
+  <Frame title={SITE_SYSTEM}>
+    <div
+      class="hack"
+      id="hack"
+      data-hack
+      data-grant-text={t('e404.granted')}
+      data-lock-text={t('e404.locked')}
+      data-home={home}
+    >
+      <!-- Static fallback for no-JS; the script replaces it with the game. -->
+      <div class="hack__head">
+        <p>{SITE_VENDOR} (TM) {SITE_SYSTEM}</p>
+        <p class="error-text" style="text-align:left;margin:8px 0;">
+          {t('e404.message')}
+        </p>
+      </div>
+    </div>
+    <!-- Kept outside the game container so the exits always work. -->
+    <div class="hack__exits">
+      <div class="menu-list">
+        <a class="menu-item" href={home}>
+          <span class="mi-marker" aria-hidden="true">▪ &gt;</span>
+          <span class="mi-title">{t('e404.home')}</span>
+          <span class="mi-arrow" aria-hidden="true">›</span>
+        </a>
+        <a class="menu-item" href={localePath(lang, '/blog/')}>
+          <span class="mi-marker" aria-hidden="true">▪ &gt;</span>
+          <span class="mi-title">{t('e404.archive')}</span>
+          <span class="mi-arrow" aria-hidden="true">›</span>
+        </a>
+      </div>
+    </div>
+  </Frame>
+</Layout>
+
+<script>
+  import { buildHackGame } from '../../scripts/hackGame';
+  const root = document.querySelector<HTMLElement>('[data-hack]');
+  if (root) {
+    buildHackGame(root, {
+      grantText: root.dataset.grantText,
+      lockText: root.dataset.lockText,
+      onGranted: () => (location.href = root.dataset.home ?? '/'),
+    });
+  }
+</script>

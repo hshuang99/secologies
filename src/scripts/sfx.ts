@@ -181,7 +181,7 @@ export const sfx = {
     noise(0.008, 0.08, 1400);
   },
 
-  /** CRT hum — used when the theme switches and the screen "relights". */
+  /** CRT hum — unused by default; kept for the optional power sample. */
   power() {
     if (sample('power')) return;
     tone({ freq: 60, freqTo: 220, dur: 0.5, type: 'sawtooth', gain: 0.22 });

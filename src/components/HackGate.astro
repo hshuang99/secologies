@@ -2,14 +2,17 @@
 // Private-mode gate: a full-screen overlay holding the minigame.
 // Layout renders it only when PRIVATE_MODE is on.
 import { SITE_VENDOR, SITE_SYSTEM } from '../consts';
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const t = useTranslations(getLangFromUrl(Astro.url));
 ---
 
 <div class="hack-gate" id="hack-gate">
   <div class="hack-gate__inner">
-    <div class="hack" data-hack-gate>
+    <div class="hack" data-hack-gate data-grant-text={t('gate.granted')}>
       <div class="hack__head">
         <p>{SITE_VENDOR} (TM) {SITE_SYSTEM}</p>
-        <p>ENTER PASSWORD NOW</p>
+        <p>{t('gate.prompt')}</p>
       </div>
     </div>
   </div>
@@ -38,7 +41,7 @@ import { SITE_VENDOR, SITE_SYSTEM } from '../consts';
       // Lock background scrolling while the gate is up.
       document.documentElement.style.overflow = 'hidden';
       buildHackGame(root, {
-        grantText: 'ACCESS GRANTED, WELCOME…',
+        grantText: root.dataset.grantText,
         allowRetry: true, // Running out of attempts must not be a dead end.
         onGranted: () => {
           sessionStorage.setItem('unlocked', '1');

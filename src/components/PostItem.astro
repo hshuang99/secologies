@@ -1,16 +1,22 @@
 ---
-import type { CollectionEntry } from 'astro:content';
+import type { Entry } from '../i18n/utils';
+import { entrySection, postLang, postUrl, useTranslations } from '../i18n/utils';
+import type { UiKey } from '../i18n/ui';
 
 interface Props {
-  post: CollectionEntry<'blog'>;
+  post: Entry;
+  /** Show a [BLOG] / [PODCAST]... badge, for lists that mix sections. */
+  showType?: boolean;
 }
 
-const { post } = Astro.props;
+const { post, showType = false } = Astro.props;
+const t = useTranslations(postLang(post));
 const date = post.data.pubDate.toISOString().slice(0, 10);
 ---
 
-<a class="menu-item" href={`/blog/${post.id}/`}>
+<a class="menu-item" href={postUrl(post)}>
   <span class="mi-marker" aria-hidden="true">▪ &gt;</span>
+  {showType && <span class="mi-type">[{t(`nav.${entrySection(post)}` as UiKey)}]</span>}
   <span class="mi-title">{post.data.title}</span>
   <time class="mi-date" datetime={date}>{date}</time>
   <span class="mi-arrow" aria-hidden="true">›</span>

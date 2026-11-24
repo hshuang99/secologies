@@ -1,39 +1,15 @@
-# ASTRO TERMINAL — multilingual, green phosphor
-
-## Run
-    npm install
-    npm run dev       # http://localhost:4321
-    npm run build
-
-You also need the font (and optional sound) from your original project in
-`public/` — see `public/fonts/README.txt`.
-
-## Languages (English + Traditional Chinese included)
-- Traditional Chinese (zh-TW) is the default and lives at `/`; English is at `/en/` (`prefixDefaultLocale: false`). To change the default, edit `DEFAULT_LOCALE` in `src/i18n/config.ts` and `defaultLocale` in `astro.config.mjs`.
-- UI strings: `src/i18n/ui.ts`. Posts: `src/content/blog/<lang>/<slug>.md` (`en`, `zh-tw`).
-  Same file name in two languages = translation of one post; the language
-  switcher (header, or `L` key) jumps between them. Without a translation it
-  goes to the other language's home page.
-- Add a language: `astro.config.mjs` (`i18n.locales`), `src/i18n/config.ts`,
-  a new dictionary in `src/i18n/ui.ts`, and `src/content/blog/<code>/`.
-- Each language gets its own RSS feed (`/rss.xml`, `/en/rss.xml`) and
-  `hreflang` links on translated pages. Set `site` in `astro.config.mjs`.
-- Static hosts serve one 404 page: `404.html` is Chinese; `/en/404/` exists
-  for hosts that can route per language.
-
-## Sections
-Four content sections, each a nav item, a collection and a folder:
-`blog`, `jotting`, `project`, `podcast` -> `src/content/<section>/<lang>/<slug>.md`
-(URLs `/<section>/` and `/<section>/<slug>/`, tags at `/<section>/tag/<tag>/`).
-- `project` extra frontmatter: `status` (active|wip|done|archived), `stack`, `url`, `repo`.
-- `podcast` extra frontmatter: `episode`, `duration`, `audio` (file in `public/` or URL), `links`.
-- The home page lists the 10 newest entries across all sections (`src/pages/[...lang]/index.astro`).
-- `/rss.xml` carries all sections. Add a section: `src/sections.ts`, `src/content.config.ts`,
-  and `nav.<name>` + `section.<name>.description` in `src/i18n/ui.ts`.
-
-## Color
-Fixed green phosphor. Tune it in the `:root` block at the top of
-`src/styles/terminal.css` (`--fg`, `--bg`, `--glow`, ...). The theme toggle,
-`T` hotkey and amber palette were removed.
 # secologies
-# secologies
+
+Secologies 是一個以研究為導向的獨立資安平台，致力於系統性地理解與分析資訊安全
+
+我們不將資安視為單一技術領域，而是由多種彼此關聯的「資安生態（secologies）」所構成，涵蓋事件調查、系統防禦架構、解碼與演算法研究，以及真實世界中的資安實務
+
+透過技術深度分析、研究筆記與長篇調查文章，Secologies 希望在學術嚴謹性與工程實作之間，建立一座可持續累積的橋樑
+
+同時我們認為資安從來都不是單一解法的問題
+
+本網站記錄不同情境下，安全系統如何被思考、設計與分析──從底層技術細節，到事件層級的調查與推理
+
+我們相信資安來自於情境、限制與取捨。透過整理不同的「資安觀點與實踐路徑（secologies）」，讓複雜的系統變得可理解、可防禦
+
+因此，本網站希望從各式各樣的角度來建立整個資訊安全生態系，帶給讀者我們獨特的觀點，為此我們將從原子等級的事物開始出發，最終實現資訊、通訊安全上的探討

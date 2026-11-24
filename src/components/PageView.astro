@@ -1,0 +1,48 @@
+---
+// Renders one standalone page from src/content/page/<language>/<slug>.md.
+// Everything on the page is the markdown file itself. If a page has no
+// translation, the default language's version is shown instead.
+import { getCollection, render } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import Frame from './Frame.astro';
+import { DEFAULT_LOCALE, LOCALE_CODES, type Locale } from '../i18n/config';
+import { localePath, useTranslations } from '../i18n/utils';
+
+interface Props {
+  lang: Locale;
+  slug: string;
+}
+
+const { lang, slug } = Astro.props;
+const t = useTranslations(lang);
+
+const pages = await getCollection('page');
+const find = (code: Locale) => pages.find((p) => p.id === `${code}/${slug}`);
+const entry = find(lang) ?? find(DEFAULT_LOCALE);
+if (!entry) {
+  throw new Error(`Missing page: create src/content/page/${DEFAULT_LOCALE}/${slug}.md`);
+}
+
+const { Content } = await render(entry);
+const { title, description, updatedDate } = entry.data;
+const updated = updatedDate?.toISOString().slice(0, 10);
+const alternates = Object.fromEntries(
+  LOCALE_CODES.flatMap((code) => (find(code) ? [[code, localePath(code, `/${slug}/`)]] : [])),
+);
+---
+
+<Layout title={title} description={description || undefined} alternates={alternates}>
+  <Frame title={title}>
+    {
+      updated && (
+        <p class="post-meta">
+          {t('post.updated')}: <time datetime={updated}>{updated}</time>
+        </p>
+      )
+    }
+    <div class="prose">
+      <Content />
+    </div>
+    <slot />
+  </Frame>
+</Layout>

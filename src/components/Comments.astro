@@ -1,0 +1,144 @@
+---
+// Comment section for one page. Comments are read from and posted to
+// /api/comments (src/pages/api/comments.ts, Cloudflare D1). `slug` is the
+// page path and is what comments are stored under.
+import Frame from './Frame.astro';
+import type { Locale } from '../i18n/config';
+import { useTranslations } from '../i18n/utils';
+
+interface Props {
+  lang: Locale;
+  slug: string;
+}
+
+const { lang, slug } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<Frame title={t('comments.title')} class="comments">
+  <div
+    id="comments"
+    data-slug={slug}
+    data-loading={t('comments.loading')}
+    data-error={t('comments.error')}
+    data-count={t('comments.count', { n: '{n}' })}
+    data-none={t('comments.none')}
+    data-sending={t('comments.sending')}
+    data-pending={t('comments.pending')}
+    data-failed={t('comments.failed')}
+    data-toomany={t('comments.tooMany')}
+    data-invalid={t('comments.invalid')}
+  >
+    <p class="comments-status" role="status" aria-live="polite"></p>
+    <div class="comments-list"></div>
+
+    <form class="comments-form" novalidate>
+      <label>
+        <span>{t('comments.name')}</span>
+        <input type="text" name="author" maxlength="50" autocomplete="nickname" required />
+      </label>
+      <label>
+        <span>{t('comments.message')}</span>
+        <textarea name="content" rows="5" maxlength="2000" required></textarea>
+      </label>
+      <!-- Honeypot: hidden from people, bots tend to fill it in. -->
+      <div class="comments-hp" aria-hidden="true">
+        <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+      </div>
+      <p class="comments-note">{t('comments.note')}</p>
+      <button type="submit">{t('comments.submit')}</button>
+      <p class="comments-msg" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</Frame>
+
+<script>
+  interface Comment {
+    id: number;
+    author: string;
+    content: string;
+    created_at: string;
+  }
+
+  const root = document.getElementById('comments');
+  if (root) {
+    const d = root.dataset as Record<string, string>;
+    const list = root.querySelector<HTMLElement>('.comments-list')!;
+    const status = root.querySelector<HTMLElement>('.comments-status')!;
+    const form = root.querySelector<HTMLFormElement>('.comments-form')!;
+    const msg = root.querySelector<HTMLElement>('.comments-msg')!;
+    const button = form.querySelector<HTMLButtonElement>('button')!;
+
+    // Text only (textContent), so a comment can never inject HTML.
+    function draw(comments: Comment[]) {
+      list.replaceChildren();
+      for (const c of comments) {
+        const item = document.createElement('article');
+        item.className = 'comment';
+        const head = document.createElement('p');
+        head.className = 'comment-head';
+        const author = document.createElement('span');
+        author.className = 'comment-author';
+        author.textContent = c.author;
+        const time = document.createElement('time');
+        time.textContent = c.created_at.slice(0, 10);
+        head.append(author, ' // ', time);
+        const body = document.createElement('p');
+        body.className = 'comment-body';
+        body.textContent = c.content;
+        item.append(head, body);
+        list.append(item);
+      }
+      status.textContent = comments.length
+        ? d.count.replace('{n}', String(comments.length))
+        : d.none;
+    }
+
+    async function load() {
+      status.textContent = d.loading;
+      try {
+        const res = await fetch(`/api/comments?slug=${encodeURIComponent(d.slug)}`);
+        if (!res.ok) throw new Error(String(res.status));
+        const data = (await res.json()) as { comments: Comment[] };
+        draw(data.comments);
+      } catch {
+        status.textContent = d.error;
+      }
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      button.disabled = true;
+      msg.textContent = d.sending;
+      try {
+        const res = await fetch('/api/comments', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            slug: d.slug,
+            author: fd.get('author'),
+            content: fd.get('content'),
+            website: fd.get('website'),
+          }),
+        });
+        if (res.status === 202) {
+          form.reset();
+          msg.textContent = d.pending;
+        } else if (res.status === 429) {
+          msg.textContent = d.toomany;
+        } else if (res.status === 400) {
+          msg.textContent = d.invalid;
+        } else {
+          throw new Error(String(res.status));
+        }
+      } catch {
+        msg.textContent = d.failed;
+      } finally {
+        button.disabled = false;
+      }
+    });
+
+    load();
+  }
+</script>

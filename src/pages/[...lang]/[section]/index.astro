@@ -1,0 +1,40 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Frame from '../../../components/Frame.astro';
+import PostItem from '../../../components/PostItem.astro';
+import { getEntries, sectionParams, useTranslations } from '../../../i18n/utils';
+import type { UiKey } from '../../../i18n/ui';
+
+export const getStaticPaths = () => sectionParams();
+
+const { lang, section } = Astro.props;
+const t = useTranslations(lang);
+const entries = await getEntries(section, lang);
+
+// Group entries by year.
+const byYear = new Map<number, typeof entries>();
+for (const entry of entries) {
+  const year = entry.data.pubDate.getFullYear();
+  if (!byYear.has(year)) byYear.set(year, []);
+  byYear.get(year)!.push(entry);
+}
+const title = t(`nav.${section}` as UiKey);
+---
+
+<Layout title={title} description={t(`section.${section}.description` as UiKey)}>
+  <Frame title={title}>
+    <div class="menu-list">
+      {entries.length === 0 && <div class="year-sep">{t('list.empty')}</div>}
+      {
+        [...byYear.entries()].map(([year, yearEntries]) => (
+          <>
+            <div class="year-sep">{t('list.year', { year, n: yearEntries.length })}</div>
+            {yearEntries.map((entry) => (
+              <PostItem post={entry} />
+            ))}
+          </>
+        ))
+      }
+    </div>
+  </Frame>
+</Layout>

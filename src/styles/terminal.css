@@ -12,30 +12,20 @@
   font-display: swap;
 }
 
-/* ---------- Themes ---------- */
+/* ---------- Colors ---------- */
+/* One fixed palette: green phosphor, classic P1 / VT220. All colors in the
+   site come from these variables, so this block is the only place to tune
+   the look. */
 
 :root {
-  /* amber (default) — like P3-phosphor office terminals */
-  --bg: #241c13;
-  --bg-deep: #1a140d;
-  --fg: #ffb454;
-  --fg-bright: #ffd493;
-  --fg-dim: #a97a3f;
-  --glow: rgba(255, 180, 84, 0.4);
-  --img-filter: grayscale(1) sepia(1) saturate(2.4) hue-rotate(-8deg)
-    brightness(0.95) contrast(1.05);
-}
-
-:root[data-theme='green'] {
-  /* green phosphor — classic P1 / VT220 */
+  color-scheme: dark;
   --bg: #0c1710;
   --bg-deep: #07100a;
   --fg: #4af66c;
   --fg-bright: #a8ffbb;
   --fg-dim: #2c9447;
   --glow: rgba(74, 246, 108, 0.35);
-  --img-filter: grayscale(1) sepia(1) saturate(2.4) hue-rotate(65deg)
-    brightness(0.9) contrast(1.05);
+  --err: #ff6b6b;
 }
 
 /* ---------- Base ---------- */
@@ -51,7 +41,8 @@ html {
 }
 
 body {
-  font-family: 'IBM VGA', 'Courier New', monospace;
+  font-family: 'IBM VGA', 'Courier New', 'PingFang TC', 'Noto Sans Mono CJK TC',
+    'Noto Sans TC', 'Microsoft JhengHei', monospace;
   font-size: 20px;
   line-height: 1.5;
   letter-spacing: 0.04em;
@@ -236,7 +227,7 @@ button {
 }
 
 .h-nav a,
-.h-nav .nav-theme {
+.lang-switch a {
   white-space: nowrap;
 }
 
@@ -245,8 +236,9 @@ button {
   gap: 16px;
 }
 
+/* Own row under the nav links, starting at the same left edge as the first one. */
 .toggles--header {
-  margin-left: auto;
+  flex: 0 0 100%;
 }
 
 .toggles--footer {
@@ -257,12 +249,29 @@ button {
   white-space: nowrap;
 }
 
+/* Language switcher: EN / RU, the current language is highlighted. */
+.lang-switch {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.lang-switch__label {
+  color: var(--fg-dim);
+}
+
+.lang-switch a[aria-current='true'] {
+  background: var(--fg);
+  color: var(--bg);
+  text-shadow: none;
+}
+
 .nav-sound[aria-pressed='false'] {
   color: var(--fg-dim);
 }
 
 .h-nav a:hover,
-.nav-theme:hover,
+.lang-switch a:hover,
 .nav-sound:hover,
 .h-nav a[aria-current='page'] {
   background: var(--fg);
@@ -341,6 +350,17 @@ button {
 
 .mi-title {
   min-width: 0;
+}
+
+/* Section badge in mixed lists (home page). */
+.mi-type {
+  flex: 0 0 auto;
+  color: var(--fg-dim);
+}
+
+.menu-item:hover .mi-type,
+.menu-item:focus-visible .mi-type {
+  color: var(--bg);
 }
 
 .mi-date {
@@ -556,7 +576,6 @@ button {
   display: block;
   border: 1px solid var(--fg);
   padding: 4px;
-  filter: var(--img-filter);
 }
 
 .prose table {
@@ -576,12 +595,34 @@ button {
   text-transform: uppercase;
 }
 
-/* Terminal tint for images: hero and in-post alike. */
+/* Hero images keep their original colors; only the frame is themed. */
 .post-hero,
 .about-photo {
-  filter: var(--img-filter);
   border: 1px solid var(--fg);
   padding: 4px;
+}
+
+/* ---------- Project / podcast entry extras ---------- */
+
+.entry-fields {
+  margin-bottom: 20px;
+}
+
+.entry-audio {
+  display: block;
+  width: 100%;
+  margin: 0 0 20px;
+  color-scheme: dark;
+}
+
+.entry-links {
+  margin-bottom: 24px;
+}
+
+.entry-links a:hover {
+  background: var(--fg);
+  color: var(--bg);
+  text-shadow: none;
 }
 
 /* ---------- Records (dl key/value, about page) ---------- */
@@ -948,7 +989,7 @@ button {
     align-items: center;
   }
 
-  /* THEME and SND move to the footer: in the header they cost a whole
+  /* LANG and SND move to the footer: in the header they cost a whole
      second line, at the bottom they scroll away with the content. */
   .toggles--header { display: none; }
   .toggles--footer {
@@ -956,7 +997,8 @@ button {
     gap: 20px;
     margin-top: 12px;
   }
-  .toggles--footer button {
+  .toggles--footer button,
+  .toggles--footer .lang-switch a {
     min-height: 44px;
     display: inline-flex;
     align-items: center;
@@ -1001,4 +1043,336 @@ button {
     border-top: 1px solid var(--fg-dim);
     padding-top: 12px;
   }
+}
+
+
+/* ---------- Footer links ---------- */
+
+.t-colophon a {
+  border-bottom: 1px solid var(--fg-dim);
+}
+
+.t-colophon a:hover,
+.t-colophon a:focus-visible {
+  background: var(--fg);
+  color: var(--bg);
+  text-shadow: none;
+  outline: none;
+}
+
+/* ---------- Math (KaTeX) ---------- */
+
+.prose .katex {
+  font-size: 1.05em;
+}
+
+.prose .katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 4px 0;
+}
+
+/* ---------- Mermaid diagrams ---------- */
+
+.prose .mermaid {
+  border: 1px solid var(--fg-dim);
+  background: var(--bg-deep);
+  padding: 16px;
+  overflow-x: auto;
+  text-align: center;
+}
+
+/* Until the script has drawn it, show the source quietly. */
+.prose .mermaid:not([data-processed]) {
+  white-space: pre;
+  text-align: left;
+  color: var(--fg-dim);
+}
+
+.prose .mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ---------- Search ---------- */
+
+mark {
+  background: var(--fg);
+  color: var(--bg);
+  text-shadow: none;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--fg);
+  background: var(--bg-deep);
+  padding: 8px 14px;
+}
+
+.search-box:focus-within {
+  outline: 2px solid var(--fg-bright);
+}
+
+.search-prompt {
+  flex: 0 0 auto;
+  color: var(--fg-dim);
+}
+
+.search-box input {
+  flex: 1 1 auto;
+  min-width: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  color: var(--fg-bright);
+  text-shadow: inherit;
+  caret-color: var(--fg);
+  background: transparent;
+  border: 0;
+  outline: 0;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.search-box input::placeholder {
+  color: var(--fg-dim);
+  opacity: 1;
+}
+
+.search-box input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.search-status {
+  margin: 16px 0 10px;
+  color: var(--fg-dim);
+}
+
+.search-hit + .search-hit {
+  margin-top: 8px;
+}
+
+.search-snippet {
+  margin: 0 14px 4px 48px;
+  color: var(--fg-dim);
+  font-size: 0.85em;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 640px) {
+  .search-snippet { margin-left: 12px; }
+}
+
+
+/* ---------- Newsletter (MailerLite form, restyled) ---------- */
+/* The markup keeps MailerLite's class names because its script looks for
+   them; none of MailerLite's own stylesheet is loaded. */
+
+.newsletter {
+  margin-top: 28px;
+  border: 1px solid var(--fg-dim);
+  background: var(--bg-deep);
+  padding: 20px;
+}
+
+.newsletter-title {
+  color: var(--fg-bright);
+  margin-bottom: 18px;
+}
+
+.newsletter .ml-field-group {
+  margin-bottom: 16px;
+}
+
+.newsletter label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--fg-dim);
+}
+
+.newsletter input[type='text'],
+.newsletter input[type='email'] {
+  width: 100%;
+  font: inherit;
+  letter-spacing: inherit;
+  color: var(--fg-bright);
+  text-shadow: inherit;
+  caret-color: var(--fg);
+  background: var(--bg);
+  border: 1px solid var(--fg);
+  border-radius: 0;
+  padding: 8px 12px;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.newsletter input:focus {
+  outline: 2px solid var(--fg-bright);
+}
+
+.newsletter button {
+  font: inherit;
+  letter-spacing: inherit;
+  color: var(--fg);
+  background: transparent;
+  border: 2px solid var(--fg);
+  border-radius: 0;
+  padding: 8px 24px;
+  cursor: pointer;
+}
+
+.newsletter button:hover:not(:disabled),
+.newsletter button:focus-visible {
+  background: var(--fg);
+  color: var(--bg);
+  text-shadow: none;
+  outline: none;
+}
+
+.newsletter button:disabled {
+  color: var(--fg-dim);
+  border-color: var(--fg-dim);
+  cursor: wait;
+}
+
+.newsletter-note {
+  margin: 4px 0 18px;
+  color: var(--fg-dim);
+  font-size: 0.85em;
+}
+
+.newsletter-note a {
+  border-bottom: 1px solid var(--fg-dim);
+}
+
+/* Validation errors added by MailerLite's script. */
+.newsletter .ml-error input {
+  border-color: var(--err);
+}
+
+.newsletter .ml-error label {
+  color: var(--err);
+}
+
+.newsletter-success {
+  color: var(--fg-bright);
+}
+
+
+/* ---------- Comments ---------- */
+
+.comments {
+  margin-top: 32px;
+}
+
+.comments-status {
+  color: var(--fg-dim);
+  margin-bottom: 16px;
+}
+
+.comment {
+  border-left: 3px double var(--fg);
+  padding: 4px 0 4px 16px;
+  margin-bottom: 20px;
+}
+
+.comment-head {
+  color: var(--fg-dim);
+}
+
+.comment-author {
+  color: var(--fg-bright);
+}
+
+.comment-body {
+  margin-top: 6px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.comments-form {
+  margin-top: 28px;
+  border-top: 1px dashed var(--fg-dim);
+  padding-top: 20px;
+}
+
+.comments-form label {
+  display: block;
+  margin-bottom: 16px;
+  color: var(--fg-dim);
+}
+
+.comments-form label span {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.comments-form input[type='text'],
+.comments-form textarea {
+  display: block;
+  width: 100%;
+  font: inherit;
+  letter-spacing: inherit;
+  color: var(--fg-bright);
+  text-shadow: inherit;
+  caret-color: var(--fg);
+  background: var(--bg-deep);
+  border: 1px solid var(--fg);
+  border-radius: 0;
+  padding: 8px 12px;
+  resize: vertical;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.comments-form input:focus,
+.comments-form textarea:focus {
+  outline: 2px solid var(--fg-bright);
+}
+
+.comments-form button {
+  font: inherit;
+  letter-spacing: inherit;
+  color: var(--fg);
+  background: transparent;
+  border: 2px solid var(--fg);
+  border-radius: 0;
+  padding: 8px 24px;
+  cursor: pointer;
+}
+
+.comments-form button:hover:not(:disabled),
+.comments-form button:focus-visible {
+  background: var(--fg);
+  color: var(--bg);
+  text-shadow: none;
+  outline: none;
+}
+
+.comments-form button:disabled {
+  color: var(--fg-dim);
+  border-color: var(--fg-dim);
+  cursor: wait;
+}
+
+.comments-note,
+.comments-msg {
+  color: var(--fg-dim);
+  font-size: 0.85em;
+  margin-bottom: 14px;
+}
+
+.comments-msg {
+  margin: 14px 0 0;
+  color: var(--fg-bright);
+}
+
+/* Honeypot: off-screen, not display:none, so bots still see and fill it. */
+.comments-hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }

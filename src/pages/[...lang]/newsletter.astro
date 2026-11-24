@@ -1,0 +1,13 @@
+---
+import PageView from '../../components/PageView.astro';
+import NewsletterForm from '../../components/NewsletterForm.astro';
+import { localeParams } from '../../i18n/utils';
+
+export const getStaticPaths = () => localeParams();
+
+const { lang } = Astro.props;
+---
+
+<PageView lang={lang} slug="newsletter">
+  <NewsletterForm lang={lang} />
+</PageView>

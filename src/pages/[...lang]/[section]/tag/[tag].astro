@@ -1,0 +1,55 @@
+---
+import Layout from '../../../../layouts/Layout.astro';
+import Frame from '../../../../components/Frame.astro';
+import PostItem from '../../../../components/PostItem.astro';
+import { DEFAULT_LOCALE, LOCALE_CODES } from '../../../../i18n/config';
+import { SECTIONS } from '../../../../sections';
+import { getEntries, localePath, useTranslations, type Entry } from '../../../../i18n/utils';
+
+export async function getStaticPaths() {
+  const tagsOf = (entries: Entry[]) => [...new Set(entries.flatMap((e) => e.data.tags))];
+  const out = [];
+  for (const section of SECTIONS) {
+    const byLang = Object.fromEntries(
+      await Promise.all(LOCALE_CODES.map(async (l) => [l, await getEntries(section, l)] as const)),
+    );
+    for (const lang of LOCALE_CODES) {
+      for (const tag of tagsOf(byLang[lang])) {
+        // The same tag in the other language, if entries there use it.
+        const alternates = Object.fromEntries(
+          LOCALE_CODES.filter((code) => tagsOf(byLang[code]).includes(tag)).map((code) => [
+            code,
+            localePath(code, `/${section}/tag/${tag}/`),
+          ]),
+        );
+        out.push({
+          params: { lang: lang === DEFAULT_LOCALE ? undefined : lang, section, tag },
+          props: {
+            lang,
+            alternates,
+            entries: byLang[lang].filter((e) => e.data.tags.includes(tag)),
+          },
+        });
+      }
+    }
+  }
+  return out;
+}
+
+const { tag } = Astro.params;
+const { lang, entries, alternates } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<Layout
+  title={t('tag.title', { tag })}
+  description={t('tag.description', { tag })}
+  alternates={alternates}
+>
+  <Frame title={t('tag.frame', { tag })}>
+    <div class="menu-list">
+      <div class="year-sep">{t('tag.found', { n: entries.length })}</div>
+      {entries.map((entry) => <PostItem post={entry} />)}
+    </div>
+  </Frame>
+</Layout>

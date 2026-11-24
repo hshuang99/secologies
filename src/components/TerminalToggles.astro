@@ -1,19 +1,42 @@
 ---
-// Theme and sound toggles. Rendered twice — in the header and in the
-// footer — with CSS showing exactly one: the header pair on desktop, the
+// Language switcher and sound toggle. Rendered twice — in the header and in
+// the footer — with CSS showing exactly one: the header pair on desktop, the
 // footer pair on phones, where they scroll away with the content instead of
-// costing a permanent nav line. The script in Layout.astro drives both.
+// costing a permanent nav line. The script in Layout.astro drives the sound
+// button; the language links are plain links.
+import { LOCALES } from '../i18n/config';
+import { useTranslations } from '../i18n/utils';
+import type { Locale } from '../i18n/config';
+import type { SwitcherItem } from '../i18n/utils';
+
 interface Props {
   class?: string;
+  lang: Locale;
+  switcher: SwitcherItem[];
 }
-const { class: cls } = Astro.props;
+const { class: cls, lang, switcher } = Astro.props;
+const t = useTranslations(lang);
 ---
 
 <div class:list={['toggles', cls]}>
-  <!-- data-sfx="hover": both buttons make their own sound on click. -->
-  <button class="nav-theme" data-action="theme" data-sfx="hover" type="button">
-    ◙ THEME
-  </button>
+  <div class="lang-switch" role="group" aria-label={t('toggle.langAria')}>
+    <span class="lang-switch__label" aria-hidden="true">{t('toggle.lang')}</span>
+    {
+      switcher.map((l) => (
+        <a
+          href={l.href}
+          lang={LOCALES[l.code].htmlLang}
+          hreflang={LOCALES[l.code].htmlLang}
+          title={LOCALES[l.code].name}
+          aria-current={l.current ? 'true' : undefined}
+          data-sfx="hover"
+        >
+          {l.label}
+        </a>
+      ))
+    }
+  </div>
+  <!-- data-sfx="hover": the button makes its own sound on click. -->
   <button
     class="nav-sound"
     data-action="sound"
@@ -21,6 +44,6 @@ const { class: cls } = Astro.props;
     type="button"
     aria-pressed="true"
   >
-    <span data-sound-label>♪ SND</span>
+    <span data-sound-label>{t('toggle.sound')}</span>
   </button>
 </div>

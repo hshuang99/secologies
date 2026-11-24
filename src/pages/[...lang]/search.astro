@@ -1,0 +1,213 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Frame from '../../components/Frame.astro';
+import { localePath, localeParams, useTranslations } from '../../i18n/utils';
+
+export const getStaticPaths = () => localeParams();
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<Layout title={t('search.title')} description={t('search.description')}>
+  <Frame title={t('search.title')}>
+    <div
+      id="search-app"
+      data-index={localePath(lang, '/search.json')}
+      data-idle={t('search.idle')}
+      data-loading={t('search.loading')}
+      data-error={t('search.error')}
+      data-found={t('search.found', { n: '{n}' })}
+      data-none={t('search.none')}
+    >
+      <label class="search-box">
+        <span class="search-prompt">{t('search.prompt')}</span>
+        <input
+          id="q"
+          type="search"
+          autocomplete="off"
+          autocapitalize="off"
+          spellcheck="false"
+          placeholder={t('search.placeholder')}
+        />
+      </label>
+      <p class="search-status" id="search-status" role="status" aria-live="polite"></p>
+      <div class="menu-list" id="search-results"></div>
+    </div>
+  </Frame>
+</Layout>
+
+<script>
+  interface Doc {
+    t: string; // title
+    u: string; // url
+    k: string; // section label
+    d: string; // date
+    g: string[]; // tags
+    x: string; // description
+    b: string; // plain-text body
+  }
+  interface Row extends Doc {
+    lt: string;
+    lg: string;
+    ld: string;
+    lb: string;
+  }
+
+  const app = document.getElementById('search-app')!;
+  const input = document.getElementById('q') as HTMLInputElement;
+  const status = document.getElementById('search-status')!;
+  const list = document.getElementById('search-results')!;
+  const msg = app.dataset as Record<string, string>;
+
+  const norm = (s: string) => s.normalize('NFKC').toLowerCase();
+  const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const MAX = 50;
+
+  let rows: Row[] | null = null;
+  let loading: Promise<void> | null = null;
+
+  function load() {
+    loading ??= fetch(msg.index)
+      .then((r) => {
+        if (!r.ok) throw new Error(String(r.status));
+        return r.json() as Promise<Doc[]>;
+      })
+      .then((docs) => {
+        rows = docs.map((d) => ({
+          ...d,
+          lt: norm(d.t),
+          lg: norm(d.g.join(' ')),
+          ld: norm(d.x),
+          lb: d.b.toLowerCase(),
+        }));
+      });
+    return loading;
+  }
+
+  // Every term must hit somewhere; title and tag hits count the most.
+  function score(r: Row, terms: string[]) {
+    let total = 0;
+    for (const term of terms) {
+      let s = 0;
+      if (r.lt.includes(term)) s += 10;
+      if (r.lg.includes(term)) s += 6;
+      if (r.ld.includes(term)) s += 3;
+      if (r.lb.includes(term)) s += 1;
+      if (!s) return 0;
+      total += s;
+    }
+    return total;
+  }
+
+  function snippet(r: Row, terms: string[]) {
+    let at = -1;
+    for (const term of terms) {
+      const i = r.lb.indexOf(term);
+      if (i >= 0 && (at < 0 || i < at)) at = i;
+    }
+    if (at < 0) return r.x.slice(0, 140);
+    const start = Math.max(0, at - 40);
+    return (start > 0 ? '…' : '') + r.b.slice(start, start + 140) + '…';
+  }
+
+  // Text with the matched terms wrapped in <mark>, built without innerHTML.
+  function highlight(text: string, terms: string[]) {
+    const frag = document.createDocumentFragment();
+    const re = new RegExp(`(${terms.map(escapeRe).join('|')})`, 'gi');
+    let last = 0;
+    for (const m of text.matchAll(re)) {
+      const i = m.index ?? 0;
+      if (i > last) frag.append(text.slice(last, i));
+      const mark = document.createElement('mark');
+      mark.textContent = m[0];
+      frag.append(mark);
+      last = i + m[0].length;
+    }
+    if (last < text.length) frag.append(text.slice(last));
+    return frag;
+  }
+
+  function span(cls: string, text = '') {
+    const el = document.createElement('span');
+    el.className = cls;
+    el.textContent = text;
+    return el;
+  }
+
+  function show(r: Row, terms: string[]) {
+    const hit = document.createElement('div');
+    hit.className = 'search-hit';
+
+    const a = document.createElement('a');
+    a.className = 'menu-item';
+    a.href = r.u;
+    const marker = span('mi-marker', '▪ >');
+    marker.setAttribute('aria-hidden', 'true');
+    const title = span('mi-title');
+    title.append(highlight(r.t, terms));
+    const time = document.createElement('time');
+    time.className = 'mi-date';
+    time.dateTime = r.d;
+    time.textContent = r.d;
+    const arrow = span('mi-arrow', '›');
+    arrow.setAttribute('aria-hidden', 'true');
+    a.append(marker, span('mi-type', `[${r.k}]`), title, time, arrow);
+
+    const p = document.createElement('p');
+    p.className = 'search-snippet';
+    p.append(highlight(snippet(r, terms), terms));
+
+    hit.append(a, p);
+    list.append(hit);
+  }
+
+  async function run() {
+    const q = input.value.trim();
+    history.replaceState(null, '', q ? `?q=${encodeURIComponent(q)}` : location.pathname);
+    list.replaceChildren();
+    if (!q) {
+      status.textContent = msg.idle;
+      return;
+    }
+    if (!rows) {
+      status.textContent = msg.loading;
+      try {
+        await load();
+      } catch {
+        status.textContent = msg.error;
+        return;
+      }
+    }
+    if (input.value.trim() !== q) return; // the query changed while loading
+
+    const terms = norm(q).split(/\s+/).filter(Boolean);
+    const hits = rows!
+      .map((r) => ({ r, s: score(r, terms) }))
+      .filter((h) => h.s > 0)
+      .sort((a, b) => b.s - a.s || b.r.d.localeCompare(a.r.d));
+
+    status.textContent = hits.length
+      ? msg.found.replace('{n}', String(hits.length))
+      : msg.none;
+    hits.slice(0, MAX).forEach((h) => show(h.r, terms));
+  }
+
+  let timer: number | undefined;
+  const schedule = () => {
+    clearTimeout(timer);
+    timer = window.setTimeout(run, 120);
+  };
+  input.addEventListener('input', (e) => {
+    // Wait for the IME (zhuyin, pinyin...) to commit instead of searching
+    // for half-typed syllables.
+    if ((e as InputEvent).isComposing) return;
+    schedule();
+  });
+  input.addEventListener('compositionend', schedule);
+
+  input.value = new URLSearchParams(location.search).get('q') ?? '';
+  status.textContent = msg.idle;
+  if (input.value) run();
+  input.focus();
+</script>

@@ -1,33 +1,59 @@
 ---
-import { SITE_TITLE, SITE_TAGLINE, SITE_VERSION, SITE_BUILD_ID } from '../consts';
+import { SITE_VERSION, SITE_BUILD_ID } from '../consts';
+import { LOCALES, type Locale } from '../i18n/config';
+import { localePath, useTranslations } from '../i18n/utils';
+import { SECTIONS } from '../sections';
+import type { UiKey } from '../i18n/ui';
 import TerminalToggles from './TerminalToggles.astro';
+import type { SwitcherItem } from '../i18n/utils';
+
+interface Props {
+  lang: Locale;
+  switcher: SwitcherItem[];
+}
+const { lang, switcher } = Astro.props;
+const t = useTranslations(lang);
 
 const buildDate = new Date()
-  .toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+  .toLocaleDateString(LOCALES[lang].dateLocale, {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  })
   .toUpperCase();
 
 const { pathname } = Astro.url;
-const current = (path: string) =>
-  pathname === path || pathname === path.replace(/\/$/, '') ? 'page' : undefined;
+const current = (path: string) => {
+  const full = localePath(lang, path);
+  return pathname === full || pathname === full.replace(/\/$/, '') ? 'page' : undefined;
+};
 ---
 
 <header class="t-header">
-  <a class="logo" href="/" aria-label="На главную">
+  <a class="logo" href={localePath(lang, '/')} aria-label={t('nav.homeAria')}>
     <span class="logo-glyph" aria-hidden="true">&gt;_</span>
-    <span class="logo-name">{SITE_TITLE}</span>
+    <span class="logo-name">{t('site.title')}</span>
   </a>
   <div class="h-info">
-    <div class="h-line h-line-top">{SITE_TAGLINE}</div>
+    <div class="h-line h-line-top">{t('site.tagline')}</div>
     <div class="h-line h-line-bottom">
       <span>BUILD: {SITE_BUILD_ID} VER {SITE_VERSION}</span>
       <span>{buildDate}</span>
     </div>
-    <nav class="h-nav" aria-label="Основная навигация">
-      <a href="/" aria-current={current('/')}>&gt; HOME</a>
-      <a href="/blog/" aria-current={current('/blog/')}>&gt; ARCHIVE</a>
-      <a href="/about/" aria-current={current('/about/')}>&gt; ABOUT</a>
-      <a href="/rss.xml">&gt; RSS</a>
-      <TerminalToggles class="toggles--header" />
+    <nav class="h-nav" aria-label={t('nav.label')}>
+      <a href={localePath(lang, '/')} aria-current={current('/')}>&gt; {t('nav.home')}</a>
+      {
+        SECTIONS.map((section) => (
+          <a href={localePath(lang, `/${section}/`)} aria-current={current(`/${section}/`)}>
+            &gt; {t(`nav.${section}` as UiKey)}
+          </a>
+        ))
+      }
+      <a href={localePath(lang, '/about/')} aria-current={current('/about/')}>&gt; {t('nav.about')}</a>
+      <a href={localePath(lang, '/newsletter/')} aria-current={current('/newsletter/')}>&gt; {t('nav.newsletter')}</a>
+      <a href={localePath(lang, '/search/')} aria-current={current('/search/')}>&gt; {t('nav.search')}</a>
+      <a href={localePath(lang, '/rss.xml')}>&gt; {t('nav.rss')}</a>
+      <TerminalToggles class="toggles--header" lang={lang} switcher={switcher} />
     </nav>
   </div>
 </header>

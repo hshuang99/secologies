@@ -1,0 +1,21 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Frame from '../../components/Frame.astro';
+import PostItem from '../../components/PostItem.astro';
+import { getAllEntries, localeParams, useTranslations } from '../../i18n/utils';
+
+export const getStaticPaths = () => localeParams();
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+// The ten newest entries across blog, jotting, project and podcast.
+const entries = (await getAllEntries(lang)).slice(0, 10);
+---
+
+<Layout>
+  <Frame title={t('home.latest')}>
+    <div class="menu-list">
+      {entries.map((entry) => <PostItem post={entry} showType />)}
+    </div>
+  </Frame>
+</Layout>

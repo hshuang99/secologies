@@ -1,33 +1,59 @@
 ---
 import '../styles/terminal.css';
+import 'katex/dist/katex.min.css';
 import TerminalHeader from '../components/TerminalHeader.astro';
 import TerminalFooter from '../components/TerminalFooter.astro';
 import HackGate from '../components/HackGate.astro';
 import {
-  SITE_TITLE,
-  SITE_DESCRIPTION,
   PRIVATE_MODE,
   SITE_VENDOR,
   SITE_SYSTEM,
   SITE_MODEL,
 } from '../consts';
+import { LOCALE_CODES, LOCALES, type Locale } from '../i18n/config';
+import {
+  buildSwitcher,
+  getLangFromUrl,
+  localePath,
+  useTranslations,
+} from '../i18n/utils';
 
 interface Props {
   title?: string;
   description?: string;
+  /** Counterparts of this page per language (for the switcher and hreflang). */
+  alternates?: Partial<Record<Locale, string>>;
 }
 
-const { title, description = SITE_DESCRIPTION } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const SITE_TITLE = t('site.title');
+const { title, description = t('site.description'), alternates } = Astro.props;
 const pageTitle = title ? `${title} // ${SITE_TITLE}` : SITE_TITLE;
+const switcher = buildSwitcher(lang, Astro.url, alternates);
+const hreflangs = alternates
+  ? LOCALE_CODES.filter((code) => alternates[code]).map((code) => ({
+      code,
+      href: new URL(alternates[code]!, Astro.site),
+    }))
+  : [];
+const nextLang = switcher[(switcher.findIndex((l) => l.current) + 1) % switcher.length];
 ---
 
 <!doctype html>
-<html lang="en" data-theme="amber">
+<html lang={LOCALES[lang].htmlLang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#0c1710" />
+    <meta property="og:locale" content={LOCALES[lang].htmlLang.replace('-', '_')} />
+    {
+      hreflangs.map(({ code, href }) => (
+        <link rel="alternate" hreflang={LOCALES[code].htmlLang} href={href} />
+      ))
+    }
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link
       rel="preload"
@@ -40,18 +66,18 @@ const pageTitle = title ? `${title} // ${SITE_TITLE}` : SITE_TITLE;
       rel="alternate"
       type="application/rss+xml"
       title={SITE_TITLE}
-      href={new URL('rss.xml', Astro.site)}
+      href={new URL(localePath(lang, '/rss.xml'), Astro.site)}
     />
     <title>{pageTitle}</title>
-    <!-- Apply the saved theme before first paint so it does not flash. -->
-    <script is:inline>
-      const saved = localStorage.getItem('theme');
-      if (saved === 'green' || saved === 'amber') {
-        document.documentElement.dataset.theme = saved;
-      }
-    </script>
   </head>
-  <body>
+  <body
+    data-home={localePath(lang, '/')}
+    data-archive={localePath(lang, '/blog/')}
+    data-search={localePath(lang, '/search/')}
+    data-next-lang={nextLang.href}
+    data-snd-on={t('toggle.sound')}
+    data-snd-off={t('toggle.soundOff')}
+  >
     <!-- Power-on screen: once per session, dismissed by any click or key. -->
     <div class="crt-boot" id="crt-boot" aria-hidden="true">
       <div class="crt-boot__screen">
@@ -73,7 +99,7 @@ const pageTitle = title ? `${title} // ${SITE_TITLE}` : SITE_TITLE;
         ].map((line, i) => (
           <span class="boot-line" style={`--i:${i}`}>{line + '\n'}</span>
         ))}</pre>
-        <div class="crt-boot__skip">[ PRESS ANY KEY ]</div>
+        <div class="crt-boot__skip">{t('boot.skip')}</div>
       </div>
     </div>
     <script is:inline>
@@ -94,11 +120,11 @@ const pageTitle = title ? `${title} // ${SITE_TITLE}` : SITE_TITLE;
 
     <div class="crt">
       <div class="container">
-        <TerminalHeader />
+        <TerminalHeader lang={lang} switcher={switcher} />
         <main>
           <slot />
         </main>
-        <TerminalFooter />
+        <TerminalFooter lang={lang} switcher={switcher} />
       </div>
     </div>
 
@@ -118,7 +144,10 @@ const pageTitle = title ? `${title} // ${SITE_TITLE}` : SITE_TITLE;
         soundBtns.forEach((btn) => {
           btn.setAttribute('aria-pressed', String(sfx.enabled));
           const label = btn.querySelector<HTMLElement>('[data-sound-label]');
-          if (label) label.textContent = sfx.enabled ? '♪ SND' : '♪ SND OFF';
+          if (label) {
+            const d = document.body.dataset;
+            label.textContent = (sfx.enabled ? d.sndOn : d.sndOff) ?? '';
+          }
         });
       }
       drawSound();
@@ -155,17 +184,52 @@ const pageTitle = title ? `${title} // ${SITE_TITLE}` : SITE_TITLE;
         setTimeout(dismiss, 2600);
       })();
 
-      function toggleTheme() {
-        const el = document.documentElement;
-        const next = el.dataset.theme === 'green' ? 'amber' : 'green';
-        el.dataset.theme = next;
-        localStorage.setItem('theme', next);
-        sfx.power(); // The screen "relights", so the phosphor hums.
-      }
-
-      document
-        .querySelectorAll('[data-action="theme"]')
-        .forEach((btn) => btn.addEventListener('click', toggleTheme));
+      // Mermaid: only downloaded on pages that actually contain a diagram.
+      // ```mermaid fences render as <pre><code class="language-mermaid">.
+      (async function () {
+        const codes = document.querySelectorAll<HTMLElement>(
+          'pre > code.language-mermaid',
+        );
+        if (!codes.length) return;
+        const { default: mermaid } = await import('mermaid');
+        // Colors come from the CSS variables, so terminal.css stays the one
+        // place where the palette is defined.
+        const css = getComputedStyle(document.documentElement);
+        const v = (name: string) => css.getPropertyValue(name).trim();
+        mermaid.initialize({
+          startOnLoad: false,
+          securityLevel: 'strict',
+          theme: 'base',
+          fontFamily:
+            "'Courier New', 'PingFang TC', 'Noto Sans Mono CJK TC', 'Noto Sans TC', monospace",
+          themeVariables: {
+            darkMode: true,
+            background: v('--bg-deep'),
+            primaryColor: v('--bg'),
+            primaryTextColor: v('--fg'),
+            primaryBorderColor: v('--fg'),
+            secondaryColor: v('--bg-deep'),
+            tertiaryColor: v('--bg-deep'),
+            lineColor: v('--fg'),
+            textColor: v('--fg'),
+            mainBkg: v('--bg'),
+            nodeBorder: v('--fg'),
+            clusterBkg: v('--bg-deep'),
+            clusterBorder: v('--fg-dim'),
+            edgeLabelBackground: v('--bg-deep'),
+            titleColor: v('--fg-bright'),
+          },
+        });
+        const nodes: HTMLElement[] = [];
+        codes.forEach((code) => {
+          const box = document.createElement('div');
+          box.className = 'mermaid';
+          box.textContent = code.textContent ?? '';
+          code.parentElement!.replaceWith(box);
+          nodes.push(box);
+        });
+        await mermaid.run({ nodes });
+      })();
 
       window.addEventListener('keydown', (e) => {
         if (e.metaKey || e.ctrlKey || e.altKey) return;
@@ -176,15 +240,22 @@ const pageTitle = title ? `${title} // ${SITE_TITLE}` : SITE_TITLE;
           // physical key under a Russian keyboard layout.
           case 'h':
           case 'р':
-            location.href = '/';
+            location.href = document.body.dataset.home ?? '/';
             break;
           case 'a':
           case 'ф':
-            location.href = '/blog/';
+            location.href = document.body.dataset.archive ?? '/blog/';
             break;
-          case 't':
-          case 'е':
-            toggleTheme();
+          case 'k': // search
+          case 'л':
+          case '/':
+            e.preventDefault();
+            location.href = document.body.dataset.search ?? '/search/';
+            break;
+          case 'l': // switch language
+            if (document.body.dataset.nextLang) {
+              location.href = document.body.dataset.nextLang;
+            }
             break;
         }
       });

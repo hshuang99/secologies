@@ -1,12 +1,23 @@
 ---
-import { SITE_TITLE } from '../consts';
+import type { Locale } from '../i18n/config';
+import { localePath, useTranslations } from '../i18n/utils';
 import TerminalToggles from './TerminalToggles.astro';
+import type { SwitcherItem } from '../i18n/utils';
+
+interface Props {
+  lang: Locale;
+  switcher: SwitcherItem[];
+}
+const { lang, switcher } = Astro.props;
+const t = useTranslations(lang);
 const year = new Date().getFullYear();
 ---
 
 <footer class="t-footer">
   <p class="t-colophon">
-    {SITE_TITLE} &copy; {year} // POWERED BY ASTRO
+    {t('site.title')} &copy; {year} // {t('footer.colophon')} //
+    <a href={localePath(lang, '/hong-sheng-huang/')}>{t('nav.author')}</a> //
+    <a href={localePath(lang, '/privacy/')}>{t('nav.privacy')}</a>
   </p>
-  <TerminalToggles class="toggles--footer" />
+  <TerminalToggles class="toggles--footer" lang={lang} switcher={switcher} />
 </footer>
