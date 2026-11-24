@@ -7,5 +7,8 @@
 			"database_name": "secologies-comments",
 			"database_id": "1b46d0be-85c9-48ff-a173-13e9d6bd9520"
 		}
-	]
+	],
+	"kv_namespaces": [
+            { "binding": "SESSION", "id": "e5f75d145b024f15b48e8c18c8b3becf" }
+        ]
 }
