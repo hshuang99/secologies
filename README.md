@@ -36,3 +36,4 @@ Fixed green phosphor. Tune it in the `:root` block at the top of
 `src/styles/terminal.css` (`--fg`, `--bg`, `--glow`, ...). The theme toggle,
 `T` hotkey and amber palette were removed.
 # secologies
+# secologies
